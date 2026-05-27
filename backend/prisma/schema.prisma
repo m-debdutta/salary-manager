@@ -1,0 +1,30 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Employee {
+  id              Int      @id @default(autoincrement())
+  firstName       String   @map("first_name")
+  lastName        String   @map("last_name")
+  jobTitle        String   @map("job_title")
+  country         String
+  salary          Float
+  department      String?
+  hireDate        DateTime @map("hire_date")
+  employmentType  String   @map("employment_type")
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  @@index([country])
+  @@index([jobTitle], map: "idx_job_title")
+  @@index([country, jobTitle], map: "idx_country_job_title")
+  @@map("employees")
+}

@@ -12,6 +12,13 @@
     "test:coverage": "vitest --coverage",
     "test:ui": "vitest --ui",
     "seed": "tsx src/scripts/seed.ts",
+    "db:init": "tsx src/db/init.ts",
+    "db:migrate": "prisma migrate dev",
+    "db:migrate:deploy": "prisma migrate deploy",
+    "db:push": "prisma db push",
+    "db:studio": "prisma studio",
+    "db:generate": "prisma generate",
+    "db:seed": "tsx src/scripts/seed.ts",
     "lint": "eslint src --ext .ts",
     "format": "prettier --write \"src/**/*.ts\""
   },
@@ -30,6 +37,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@prisma/client": "^6.19.3",
     "@types/better-sqlite3": "^7.6.13",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
@@ -41,6 +49,7 @@
     "@vitest/ui": "^4.1.7",
     "eslint": "^9.39.4",
     "prettier": "^3.8.3",
+    "prisma": "^6.19.3",
     "supertest": "^7.2.2",
     "tsx": "^4.22.3",
     "typescript": "^6.0.3",

@@ -56,7 +56,6 @@ Build a production-ready salary management tool for 10,000 employees with CRUD o
 **employees table**:
 
 - id (INTEGER PRIMARY KEY AUTOINCREMENT)
-- full_name (TEXT NOT NULL)
 - first_name (TEXT NOT NULL)
 - last_name (TEXT NOT NULL)
 - job_title (TEXT NOT NULL)
@@ -67,6 +66,8 @@ Build a production-ready salary management tool for 10,000 employees with CRUD o
 - employment_type (TEXT) - Full-time/Part-time/Contract
 - created_at (TIMESTAMP)
 - updated_at (TIMESTAMP)
+
+**Note**: Full name is computed dynamically from `first_name` and `last_name` to avoid data redundancy.
 
 **Indexes**:
 

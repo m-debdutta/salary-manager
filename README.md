@@ -22,9 +22,10 @@ A full-stack salary management application for managing employee data with CRUD 
 
 - Node.js with TypeScript
 - Express.js
+- Prisma ORM
 - SQLite with indexing
 - Zod for validation
-- Jest for testing
+- Vitest for testing
 
 ### Frontend
 
@@ -39,7 +40,7 @@ A full-stack salary management application for managing employee data with CRUD 
 **Employees Table:**
 
 - `id` - Primary key
-- `first_name`, `last_name`, `full_name` - Employee names
+- `first_name`, `last_name` - Employee names
 - `job_title` - Position/role
 - `country` - Work location
 - `salary` - Annual salary (decimal)
@@ -47,6 +48,8 @@ A full-stack salary management application for managing employee data with CRUD 
 - `hire_date` - Date of hire
 - `employment_type` - Full-time/Part-time/Contract
 - `created_at`, `updated_at` - Timestamps
+
+**Note**: Full name is computed as `first_name + last_name` to avoid redundancy.
 
 **Indexes:** Optimized for queries on `country`, `job_title`, and combined `(country, job_title)`.
 
@@ -71,6 +74,9 @@ A full-stack salary management application for managing employee data with CRUD 
 ```
 salary-manager/
 ├── backend/
+│   ├── prisma/
+│   │   ├── schema.prisma               # Prisma schema definition
+│   │   └── migrations/                 # Database migrations
 │   ├── src/
 │   │   ├── index.ts                    # Express server entry point
 │   │   ├── routes/
@@ -80,8 +86,9 @@ salary-manager/
 │   │   │   ├── employeeService.ts      # Employee business logic
 │   │   │   └── analyticsService.ts     # Analytics calculations
 │   │   ├── db/
-│   │   │   ├── database.ts             # Database connection & setup
-│   │   │   └── queries.ts              # SQL queries & repository layer
+│   │   │   ├── client.ts               # Prisma client singleton
+│   │   │   ├── init.ts                 # Database initialization
+│   │   │   └── README.md               # Database documentation
 │   │   ├── middleware/
 │   │   │   ├── validation.ts           # Request validation middleware
 │   │   │   └── errorHandler.ts         # Global error handler
@@ -97,9 +104,11 @@ salary-manager/
 │   ├── tests/
 │   │   ├── employees.test.ts           # Employee API tests
 │   │   └── analytics.test.ts           # Analytics API tests
+│   ├── .env                            # Environment variables (gitignored)
+│   ├── .env.example                    # Environment template
 │   ├── package.json
 │   ├── tsconfig.json
-│   └── database.db                     # SQLite database (gitignored)
+│   └── dev.db                          # SQLite database (gitignored)
 ├── frontend/
 │   ├── src/
 │   │   ├── main.tsx                    # Application entry point
@@ -135,9 +144,10 @@ salary-manager/
 **Backend:**
 
 - **Layered Architecture**: Separation of routes, services, and data access layers
+- **Prisma ORM**: Type-safe database queries with automatic migrations
 - **Middleware Pattern**: Reusable validation and error handling
-- **Repository Pattern**: Isolated database queries for maintainability
 - **Service Layer**: Business logic separated from HTTP concerns
+- **Database Indexing**: Optimized queries with strategic indexes
 
 **Frontend:**
 
@@ -168,19 +178,55 @@ salary-manager/
    npm install
    ```
 
-3. **Install Frontend Dependencies**
+3. **Configure Environment Variables**
+
+   Create a `.env` file in the backend directory:
+   ```bash
+   cd backend
+   cp .env.example .env
+   ```
+   
+   The default configuration uses SQLite:
+   ```
+   DATABASE_URL="file:./dev.db"
+   PORT=3000
+   NODE_ENV=development
+   ```
+
+4. **Initialize Database**
+
+   Run Prisma migrations to create the database schema:
+   ```bash
+   cd backend
+   npm run db:migrate
+   ```
+   
+   This will:
+   - Create the SQLite database (`dev.db`)
+   - Apply the schema with all tables and indexes
+   - Generate the Prisma Client
+
+5. **Verify Database Connection**
+
+   ```bash
+   npm run db:init
+   ```
+   
+   You should see: `✅ Database connection established`
+
+6. **Install Frontend Dependencies**
 
    ```bash
    cd frontend
    npm install
    ```
 
-4. **Initialize Database & Seed Data**
+7. **Seed Database with Sample Data**
    ```bash
    cd backend
    npm run seed
    ```
-   This creates the database schema and seeds 10,000 employee records in under 5 seconds.
+   This seeds 10,000 employee records in under 5 seconds.
 
 ### Development
 
@@ -199,6 +245,34 @@ salary-manager/
    npm run dev
    ```
    Application runs on `http://localhost:5173`
+
+### Database Management
+
+The project uses Prisma ORM for database management. Available commands:
+
+```bash
+cd backend
+
+# Initialize and verify database connection
+npm run db:init
+
+# Create a new migration after schema changes
+npm run db:migrate
+
+# Open Prisma Studio (database GUI)
+npm run db:studio
+
+# Generate Prisma Client (after schema changes)
+npm run db:generate
+
+# Seed database with sample data
+npm run db:seed
+
+# Deploy migrations to production
+npm run db:migrate:deploy
+```
+
+**Prisma Studio**: Run `npm run db:studio` to open a visual database browser at `http://localhost:5555`
 
 ## 🧪 Testing
 
