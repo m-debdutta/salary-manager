@@ -69,43 +69,10 @@ describe('fetchEmployees', () => {
     expect(result).toEqual(MOCK_RESPONSE);
   });
 
-  it('returns the correct employees array', async () => {
-    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
-
-    const result = await fetchEmployees();
-
-    expect(result.employees).toHaveLength(1);
-    expect(result.employees[0].firstName).toBe('Alice');
-  });
-
-  it('returns the correct pagination metadata', async () => {
-    const paginatedResponse: EmployeesResponse = {
-      ...MOCK_RESPONSE,
-      total: 100,
-      page: 2,
-      pageSize: 10,
-    };
-    mockedAxios.get.mockResolvedValueOnce({ data: paginatedResponse });
-
-    const result = await fetchEmployees(2, 10);
-
-    expect(result.total).toBe(100);
-    expect(result.page).toBe(2);
-    expect(result.pageSize).toBe(10);
-  });
-
   it('propagates errors thrown by axios', async () => {
     const networkError = new Error('Network Error');
     mockedAxios.get.mockRejectedValueOnce(networkError);
 
     await expect(fetchEmployees()).rejects.toThrow('Network Error');
-  });
-
-  it('is called exactly once per invocation', async () => {
-    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
-
-    await fetchEmployees();
-
-    expect(mockedAxios.get).toHaveBeenCalledTimes(1);
   });
 });

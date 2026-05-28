@@ -52,11 +52,6 @@ describe('Employees Router', () => {
     vi.clearAllMocks();
   });
 
-  it('should export a router instance', () => {
-    expect(employeeRouter).toBeDefined();
-    expect(typeof employeeRouter).toBe('function');
-  });
-
   describe('GET /api/employees', () => {
     it('should return 200 with employees list', async () => {
       const employee = makeEmployee();

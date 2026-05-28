@@ -1,4 +1,5 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
+import request from 'supertest';
 import express from 'express';
 import { setupMiddleware } from '../../../src/middleware';
 
@@ -8,41 +9,31 @@ describe('Middleware Setup', () => {
     expect(typeof setupMiddleware).toBe('function');
   });
 
-  it('should configure middleware on the app', () => {
-    const app = express();
-    const useSpy = vi.spyOn(app, 'use');
-
-    setupMiddleware(app);
-
-    expect(useSpy).toHaveBeenCalled();
-    expect(useSpy.mock.calls.length).toBeGreaterThanOrEqual(2);
-  });
-
   it('should not throw when called with valid Express app', () => {
     const app = express();
     expect(() => setupMiddleware(app)).not.toThrow();
   });
 
-  it('should enable CORS middleware', () => {
+  it('should add CORS headers to responses', async () => {
     const app = express();
-    const useSpy = vi.spyOn(app, 'use');
-
     setupMiddleware(app);
+    app.get('/test', (_req, res) => res.json({ ok: true }));
 
-    // Check that middleware was registered (CORS and JSON parser)
-    expect(useSpy).toHaveBeenCalledTimes(2);
-    expect(useSpy.mock.calls[0][0]).toBeDefined();
-    expect(useSpy.mock.calls[1][0]).toBeDefined();
+    const response = await request(app).get('/test');
+
+    expect(response.headers['access-control-allow-origin']).toBeDefined();
   });
 
-  it('should enable JSON body parser middleware', () => {
+  it('should parse JSON request bodies', async () => {
     const app = express();
-    const useSpy = vi.spyOn(app, 'use');
-
     setupMiddleware(app);
+    app.post('/test', (req, res) => res.json(req.body));
 
-    // Verify that use was called (once for CORS, once for JSON)
-    expect(useSpy).toHaveBeenCalled();
-    expect(useSpy.mock.calls.length).toBeGreaterThanOrEqual(1);
+    const response = await request(app)
+      .post('/test')
+      .set('Content-Type', 'application/json')
+      .send({ foo: 'bar' });
+
+    expect(response.body).toEqual({ foo: 'bar' });
   });
 });

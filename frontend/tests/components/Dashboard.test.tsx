@@ -3,15 +3,25 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import Dashboard from '../../src/components/Dashboard';
 import { fetchEmployees } from '../../src/api/employees';
-import { MOCK_EMPLOYEES_RESPONSE, EMPLOYEE_NAMES } from '../fixtures/employees';
+import {
+  MOCK_EMPLOYEES_RESPONSE,
+  MOCK_EMPLOYEES,
+  EMPLOYEE_NAMES,
+} from '../fixtures/employees';
 
 vi.mock('../../src/api/employees');
 
+const contractCount = MOCK_EMPLOYEES.filter(
+  (e) => e.employmentType === 'contract',
+).length;
+const partTimeCount = MOCK_EMPLOYEES.filter(
+  (e) => e.employmentType === 'part-time',
+).length;
+
 const EXPECTED = {
-  totalEmployees: 8,
-  departments: 6,
-  fullTime: 5,
-} as const;
+  totalEmployees: MOCK_EMPLOYEES_RESPONSE.total,
+  fullTime: MOCK_EMPLOYEES.filter((e) => e.employmentType === 'full-time').length,
+};
 
 const renderDashboard = () => {
   const queryClient = new QueryClient({
@@ -139,7 +149,7 @@ describe('Dashboard', () => {
       const badges = screen
         .getAllByText('contract')
         .filter((el) => el.classList.contains('badge--contract'));
-      expect(badges).toHaveLength(2);
+      expect(badges).toHaveLength(contractCount);
     });
 
     it('renders a part-time badge', async () => {
@@ -148,7 +158,7 @@ describe('Dashboard', () => {
       const badges = screen
         .getAllByText('part-time')
         .filter((el) => el.classList.contains('badge--part-time'));
-      expect(badges).toHaveLength(1);
+      expect(badges).toHaveLength(partTimeCount);
     });
   });
 

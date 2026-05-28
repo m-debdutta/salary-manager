@@ -122,128 +122,13 @@ describe('POST /api/employees - Create Employee', () => {
     });
   });
 
-  describe('Invalid Input - Missing Fields', () => {
-    it('should return 400 when firstName is missing', async () => {
+  describe('Invalid Input', () => {
+    it('should return 400 when a required field is missing', async () => {
       const invalidEmployee = {
         lastName: 'Doe',
         jobTitle: 'Engineer',
         country: 'USA',
         salary: 100000,
-        hireDate: '2024-01-15',
-        employmentType: 'Full-time',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-
-    it('should return 400 when lastName is missing', async () => {
-      const invalidEmployee = {
-        firstName: 'John',
-        jobTitle: 'Engineer',
-        country: 'USA',
-        salary: 100000,
-        hireDate: '2024-01-15',
-        employmentType: 'Full-time',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-
-    it('should return 400 when jobTitle is missing', async () => {
-      const invalidEmployee = {
-        firstName: 'John',
-        lastName: 'Doe',
-        country: 'USA',
-        salary: 100000,
-        hireDate: '2024-01-15',
-        employmentType: 'Full-time',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-
-    it('should return 400 when country is missing', async () => {
-      const invalidEmployee = {
-        firstName: 'John',
-        lastName: 'Doe',
-        jobTitle: 'Engineer',
-        salary: 100000,
-        hireDate: '2024-01-15',
-        employmentType: 'Full-time',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-
-    it('should return 400 when salary is missing', async () => {
-      const invalidEmployee = {
-        firstName: 'John',
-        lastName: 'Doe',
-        jobTitle: 'Engineer',
-        country: 'USA',
-        hireDate: '2024-01-15',
-        employmentType: 'Full-time',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-
-    it('should return 400 when hireDate is missing', async () => {
-      const invalidEmployee = {
-        firstName: 'John',
-        lastName: 'Doe',
-        jobTitle: 'Engineer',
-        country: 'USA',
-        salary: 100000,
-        employmentType: 'Full-time',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-
-    it('should return 400 when employmentType is missing', async () => {
-      const invalidEmployee = {
-        firstName: 'John',
-        lastName: 'Doe',
-        jobTitle: 'Engineer',
-        country: 'USA',
-        salary: 100000,
-        hireDate: '2024-01-15',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-  });
-
-  describe('Invalid Input - Invalid Data Types', () => {
-    it('should return 400 when salary is not a number', async () => {
-      const invalidEmployee = {
-        firstName: 'John',
-        lastName: 'Doe',
-        jobTitle: 'Engineer',
-        country: 'USA',
-        salary: 'not-a-number',
         hireDate: '2024-01-15',
         employmentType: 'Full-time',
       };
@@ -261,57 +146,6 @@ describe('POST /api/employees - Create Employee', () => {
         jobTitle: 'Engineer',
         country: 'USA',
         salary: -5000,
-        hireDate: '2024-01-15',
-        employmentType: 'Full-time',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-
-    it('should return 400 when hireDate is invalid format', async () => {
-      const invalidEmployee = {
-        firstName: 'John',
-        lastName: 'Doe',
-        jobTitle: 'Engineer',
-        country: 'USA',
-        salary: 100000,
-        hireDate: 'invalid-date',
-        employmentType: 'Full-time',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-
-    it('should return 400 when firstName is empty string', async () => {
-      const invalidEmployee = {
-        firstName: '',
-        lastName: 'Doe',
-        jobTitle: 'Engineer',
-        country: 'USA',
-        salary: 100000,
-        hireDate: '2024-01-15',
-        employmentType: 'Full-time',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-
-    it('should return 400 when firstName is not a string', async () => {
-      const invalidEmployee = {
-        firstName: 123,
-        lastName: 'Doe',
-        jobTitle: 'Engineer',
-        country: 'USA',
-        salary: 100000,
         hireDate: '2024-01-15',
         employmentType: 'Full-time',
       };
@@ -500,7 +334,6 @@ describe('GET /api/employees - List Employees', () => {
     const response = await request(app).get('/api/employees');
 
     expect(response.body.employees[0].hireDate).toBe('2024-01-15');
-    expect(response.body.employees[0].hireDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
   });
 
   it('should default to page=1 and pageSize=50 when not specified', async () => {

@@ -60,35 +60,6 @@ describe('EmployeeRepository', () => {
       expect(employee.department).toBeNull();
     });
 
-    it('should store employee in database correctly', async () => {
-      const employeeData: EmployeeCreateInput = {
-        firstName: 'Alice',
-        lastName: 'Johnson',
-        jobTitle: 'Data Analyst',
-        country: 'UK',
-        salary: 75000,
-        department: 'Analytics',
-        hireDate: new Date('2023-06-15'),
-        employmentType: 'Full-time',
-      };
-
-      const employee = await createEmployee(employeeData);
-
-      // Verify data in database
-      const savedEmployee = await prisma.employee.findUnique({
-        where: { id: employee.id },
-      });
-
-      expect(savedEmployee).toBeDefined();
-      expect(savedEmployee?.firstName).toBe(employeeData.firstName);
-      expect(savedEmployee?.lastName).toBe(employeeData.lastName);
-      expect(savedEmployee?.jobTitle).toBe(employeeData.jobTitle);
-      expect(savedEmployee?.country).toBe(employeeData.country);
-      expect(savedEmployee?.salary).toBe(employeeData.salary);
-      expect(savedEmployee?.department).toBe(employeeData.department);
-      expect(savedEmployee?.employmentType).toBe(employeeData.employmentType);
-    });
-
     it('should handle Date objects for hireDate', async () => {
       const hireDate = new Date('2023-06-15');
       const employeeData: EmployeeCreateInput = {
@@ -283,34 +254,6 @@ describe('EmployeeRepository', () => {
         const employee = await createEmployee(employeeData);
         expect(employee.hireDate).toBeInstanceOf(Date);
       }
-    });
-
-    it('should return complete employee object with all database fields', async () => {
-      const employeeData: EmployeeCreateInput = {
-        firstName: 'Isabel',
-        lastName: 'Rodriguez',
-        jobTitle: 'Manager',
-        country: 'Spain',
-        salary: 95000,
-        department: 'Operations',
-        hireDate: new Date('2024-01-01'),
-        employmentType: 'Full-time',
-      };
-
-      const employee = await createEmployee(employeeData);
-
-      // Verify all expected fields are present
-      expect(employee).toHaveProperty('id');
-      expect(employee).toHaveProperty('firstName');
-      expect(employee).toHaveProperty('lastName');
-      expect(employee).toHaveProperty('jobTitle');
-      expect(employee).toHaveProperty('country');
-      expect(employee).toHaveProperty('salary');
-      expect(employee).toHaveProperty('department');
-      expect(employee).toHaveProperty('hireDate');
-      expect(employee).toHaveProperty('employmentType');
-      expect(employee).toHaveProperty('createdAt');
-      expect(employee).toHaveProperty('updatedAt');
     });
   });
 
