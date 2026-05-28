@@ -43,3 +43,7 @@ export const updateEmployee = async (
   const { data } = await axios.put<Employee>(`/api/employees/${id}`, input);
   return data;
 };
+
+export const deleteEmployee = async (id: number): Promise<void> => {
+  await axios.delete(`/api/employees/${id}`);
+};

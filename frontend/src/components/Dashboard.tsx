@@ -1,6 +1,6 @@
-import { useInfiniteQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
-import { fetchEmployees } from '../api/employees';
+import { fetchEmployees, deleteEmployee } from '../api/employees';
 import { EmployeeCard, type Employee } from './EmployeeCard';
 import AddEmployeeModal from './AddEmployeeModal';
 import EmployeeDetailsModal from './EmployeeDetailsModal';
@@ -13,6 +13,16 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
+
+  const queryClient = useQueryClient();
+
+  const deleteMutation = useMutation({
+    mutationFn: (id: number) => deleteEmployee(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['employees'] });
+      setSelectedEmployee(null);
+    },
+  });
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
@@ -80,6 +90,7 @@ export default function Dashboard() {
             setEmployeeToEdit(selectedEmployee);
             setSelectedEmployee(null);
           }}
+          onDelete={() => deleteMutation.mutate(selectedEmployee.id)}
         />
       )}
 

@@ -1,9 +1,11 @@
+import { useState } from 'react';
 import type { Employee } from './EmployeeCard';
 
 interface EmployeeDetailsModalProps {
   employee: Employee;
   onClose: () => void;
   onEdit?: () => void;
+  onDelete?: () => void;
 }
 
 const employmentTypeBadgeColor: Record<string, string> = {
@@ -16,7 +18,9 @@ export default function EmployeeDetailsModal({
   employee,
   onClose,
   onEdit,
+  onDelete,
 }: EmployeeDetailsModalProps) {
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
   const initials = `${employee.firstName[0]}${employee.lastName[0]}`.toUpperCase();
   const fullName = `${employee.firstName} ${employee.lastName}`;
   const badgeClass =
@@ -90,9 +94,42 @@ export default function EmployeeDetailsModal({
         </dl>
 
         <div className="modal__actions">
-          <button type="button" className="btn btn--primary" onClick={() => onEdit?.()}>
-            Edit Employee
-          </button>
+          {confirmingDelete ? (
+            <>
+              <p className="modal__confirm-text">
+                Delete {fullName}? This cannot be undone.
+              </p>
+              <button type="button" className="btn btn--danger" onClick={onDelete}>
+                Confirm Delete
+              </button>
+              <button
+                type="button"
+                className="btn btn--secondary"
+                onClick={() => setConfirmingDelete(false)}
+              >
+                Cancel
+              </button>
+            </>
+          ) : (
+            <>
+              <button
+                type="button"
+                className="btn btn--primary"
+                onClick={() => onEdit?.()}
+              >
+                Edit Employee
+              </button>
+              {onDelete && (
+                <button
+                  type="button"
+                  className="btn btn--danger"
+                  onClick={() => setConfirmingDelete(true)}
+                >
+                  Delete Employee
+                </button>
+              )}
+            </>
+          )}
         </div>
       </div>
     </div>

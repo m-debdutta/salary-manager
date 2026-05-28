@@ -17,13 +17,18 @@ const baseEmployee: Employee = {
 
 const onClose = vi.fn();
 const onEdit = vi.fn();
+const onDelete = vi.fn();
 
-const renderModal = (overrides: Partial<Employee> = {}, { withEdit = true } = {}) =>
+const renderModal = (
+  overrides: Partial<Employee> = {},
+  { withEdit = true, withDelete = true } = {},
+) =>
   render(
     <EmployeeDetailsModal
       employee={{ ...baseEmployee, ...overrides }}
       onClose={onClose}
       onEdit={withEdit ? onEdit : undefined}
+      onDelete={withDelete ? onDelete : undefined}
     />,
   );
 
@@ -199,6 +204,88 @@ describe('EmployeeDetailsModal', () => {
       expect(() =>
         fireEvent.click(screen.getByRole('button', { name: 'Edit Employee' })),
       ).not.toThrow();
+    });
+  });
+
+  // ── Delete button ─────────────────────────────────────────────────────────────
+  describe('delete button', () => {
+    it('renders a "Delete Employee" button when onDelete is provided', () => {
+      renderModal();
+      expect(screen.getByRole('button', { name: 'Delete Employee' })).toBeInTheDocument();
+    });
+
+    it('does not render a "Delete Employee" button when onDelete is not provided', () => {
+      renderModal({}, { withDelete: false });
+      expect(
+        screen.queryByRole('button', { name: 'Delete Employee' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('shows confirmation prompt when "Delete Employee" is clicked', () => {
+      renderModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      expect(
+        screen.getByText(/Delete Alice Johnson\? This cannot be undone\./),
+      ).toBeInTheDocument();
+    });
+
+    it('shows "Confirm Delete" button in confirmation state', () => {
+      renderModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      expect(screen.getByRole('button', { name: 'Confirm Delete' })).toBeInTheDocument();
+    });
+
+    it('shows "Cancel" button in confirmation state', () => {
+      renderModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument();
+    });
+
+    it('hides "Delete Employee" button in confirmation state', () => {
+      renderModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      expect(
+        screen.queryByRole('button', { name: 'Delete Employee' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('hides "Edit Employee" button in confirmation state', () => {
+      renderModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      expect(
+        screen.queryByRole('button', { name: 'Edit Employee' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('calls onDelete when "Confirm Delete" is clicked', () => {
+      renderModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm Delete' }));
+      expect(onDelete).toHaveBeenCalledTimes(1);
+    });
+
+    it('returns to normal state when "Cancel" is clicked in confirmation', () => {
+      renderModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+      expect(screen.getByRole('button', { name: 'Edit Employee' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'Delete Employee' })).toBeInTheDocument();
+      expect(
+        screen.queryByRole('button', { name: 'Confirm Delete' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('does not call onDelete when "Cancel" is clicked', () => {
+      renderModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+      expect(onDelete).not.toHaveBeenCalled();
+    });
+
+    it('matches snapshot in confirmation state', () => {
+      const { asFragment } = renderModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      expect(asFragment()).toMatchSnapshot();
     });
   });
 });

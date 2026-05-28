@@ -1,6 +1,11 @@
 import axios from 'axios';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { fetchEmployees, createEmployee, updateEmployee } from '../../src/api/employees';
+import {
+  fetchEmployees,
+  createEmployee,
+  updateEmployee,
+  deleteEmployee,
+} from '../../src/api/employees';
 import type { EmployeesResponse } from '../../src/api/employees';
 
 vi.mock('axios');
@@ -140,5 +145,41 @@ describe('updateEmployee', () => {
     mockedAxios.put.mockRejectedValueOnce(new Error('Not Found'));
 
     await expect(updateEmployee(999, { salary: 50000 })).rejects.toThrow('Not Found');
+  });
+});
+
+describe('deleteEmployee', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('calls DELETE /api/employees/:id with the correct URL', async () => {
+    mockedAxios.delete.mockResolvedValueOnce({ data: undefined });
+
+    await deleteEmployee(1);
+
+    expect(mockedAxios.delete).toHaveBeenCalledWith('/api/employees/1');
+  });
+
+  it('sends the correct id in the URL', async () => {
+    mockedAxios.delete.mockResolvedValueOnce({ data: undefined });
+
+    await deleteEmployee(42);
+
+    expect(mockedAxios.delete).toHaveBeenCalledWith('/api/employees/42');
+  });
+
+  it('resolves without returning a value', async () => {
+    mockedAxios.delete.mockResolvedValueOnce({ data: undefined });
+
+    const result = await deleteEmployee(1);
+
+    expect(result).toBeUndefined();
+  });
+
+  it('propagates errors thrown by axios', async () => {
+    mockedAxios.delete.mockRejectedValueOnce(new Error('Not Found'));
+
+    await expect(deleteEmployee(999)).rejects.toThrow('Not Found');
   });
 });

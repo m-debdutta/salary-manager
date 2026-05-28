@@ -2,7 +2,12 @@ import { render, screen, within, waitFor, fireEvent } from '@testing-library/rea
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import Dashboard from '../../src/components/Dashboard';
-import { fetchEmployees, createEmployee, updateEmployee } from '../../src/api/employees';
+import {
+  fetchEmployees,
+  createEmployee,
+  updateEmployee,
+  deleteEmployee,
+} from '../../src/api/employees';
 import {
   MOCK_EMPLOYEES_RESPONSE,
   MOCK_EMPLOYEES,
@@ -39,6 +44,7 @@ describe('Dashboard', () => {
     vi.mocked(fetchEmployees).mockResolvedValue(MOCK_EMPLOYEES_RESPONSE);
     vi.mocked(createEmployee).mockResolvedValue(MOCK_EMPLOYEES[0]);
     vi.mocked(updateEmployee).mockResolvedValue(MOCK_EMPLOYEES[0]);
+    vi.mocked(deleteEmployee).mockResolvedValue(undefined);
   });
 
   afterEach(() => {
@@ -344,6 +350,79 @@ describe('Dashboard', () => {
       expect(
         screen.queryByRole('heading', { name: 'Employee Details' }),
       ).not.toBeInTheDocument();
+    });
+  });
+
+  // ── Delete employee ───────────────────────────────────────────────────────────
+  describe('delete employee', () => {
+    const openDetailsModal = async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      expect(
+        screen.getByRole('heading', { name: 'Employee Details' }),
+      ).toBeInTheDocument();
+    };
+
+    it('renders a "Delete Employee" button in the details modal', async () => {
+      await openDetailsModal();
+      expect(screen.getByRole('button', { name: 'Delete Employee' })).toBeInTheDocument();
+    });
+
+    it('shows confirmation prompt when "Delete Employee" is clicked', async () => {
+      await openDetailsModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      expect(
+        screen.getByText(/Delete Alice Johnson\? This cannot be undone\./),
+      ).toBeInTheDocument();
+    });
+
+    it('calls deleteEmployee with the correct id on confirm', async () => {
+      await openDetailsModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm Delete' }));
+
+      await waitFor(() =>
+        expect(vi.mocked(deleteEmployee)).toHaveBeenCalledWith(MOCK_EMPLOYEES[0].id),
+      );
+    });
+
+    it('closes the details modal after successful delete', async () => {
+      await openDetailsModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm Delete' }));
+
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('heading', { name: 'Employee Details' }),
+        ).not.toBeInTheDocument(),
+      );
+    });
+
+    it('does not call deleteEmployee when "Cancel" is clicked', async () => {
+      await openDetailsModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      expect(vi.mocked(deleteEmployee)).not.toHaveBeenCalled();
+    });
+
+    it('keeps the modal open when "Cancel" is clicked', async () => {
+      await openDetailsModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+
+      expect(
+        screen.getByRole('heading', { name: 'Employee Details' }),
+      ).toBeInTheDocument();
+    });
+
+    it('refetches employees after successful delete', async () => {
+      await openDetailsModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm Delete' }));
+
+      await waitFor(() => expect(vi.mocked(fetchEmployees)).toHaveBeenCalledTimes(2));
     });
   });
 });

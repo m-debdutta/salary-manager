@@ -1,5 +1,158 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`EmployeeDetailsModal > delete button > matches snapshot in confirmation state 1`] = `
+<DocumentFragment>
+  <div
+    aria-labelledby="employee-details-title"
+    aria-modal="true"
+    class="modal-overlay"
+    role="dialog"
+  >
+    <div
+      class="modal employee-details-modal"
+    >
+      <div
+        class="modal__header"
+      >
+        <h2
+          class="modal__title"
+          id="employee-details-title"
+        >
+          Employee Details
+        </h2>
+        <button
+          aria-label="Close"
+          class="modal__close"
+        >
+          ✕
+        </button>
+      </div>
+      <div
+        class="employee-details__hero"
+      >
+        <div
+          class="employee-details__avatar"
+        >
+          AJ
+        </div>
+        <div>
+          <h3
+            class="employee-details__name"
+          >
+            Alice Johnson
+          </h3>
+          <p
+            class="employee-details__job-title"
+          >
+            Software Engineer
+          </p>
+          <span
+            class="badge badge--full-time"
+          >
+            full-time
+          </span>
+        </div>
+      </div>
+      <dl
+        class="employee-details__grid"
+      >
+        <div
+          class="employee-details__field"
+        >
+          <dt
+            class="employee-details__label"
+          >
+            Department
+          </dt>
+          <dd
+            class="employee-details__value"
+          >
+            Engineering
+          </dd>
+        </div>
+        <div
+          class="employee-details__field"
+        >
+          <dt
+            class="employee-details__label"
+          >
+            Country
+          </dt>
+          <dd
+            class="employee-details__value"
+          >
+            USA
+          </dd>
+        </div>
+        <div
+          class="employee-details__field"
+        >
+          <dt
+            class="employee-details__label"
+          >
+            Salary
+          </dt>
+          <dd
+            class="employee-details__value employee-details__value--salary"
+          >
+            $120,000
+          </dd>
+        </div>
+        <div
+          class="employee-details__field"
+        >
+          <dt
+            class="employee-details__label"
+          >
+            Hire Date
+          </dt>
+          <dd
+            class="employee-details__value"
+          >
+            March 15, 2021
+          </dd>
+        </div>
+        <div
+          class="employee-details__field"
+        >
+          <dt
+            class="employee-details__label"
+          >
+            Employee ID
+          </dt>
+          <dd
+            class="employee-details__value"
+          >
+            #42
+          </dd>
+        </div>
+      </dl>
+      <div
+        class="modal__actions"
+      >
+        <p
+          class="modal__confirm-text"
+        >
+          Delete Alice Johnson? This cannot be undone.
+        </p>
+        <button
+          class="btn btn--danger"
+          type="button"
+        >
+          Confirm Delete
+        </button>
+        <button
+          class="btn btn--secondary"
+          type="button"
+        >
+          Cancel
+        </button>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
 exports[`EmployeeDetailsModal > snapshot > matches snapshot for a full-time employee 1`] = `
 <DocumentFragment>
   <div
@@ -135,6 +288,12 @@ exports[`EmployeeDetailsModal > snapshot > matches snapshot for a full-time empl
           type="button"
         >
           Edit Employee
+        </button>
+        <button
+          class="btn btn--danger"
+          type="button"
+        >
+          Delete Employee
         </button>
       </div>
     </div>
@@ -277,6 +436,12 @@ exports[`EmployeeDetailsModal > snapshot > matches snapshot when department is n
           type="button"
         >
           Edit Employee
+        </button>
+        <button
+          class="btn btn--danger"
+          type="button"
+        >
+          Delete Employee
         </button>
       </div>
     </div>
