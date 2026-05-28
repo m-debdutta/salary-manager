@@ -6,7 +6,8 @@ import { analyticsService } from '../../../src/services/analyticsService';
 
 vi.mock('../../../src/services/analyticsService', () => ({
   analyticsService: {
-    getSalaryByCountry: vi.fn()
+    getSalaryByCountry: vi.fn(),
+    getSalaryByJobTitle: vi.fn(),
   },
 }));
 
@@ -61,6 +62,70 @@ describe('Analytics Router', () => {
       vi.mocked(analyticsService.getSalaryByCountry).mockRejectedValue(new Error('DB error'));
 
       const response = await request(app).get('/api/analytics/salary-by-country');
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty('error');
+    });
+  });
+
+  // ─── GET /api/analytics/salary-by-job-title ───────────────────────────────
+
+  describe('GET /api/analytics/salary-by-job-title', () => {
+    it('should return 200 with salary stats grouped by job title', async () => {
+      vi.mocked(analyticsService.getSalaryByJobTitle).mockResolvedValue([
+        {
+          jobTitle: 'Software Engineer',
+          count: 50,
+          min: 80000,
+          max: 180000,
+          avg: 130000,
+          median: 125000,
+        },
+      ]);
+
+      const response = await request(app).get('/api/analytics/salary-by-job-title');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveLength(1);
+      expect(response.body[0]).toMatchObject({
+        jobTitle: 'Software Engineer',
+        count: 50,
+        min: 80000,
+        max: 180000,
+        avg: 130000,
+        median: 125000,
+      });
+    });
+
+    it('should pass country query param to service', async () => {
+      vi.mocked(analyticsService.getSalaryByJobTitle).mockResolvedValue([]);
+
+      await request(app).get('/api/analytics/salary-by-job-title?country=USA');
+
+      expect(analyticsService.getSalaryByJobTitle).toHaveBeenCalledWith('USA');
+    });
+
+    it('should call service without country when param is absent', async () => {
+      vi.mocked(analyticsService.getSalaryByJobTitle).mockResolvedValue([]);
+
+      await request(app).get('/api/analytics/salary-by-job-title');
+
+      expect(analyticsService.getSalaryByJobTitle).toHaveBeenCalledWith(undefined);
+    });
+
+    it('should return 200 with empty array when no employees exist', async () => {
+      vi.mocked(analyticsService.getSalaryByJobTitle).mockResolvedValue([]);
+
+      const response = await request(app).get('/api/analytics/salary-by-job-title');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+
+    it('should return 500 when service throws an error', async () => {
+      vi.mocked(analyticsService.getSalaryByJobTitle).mockRejectedValue(new Error('DB error'));
+
+      const response = await request(app).get('/api/analytics/salary-by-job-title');
 
       expect(response.status).toBe(500);
       expect(response.body).toHaveProperty('error');

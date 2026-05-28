@@ -138,4 +138,56 @@ describe('Analytics API - Integration Tests', () => {
       expect(response.body).toEqual([]);
     });
   });
+
+  // ─── GET /api/analytics/salary-by-job-title ───────────────────────────────
+
+  describe('GET /api/analytics/salary-by-job-title', () => {
+    it('should return 200 with all job titles', async () => {
+      const response = await request(app).get('/api/analytics/salary-by-job-title');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveLength(2);
+    });
+
+    it('should include required fields in each row', async () => {
+      const response = await request(app).get('/api/analytics/salary-by-job-title');
+
+      for (const row of response.body) {
+        expect(row).toHaveProperty('jobTitle');
+        expect(row).toHaveProperty('count');
+        expect(row).toHaveProperty('min');
+        expect(row).toHaveProperty('max');
+        expect(row).toHaveProperty('avg');
+        expect(row).toHaveProperty('median');
+      }
+    });
+
+    it('should filter by country when ?country= param is provided', async () => {
+      const response = await request(app).get('/api/analytics/salary-by-job-title?country=USA');
+
+      expect(response.status).toBe(200);
+      // Only Engineer appears in USA
+      expect(response.body).toHaveLength(1);
+      expect(response.body[0].jobTitle).toBe('Engineer');
+      expect(response.body[0].count).toBe(2);
+    });
+
+    it('should return 200 empty array for unknown country', async () => {
+      const response = await request(app).get('/api/analytics/salary-by-job-title?country=Narnia');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+
+    it('should return correct stats for Engineer across all countries', async () => {
+      const response = await request(app).get('/api/analytics/salary-by-job-title');
+      const eng = response.body.find((r: { jobTitle: string }) => r.jobTitle === 'Engineer');
+
+      expect(eng.count).toBe(3);
+      expect(eng.min).toBe(80_000);
+      expect(eng.max).toBe(120_000);
+      expect(eng.avg).toBeCloseTo(100_000, 0);
+      expect(eng.median).toBeCloseTo(100_000, 0);
+    });
+  });
 });

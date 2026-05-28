@@ -39,4 +39,49 @@ describe('AnalyticsService', () => {
       await expect(analyticsService.getSalaryByCountry()).rejects.toThrow('DB error');
     });
   });
+
+  // ─── getSalaryByJobTitle ───────────────────────────────────────────────────
+
+  describe('getSalaryByJobTitle', () => {
+    it('should return salary stats grouped by job title without filter', async () => {
+      const mockData = [
+        {
+          jobTitle: 'Software Engineer',
+          count: 50,
+          min: 80000,
+          max: 180000,
+          avg: 130000,
+          median: 125000,
+        },
+      ];
+      vi.mocked(analyticsRepository.getSalaryByJobTitle).mockResolvedValue(mockData);
+
+      const result = await analyticsService.getSalaryByJobTitle();
+
+      expect(result).toEqual(mockData);
+      expect(analyticsRepository.getSalaryByJobTitle).toHaveBeenCalledWith(undefined);
+    });
+
+    it('should pass country filter to repository', async () => {
+      vi.mocked(analyticsRepository.getSalaryByJobTitle).mockResolvedValue([]);
+
+      await analyticsService.getSalaryByJobTitle('USA');
+
+      expect(analyticsRepository.getSalaryByJobTitle).toHaveBeenCalledWith('USA');
+    });
+
+    it('should return empty array when no matching data', async () => {
+      vi.mocked(analyticsRepository.getSalaryByJobTitle).mockResolvedValue([]);
+
+      const result = await analyticsService.getSalaryByJobTitle('Unknown');
+
+      expect(result).toEqual([]);
+    });
+
+    it('should propagate errors from repository', async () => {
+      vi.mocked(analyticsRepository.getSalaryByJobTitle).mockRejectedValue(new Error('DB error'));
+
+      await expect(analyticsService.getSalaryByJobTitle()).rejects.toThrow('DB error');
+    });
+  });
 });

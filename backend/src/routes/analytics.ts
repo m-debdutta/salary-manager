@@ -17,5 +17,22 @@ router.get('/salary-by-country', async (_req: Request, res: Response) => {
   }
 });
 
+/**
+ * GET /api/analytics/salary-by-job-title
+ * Returns salary stats grouped by job title.
+ * Optional query param: country (string) — filters employees by country first.
+ */
+router.get('/salary-by-job-title', async (req: Request, res: Response) => {
+  const country = req.query.country as string | undefined;
+
+  try {
+    const data = await analyticsService.getSalaryByJobTitle(country);
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error('Error fetching salary-by-job-title:', error);
+    return res.status(500).json({ error: 'Failed to fetch salary by job title' });
+  }
+});
+
 
 export default router;

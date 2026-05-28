@@ -16,6 +16,15 @@ export interface SalaryByCountryRow {
   median: number;
 }
 
+export interface SalaryByJobTitleRow {
+  jobTitle: string;
+  count: number;
+  min: number;
+  max: number;
+  avg: number;
+  median: number;
+}
+
 // ─── Raw query result types ──────────────────────────────────────────────────
 
 interface RawGroupStats {
@@ -83,6 +92,23 @@ export const getSalaryByCountry = async (): Promise<SalaryByCountryRow[]> => {
   const rows = await queryGroupStats('country');
   return rows.map((r) => ({
     country: r.group_key,
+    count: Number(r.count),
+    min: r.min,
+    max: r.max,
+    avg: r.avg,
+    median: r.median,
+  }));
+};
+
+/**
+ * GET /api/analytics/salary-by-job-title
+ * Returns salary stats per job title, optionally filtered by country.
+ */
+export const getSalaryByJobTitle = async (country?: string): Promise<SalaryByJobTitleRow[]> => {
+  const where = country ? `WHERE country = '${country.replace(/'/g, "''")}'` : '';
+  const rows = await queryGroupStats('job_title', where);
+  return rows.map((r) => ({
+    jobTitle: r.group_key,
     count: Number(r.count),
     min: r.min,
     max: r.max,

@@ -1,6 +1,9 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import { prisma } from '../../../src/db/client';
-import { getSalaryByCountry } from '../../../src/db/analyticsRepository';
+import {
+  getSalaryByCountry,
+  getSalaryByJobTitle,
+} from '../../../src/db/analyticsRepository';
 
 /**
  * Predictable test dataset:
@@ -13,6 +16,10 @@ import { getSalaryByCountry } from '../../../src/db/analyticsRepository';
  * By country:
  *   USA: count=2, min=100k, max=120k, avg=110k, median=110k
  *   UK:  count=2, min=80k,  max=90k,  avg=85k,  median=85k
+ *
+ * By job title:
+ *   Engineer: count=3, min=80k, max=120k, avg=100k, median=100k
+ *   Manager:  count=1, min=90k, max=90k,  avg=90k,  median=90k
  *
  */
 
@@ -110,6 +117,64 @@ describe('AnalyticsRepository', () => {
       await prisma.employee.deleteMany({});
 
       const result = await getSalaryByCountry();
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  // ─── getSalaryByJobTitle ─────────────────────────────────────────────────
+
+  describe('getSalaryByJobTitle', () => {
+    it('should return one row per job title with correct shape', async () => {
+      const result = await getSalaryByJobTitle();
+
+      expect(result).toHaveLength(2);
+      const titles = result.map((r) => r.jobTitle).sort();
+      expect(titles).toEqual(['Engineer', 'Manager']);
+    });
+
+    it('should return correct aggregates for Engineer', async () => {
+      const result = await getSalaryByJobTitle();
+      const eng = result.find((r) => r.jobTitle === 'Engineer')!;
+
+      expect(eng.count).toBe(3);
+      expect(eng.min).toBe(80_000);
+      expect(eng.max).toBe(120_000);
+      expect(eng.avg).toBeCloseTo(100_000, 0);
+      // sorted: 80k, 100k, 120k → median = 100k (middle element)
+      expect(eng.median).toBeCloseTo(100_000, 0);
+    });
+
+    it('should return correct aggregates for Manager (single employee)', async () => {
+      const result = await getSalaryByJobTitle();
+      const mgr = result.find((r) => r.jobTitle === 'Manager')!;
+
+      expect(mgr.count).toBe(1);
+      expect(mgr.min).toBe(90_000);
+      expect(mgr.max).toBe(90_000);
+      expect(mgr.avg).toBeCloseTo(90_000, 0);
+      expect(mgr.median).toBeCloseTo(90_000, 0);
+    });
+
+    it('should filter by country when provided', async () => {
+      const result = await getSalaryByJobTitle('USA');
+
+      // Only Alice & Bob are in USA, both Engineers
+      expect(result).toHaveLength(1);
+      expect(result[0].jobTitle).toBe('Engineer');
+      expect(result[0].count).toBe(2);
+    });
+
+    it('should return empty array for unknown country', async () => {
+      const result = await getSalaryByJobTitle('Narnia');
+
+      expect(result).toEqual([]);
+    });
+
+    it('should return empty array when no employees exist', async () => {
+      await prisma.employee.deleteMany({});
+
+      const result = await getSalaryByJobTitle();
 
       expect(result).toEqual([]);
     });
