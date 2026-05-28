@@ -1,0 +1,312 @@
+import { describe, it, expect, afterEach } from 'vitest';
+import { createEmployee, EmployeeCreateInput } from '../../../src/db/employeeRepository';
+import { prisma } from '../../../src/db/client';
+
+describe('EmployeeRepository', () => {
+  // Clean up after each test
+  afterEach(async () => {
+    await prisma.employee.deleteMany({});
+  });
+
+  describe('createEmployee', () => {
+    it('should create an employee with all fields', async () => {
+      const employeeData: EmployeeCreateInput = {
+        firstName: 'John',
+        lastName: 'Doe',
+        jobTitle: 'Software Engineer',
+        country: 'USA',
+        salary: 100000,
+        department: 'Engineering',
+        hireDate: new Date('2024-01-15'),
+        employmentType: 'Full-time',
+      };
+
+      const employee = await createEmployee(employeeData);
+
+      expect(employee).toBeDefined();
+      expect(employee.id).toBeGreaterThan(0);
+      expect(employee.firstName).toBe(employeeData.firstName);
+      expect(employee.lastName).toBe(employeeData.lastName);
+      expect(employee.jobTitle).toBe(employeeData.jobTitle);
+      expect(employee.country).toBe(employeeData.country);
+      expect(employee.salary).toBe(employeeData.salary);
+      expect(employee.department).toBe(employeeData.department);
+      expect(employee.employmentType).toBe(employeeData.employmentType);
+      expect(employee.hireDate).toBeInstanceOf(Date);
+      expect(employee.createdAt).toBeInstanceOf(Date);
+      expect(employee.updatedAt).toBeInstanceOf(Date);
+    });
+
+    it('should create an employee without optional department', async () => {
+      const employeeData: EmployeeCreateInput = {
+        firstName: 'Jane',
+        lastName: 'Smith',
+        jobTitle: 'Product Manager',
+        country: 'Canada',
+        salary: 90000,
+        hireDate: new Date('2024-02-01'),
+        employmentType: 'Full-time',
+      };
+
+      const employee = await createEmployee(employeeData);
+
+      expect(employee).toBeDefined();
+      expect(employee.id).toBeGreaterThan(0);
+      expect(employee.firstName).toBe(employeeData.firstName);
+      expect(employee.department).toBeNull();
+    });
+
+    it('should store employee in database correctly', async () => {
+      const employeeData: EmployeeCreateInput = {
+        firstName: 'Alice',
+        lastName: 'Johnson',
+        jobTitle: 'Data Analyst',
+        country: 'UK',
+        salary: 75000,
+        department: 'Analytics',
+        hireDate: new Date('2023-06-15'),
+        employmentType: 'Full-time',
+      };
+
+      const employee = await createEmployee(employeeData);
+
+      // Verify data in database
+      const savedEmployee = await prisma.employee.findUnique({
+        where: { id: employee.id },
+      });
+
+      expect(savedEmployee).toBeDefined();
+      expect(savedEmployee?.firstName).toBe(employeeData.firstName);
+      expect(savedEmployee?.lastName).toBe(employeeData.lastName);
+      expect(savedEmployee?.jobTitle).toBe(employeeData.jobTitle);
+      expect(savedEmployee?.country).toBe(employeeData.country);
+      expect(savedEmployee?.salary).toBe(employeeData.salary);
+      expect(savedEmployee?.department).toBe(employeeData.department);
+      expect(savedEmployee?.employmentType).toBe(employeeData.employmentType);
+    });
+
+    it('should handle Date objects for hireDate', async () => {
+      const hireDate = new Date('2023-06-15');
+      const employeeData: EmployeeCreateInput = {
+        firstName: 'Bob',
+        lastName: 'Wilson',
+        jobTitle: 'Designer',
+        country: 'Australia',
+        salary: 85000,
+        hireDate: hireDate,
+        employmentType: 'Full-time',
+      };
+
+      const employee = await createEmployee(employeeData);
+
+      expect(employee.hireDate).toBeInstanceOf(Date);
+      expect(employee.hireDate.getTime()).toBe(hireDate.getTime());
+    });
+
+    it('should allow salary of 0', async () => {
+      const employeeData: EmployeeCreateInput = {
+        firstName: 'Charlie',
+        lastName: 'Brown',
+        jobTitle: 'Intern',
+        country: 'USA',
+        salary: 0,
+        hireDate: new Date('2024-01-01'),
+        employmentType: 'Internship',
+      };
+
+      const employee = await createEmployee(employeeData);
+
+      expect(employee).toBeDefined();
+      expect(employee.salary).toBe(0);
+    });
+
+    it('should handle very high salary values', async () => {
+      const employeeData: EmployeeCreateInput = {
+        firstName: 'David',
+        lastName: 'Executive',
+        jobTitle: 'CEO',
+        country: 'USA',
+        salary: 5000000,
+        department: 'Executive',
+        hireDate: new Date('2020-01-01'),
+        employmentType: 'Full-time',
+      };
+
+      const employee = await createEmployee(employeeData);
+
+      expect(employee).toBeDefined();
+      expect(employee.salary).toBe(5000000);
+    });
+
+    it('should handle special characters in text fields', async () => {
+      const employeeData: EmployeeCreateInput = {
+        firstName: "O'Connor",
+        lastName: 'Müller-Schmidt',
+        jobTitle: 'Software Engineer & Architect',
+        country: 'Germany',
+        salary: 95000,
+        department: 'R&D',
+        hireDate: new Date('2024-03-01'),
+        employmentType: 'Full-time',
+      };
+
+      const employee = await createEmployee(employeeData);
+
+      expect(employee).toBeDefined();
+      expect(employee.firstName).toBe("O'Connor");
+      expect(employee.lastName).toBe('Müller-Schmidt');
+      expect(employee.jobTitle).toBe('Software Engineer & Architect');
+      expect(employee.department).toBe('R&D');
+    });
+
+    it('should create multiple employees independently', async () => {
+      const employee1Data: EmployeeCreateInput = {
+        firstName: 'Emma',
+        lastName: 'Taylor',
+        jobTitle: 'Developer',
+        country: 'USA',
+        salary: 80000,
+        hireDate: new Date('2024-01-01'),
+        employmentType: 'Full-time',
+      };
+
+      const employee2Data: EmployeeCreateInput = {
+        firstName: 'Frank',
+        lastName: 'Harris',
+        jobTitle: 'Designer',
+        country: 'Canada',
+        salary: 75000,
+        hireDate: new Date('2024-01-02'),
+        employmentType: 'Full-time',
+      };
+
+      const employee1 = await createEmployee(employee1Data);
+      const employee2 = await createEmployee(employee2Data);
+
+      expect(employee1.id).not.toBe(employee2.id);
+      expect(employee1.firstName).toBe('Emma');
+      expect(employee2.firstName).toBe('Frank');
+
+      // Verify both are in database by looking them up individually
+      const found1 = await prisma.employee.findUnique({ where: { id: employee1.id } });
+      const found2 = await prisma.employee.findUnique({ where: { id: employee2.id } });
+      expect(found1).toBeDefined();
+      expect(found2).toBeDefined();
+    });
+
+    it('should set createdAt and updatedAt timestamps', async () => {
+      const beforeCreation = new Date();
+
+      const employeeData: EmployeeCreateInput = {
+        firstName: 'Grace',
+        lastName: 'Lee',
+        jobTitle: 'Analyst',
+        country: 'Singapore',
+        salary: 70000,
+        hireDate: new Date('2024-01-01'),
+        employmentType: 'Full-time',
+      };
+
+      const employee = await createEmployee(employeeData);
+      const afterCreation = new Date();
+
+      expect(employee.createdAt).toBeInstanceOf(Date);
+      expect(employee.updatedAt).toBeInstanceOf(Date);
+      expect(employee.createdAt.getTime()).toBeGreaterThanOrEqual(beforeCreation.getTime());
+      expect(employee.createdAt.getTime()).toBeLessThanOrEqual(afterCreation.getTime());
+      expect(employee.updatedAt.getTime()).toBeGreaterThanOrEqual(beforeCreation.getTime());
+      expect(employee.updatedAt.getTime()).toBeLessThanOrEqual(afterCreation.getTime());
+    });
+
+    it('should handle various employment types', async () => {
+      const employmentTypes = ['Full-time', 'Part-time', 'Contract', 'Internship', 'Temporary'];
+
+      for (const employmentType of employmentTypes) {
+        const employeeData: EmployeeCreateInput = {
+          firstName: 'Test',
+          lastName: employmentType,
+          jobTitle: 'Employee',
+          country: 'USA',
+          salary: 50000,
+          hireDate: new Date('2024-01-01'),
+          employmentType: employmentType,
+        };
+
+        const employee = await createEmployee(employeeData);
+        expect(employee.employmentType).toBe(employmentType);
+      }
+    });
+
+    it('should handle long text values', async () => {
+      const longDepartmentName =
+        'Department of Advanced Research and Development for Future Technologies';
+      const employeeData: EmployeeCreateInput = {
+        firstName: 'Henry',
+        lastName: 'Martinez',
+        jobTitle: 'Senior Principal Staff Engineer Architect',
+        country: 'United States of America',
+        salary: 150000,
+        department: longDepartmentName,
+        hireDate: new Date('2024-01-01'),
+        employmentType: 'Full-time',
+      };
+
+      const employee = await createEmployee(employeeData);
+
+      expect(employee).toBeDefined();
+      expect(employee.department).toBe(longDepartmentName);
+      expect(employee.jobTitle).toBe('Senior Principal Staff Engineer Architect');
+    });
+
+    it('should handle different date formats correctly', async () => {
+      const testDates = [
+        new Date('2024-01-01'),
+        new Date('2023-12-31T23:59:59'),
+        new Date(2024, 0, 15), // January 15, 2024
+      ];
+
+      for (let i = 0; i < testDates.length; i++) {
+        const employeeData: EmployeeCreateInput = {
+          firstName: `Test${i}`,
+          lastName: 'DateTest',
+          jobTitle: 'Tester',
+          country: 'USA',
+          salary: 60000,
+          hireDate: testDates[i],
+          employmentType: 'Full-time',
+        };
+
+        const employee = await createEmployee(employeeData);
+        expect(employee.hireDate).toBeInstanceOf(Date);
+      }
+    });
+
+    it('should return complete employee object with all database fields', async () => {
+      const employeeData: EmployeeCreateInput = {
+        firstName: 'Isabel',
+        lastName: 'Rodriguez',
+        jobTitle: 'Manager',
+        country: 'Spain',
+        salary: 95000,
+        department: 'Operations',
+        hireDate: new Date('2024-01-01'),
+        employmentType: 'Full-time',
+      };
+
+      const employee = await createEmployee(employeeData);
+
+      // Verify all expected fields are present
+      expect(employee).toHaveProperty('id');
+      expect(employee).toHaveProperty('firstName');
+      expect(employee).toHaveProperty('lastName');
+      expect(employee).toHaveProperty('jobTitle');
+      expect(employee).toHaveProperty('country');
+      expect(employee).toHaveProperty('salary');
+      expect(employee).toHaveProperty('department');
+      expect(employee).toHaveProperty('hireDate');
+      expect(employee).toHaveProperty('employmentType');
+      expect(employee).toHaveProperty('createdAt');
+      expect(employee).toHaveProperty('updatedAt');
+    });
+  });
+});

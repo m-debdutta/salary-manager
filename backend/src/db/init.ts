@@ -1,4 +1,4 @@
-import prisma, { disconnectDatabase } from '../db/client.js';
+import { prisma, disconnectDatabase } from '../db/client.js';
 
 /**
  * Initialize database connection and verify it's working

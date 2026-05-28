@@ -10,13 +10,11 @@ declare global {
   var prismaGlobal: undefined | ReturnType<typeof prismaClientSingleton>;
 }
 
-const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
+export const prisma = globalThis.prismaGlobal ?? prismaClientSingleton();
 
 if (process.env.NODE_ENV !== 'production') {
   globalThis.prismaGlobal = prisma;
 }
-
-export default prisma;
 
 // Graceful shutdown
 export async function disconnectDatabase() {

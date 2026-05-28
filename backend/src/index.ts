@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import { setupMiddleware } from './middleware';
 import healthRouter from './routes/health';
+import employeeRouter from './routes/employees';
 
 // Load environment variables
 dotenv.config();
@@ -14,6 +15,7 @@ setupMiddleware(app);
 
 // Routes
 app.use(healthRouter);
+app.use('/api/employees', employeeRouter);
 
 // Start server
 const main = async () => {

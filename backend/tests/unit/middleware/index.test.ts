@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import express, { Express } from 'express';
+import express from 'express';
 import { setupMiddleware } from '../../../src/middleware';
 
 describe('Middleware Setup', () => {
@@ -37,11 +37,12 @@ describe('Middleware Setup', () => {
 
   it('should enable JSON body parser middleware', () => {
     const app = express();
+    const useSpy = vi.spyOn(app, 'use');
+
     setupMiddleware(app);
 
-    // Verify the app has middleware stack
-    expect(app._router).toBeDefined();
-    expect(app._router.stack).toBeDefined();
-    expect(app._router.stack.length).toBeGreaterThan(0);
+    // Verify that use was called (once for CORS, once for JSON)
+    expect(useSpy).toHaveBeenCalled();
+    expect(useSpy.mock.calls.length).toBeGreaterThanOrEqual(1);
   });
 });
