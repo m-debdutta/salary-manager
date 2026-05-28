@@ -1,17 +1,52 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
+import { useEffect, useRef } from 'react';
 import { fetchEmployees } from '../api/employees';
 import { EmployeeCard } from './EmployeeCard';
 
-export default function Dashboard() {
-  const { data, isLoading, isError } = useQuery({
-    queryKey: ['employees'],
-    queryFn: () => fetchEmployees(),
-  });
+const PAGE_SIZE = 80;
 
-  const employees = data?.employees ?? [];
-  const total = data?.total ?? 0;
-  const departments = new Set(employees.map((e) => e.department).filter(Boolean)).size;
-  const fullTimeCount = employees.filter((e) => e.employmentType === 'full-time').length;
+export default function Dashboard() {
+  const gridRef = useRef<HTMLDivElement>(null);
+  const sentinelRef = useRef<HTMLDivElement>(null);
+
+  const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey: ['employees'],
+      queryFn: ({ pageParam }) => fetchEmployees(pageParam, PAGE_SIZE),
+      initialPageParam: 1,
+      getNextPageParam: (lastPage) =>
+        lastPage.employees.length === lastPage.pageSize ? lastPage.page + 1 : undefined,
+    });
+
+  const employees = data?.pages.flatMap((p) => p.employees) ?? [];
+  const total = data?.pages[0]?.total ?? 0;
+
+  const hasNextPageRef = useRef(hasNextPage);
+  const isFetchingNextPageRef = useRef(isFetchingNextPage);
+  const fetchNextPageRef = useRef(fetchNextPage);
+  hasNextPageRef.current = hasNextPage;
+  isFetchingNextPageRef.current = isFetchingNextPage;
+  fetchNextPageRef.current = fetchNextPage;
+
+  useEffect(() => {
+    if (isLoading) return;
+    const sentinel = sentinelRef.current;
+    if (!sentinel) return;
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (
+          entries[0].isIntersecting &&
+          hasNextPageRef.current &&
+          !isFetchingNextPageRef.current
+        ) {
+          fetchNextPageRef.current();
+        }
+      },
+      { root: gridRef.current, threshold: 0.1 },
+    );
+    observer.observe(sentinel);
+    return () => observer.disconnect();
+  }, [isLoading]);
 
   return (
     <div className="dashboard">
@@ -27,14 +62,6 @@ export default function Dashboard() {
           <span className="stat-card__value">{isLoading ? '—' : total}</span>
           <span className="stat-card__label">Total Employees</span>
         </div>
-        <div className="stat-card">
-          <span className="stat-card__value">{isLoading ? '—' : departments}</span>
-          <span className="stat-card__label">Departments</span>
-        </div>
-        <div className="stat-card">
-          <span className="stat-card__value">{isLoading ? '—' : fullTimeCount}</span>
-          <span className="stat-card__label">Full-time</span>
-        </div>
       </div>
 
       <div className="dashboard__section-header">
@@ -49,10 +76,14 @@ export default function Dashboard() {
       {isLoading ? (
         <p className="dashboard__loading">Loading employees…</p>
       ) : (
-        <div className="dashboard__grid">
+        <div className="dashboard__grid" ref={gridRef}>
           {employees.map((employee) => (
             <EmployeeCard key={employee.id} employee={employee} />
           ))}
+          <div ref={sentinelRef} className="dashboard__sentinel" />
+          {isFetchingNextPage && (
+            <p className="dashboard__loading dashboard__loading--paging">Loading more…</p>
+          )}
         </div>
       )}
     </div>

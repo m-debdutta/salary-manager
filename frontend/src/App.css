@@ -10,7 +10,7 @@
 .dashboard__loading,
 .dashboard__error {
   font-size: 0.95rem;
-  padding: 40px 0;
+  padding: 64px;
   text-align: center;
 }
 
@@ -97,6 +97,22 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   gap: 20px;
+  max-height: 65vh;
+  overflow-y: auto;
+  padding-right: 6px;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+}
+
+.dashboard__sentinel {
+  grid-column: 1 / -1;
+  height: 1px;
+}
+
+.dashboard__loading--paging {
+  grid-column: 1 / -1;
+  padding: 32px;
 }
 
 /* ── Employee card ─────────────────────────────── */

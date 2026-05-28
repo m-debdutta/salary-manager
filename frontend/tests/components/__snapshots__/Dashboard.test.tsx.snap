@@ -38,34 +38,6 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           Total Employees
         </span>
       </div>
-      <div
-        class="stat-card"
-      >
-        <span
-          class="stat-card__value"
-        >
-          6
-        </span>
-        <span
-          class="stat-card__label"
-        >
-          Departments
-        </span>
-      </div>
-      <div
-        class="stat-card"
-      >
-        <span
-          class="stat-card__value"
-        >
-          5
-        </span>
-        <span
-          class="stat-card__label"
-        >
-          Full-time
-        </span>
-      </div>
     </div>
     <div
       class="dashboard__section-header"
@@ -372,6 +344,9 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           </div>
         </div>
       </div>
+      <div
+        class="dashboard__sentinel"
+      />
     </div>
   </div>
 </DocumentFragment>
@@ -413,34 +388,6 @@ exports[`Dashboard > snapshot > matches loading snapshot 1`] = `
           class="stat-card__label"
         >
           Total Employees
-        </span>
-      </div>
-      <div
-        class="stat-card"
-      >
-        <span
-          class="stat-card__value"
-        >
-          —
-        </span>
-        <span
-          class="stat-card__label"
-        >
-          Departments
-        </span>
-      </div>
-      <div
-        class="stat-card"
-      >
-        <span
-          class="stat-card__value"
-        >
-          —
-        </span>
-        <span
-          class="stat-card__label"
-        >
-          Full-time
         </span>
       </div>
     </div>

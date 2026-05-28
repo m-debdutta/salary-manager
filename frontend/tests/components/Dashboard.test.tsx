@@ -62,9 +62,9 @@ describe('Dashboard', () => {
 
   // ── Loading state ─────────────────────────────────────────────────────────────
   describe('loading state', () => {
-    it('shows — placeholders in all three stat cards', () => {
+    it('shows — placeholder in the stat card', () => {
       renderDashboard();
-      expect(screen.getAllByText('—')).toHaveLength(3);
+      expect(screen.getAllByText('—')).toHaveLength(1);
     });
 
     it('shows a loading message in place of the grid', () => {
@@ -92,29 +92,9 @@ describe('Dashboard', () => {
       );
     });
 
-    it('shows the correct department count', async () => {
-      renderDashboard();
-      const deptCard = screen
-        .getByText('Departments')
-        .closest('.stat-card') as HTMLElement;
-      await waitFor(() =>
-        expect(
-          within(deptCard).getByText(String(EXPECTED.departments)),
-        ).toBeInTheDocument(),
-      );
-    });
-
-    it('shows the correct full-time count', async () => {
-      renderDashboard();
-      const ftCard = screen.getByText('Full-time').closest('.stat-card') as HTMLElement;
-      await waitFor(() =>
-        expect(within(ftCard).getByText(String(EXPECTED.fullTime))).toBeInTheDocument(),
-      );
-    });
-
-    it('renders exactly three stat cards', () => {
+    it('renders exactly one stat card', () => {
       const { container } = renderDashboard();
-      expect(container.querySelectorAll('.stat-card')).toHaveLength(3);
+      expect(container.querySelectorAll('.stat-card')).toHaveLength(1);
     });
   });
 
