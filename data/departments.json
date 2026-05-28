@@ -1,0 +1,74 @@
+[
+  {
+    "name": "Engineering",
+    "jobTitles": [
+      "Software Engineer",
+      "Senior Software Engineer",
+      "Staff Engineer",
+      "Principal Engineer",
+      "Engineering Manager",
+      "Backend Developer",
+      "Frontend Developer",
+      "Full Stack Developer",
+      "Mobile Developer",
+      "DevOps Engineer",
+      "Site Reliability Engineer",
+      "QA Engineer",
+      "Security Engineer",
+      "Cloud Architect"
+    ]
+  },
+  {
+    "name": "Product",
+    "jobTitles": [
+      "Product Manager",
+      "Senior Product Manager",
+      "Director of Product",
+      "Business Analyst",
+      "Technical Program Manager",
+      "Scrum Master"
+    ]
+  },
+  {
+    "name": "Design",
+    "jobTitles": ["UX Designer", "Senior UX Designer", "Product Designer"]
+  },
+  {
+    "name": "Marketing",
+    "jobTitles": [
+      "Marketing Manager",
+      "Content Strategist",
+      "SEO Specialist",
+      "Growth Manager"
+    ]
+  },
+  {
+    "name": "Sales",
+    "jobTitles": [
+      "Sales Representative",
+      "Account Executive",
+      "Sales Manager",
+      "VP of Sales"
+    ]
+  },
+  {
+    "name": "Finance",
+    "jobTitles": ["Financial Analyst", "Senior Financial Analyst", "Finance Manager"]
+  },
+  {
+    "name": "Human Resources",
+    "jobTitles": ["HR Generalist", "HR Manager", "Talent Acquisition Specialist"]
+  },
+  {
+    "name": "Operations",
+    "jobTitles": ["Operations Analyst", "Operations Manager", "Business Analyst"]
+  },
+  {
+    "name": "Legal",
+    "jobTitles": ["Legal Counsel"]
+  },
+  {
+    "name": "Customer Success",
+    "jobTitles": ["Customer Success Manager"]
+  }
+]

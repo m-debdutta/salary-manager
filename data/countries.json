@@ -1,0 +1,22 @@
+[
+  { "name": "United States", "multiplier": 1.0 },
+  { "name": "United Kingdom", "multiplier": 0.9 },
+  { "name": "Germany", "multiplier": 0.85 },
+  { "name": "France", "multiplier": 0.82 },
+  { "name": "Canada", "multiplier": 0.88 },
+  { "name": "Australia", "multiplier": 0.92 },
+  { "name": "India", "multiplier": 0.35 },
+  { "name": "Brazil", "multiplier": 0.45 },
+  { "name": "Japan", "multiplier": 0.8 },
+  { "name": "Netherlands", "multiplier": 0.88 },
+  { "name": "Sweden", "multiplier": 0.87 },
+  { "name": "Singapore", "multiplier": 0.95 },
+  { "name": "South Africa", "multiplier": 0.38 },
+  { "name": "Nigeria", "multiplier": 0.3 },
+  { "name": "Mexico", "multiplier": 0.42 },
+  { "name": "Spain", "multiplier": 0.72 },
+  { "name": "Italy", "multiplier": 0.75 },
+  { "name": "Poland", "multiplier": 0.55 },
+  { "name": "South Korea", "multiplier": 0.78 },
+  { "name": "Argentina", "multiplier": 0.38 }
+]
