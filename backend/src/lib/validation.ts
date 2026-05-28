@@ -28,6 +28,11 @@ export const createEmployeeSchema = z.object({
 // Type inference from schema
 export type CreateEmployeeInput = z.infer<typeof createEmployeeSchema>;
 
+// Schema for updating an existing employee (all fields optional)
+export const updateEmployeeSchema = createEmployeeSchema.partial();
+
+export type UpdateEmployeeInput = z.infer<typeof updateEmployeeSchema>;
+
 // Schema for employee response
 export const employeeResponseSchema = z.object({
   id: z.number(),

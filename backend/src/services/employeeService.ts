@@ -1,5 +1,5 @@
-import { createEmployee, getEmployees, getEmployeeById, EmployeeCreateInput } from '../db/employeeRepository';
-import { CreateEmployeeInput } from '../lib/validation';
+import { createEmployee, getEmployees, getEmployeeById, updateEmployee, EmployeeCreateInput } from '../db/employeeRepository';
+import { CreateEmployeeInput, UpdateEmployeeInput } from '../lib/validation';
 
 /**
  * Employee Service - Handles business logic for employee operations
@@ -30,6 +30,16 @@ export class EmployeeService {
 
   async getEmployeeById(id: number) {
     return await getEmployeeById(id);
+  }
+
+  async updateEmployee(id: number, data: UpdateEmployeeInput) {
+    const updateData: Partial<EmployeeCreateInput> = { ...data } as any;
+
+    if (data.hireDate) {
+      updateData.hireDate = new Date(data.hireDate);
+    }
+
+    return await updateEmployee(id, updateData);
   }
 
   async getEmployees(skip: number = 0, take: number = 50) {

@@ -119,6 +119,66 @@ describe('EmployeeService', () => {
     });
   });
 
+  describe('updateEmployee', () => {
+    it('should call repository updateEmployee with correct id and data', async () => {
+      vi.mocked(employeeRepository.updateEmployee).mockResolvedValue(mockCreatedEmployee);
+
+      await employeeService.updateEmployee(1, { salary: 120000 });
+
+      expect(employeeRepository.updateEmployee).toHaveBeenCalledWith(1, { salary: 120000 });
+    });
+
+    it('should convert hireDate string to Date before calling repository', async () => {
+      const updateSpy = vi
+        .mocked(employeeRepository.updateEmployee)
+        .mockResolvedValue(mockCreatedEmployee);
+
+      await employeeService.updateEmployee(1, { hireDate: '2025-06-01' });
+
+      const calledWith = updateSpy.mock.calls[0][1];
+      expect((calledWith as any).hireDate).toBeInstanceOf(Date);
+      expect((calledWith as any).hireDate.toISOString()).toContain('2025-06-01');
+    });
+
+    it('should not modify data when hireDate is not provided', async () => {
+      const updateSpy = vi
+        .mocked(employeeRepository.updateEmployee)
+        .mockResolvedValue(mockCreatedEmployee);
+
+      await employeeService.updateEmployee(1, { salary: 90000 });
+
+      const calledWith = updateSpy.mock.calls[0][1];
+      expect((calledWith as any).hireDate).toBeUndefined();
+    });
+
+    it('should return the updated employee', async () => {
+      vi.mocked(employeeRepository.updateEmployee).mockResolvedValue({
+        ...mockCreatedEmployee,
+        salary: 120000,
+      });
+
+      const result = await employeeService.updateEmployee(1, { salary: 120000 });
+
+      expect(result?.salary).toBe(120000);
+    });
+
+    it('should return null when employee does not exist', async () => {
+      vi.mocked(employeeRepository.updateEmployee).mockResolvedValue(null);
+
+      const result = await employeeService.updateEmployee(999, { salary: 120000 });
+
+      expect(result).toBeNull();
+    });
+
+    it('should propagate repository errors', async () => {
+      vi.mocked(employeeRepository.updateEmployee).mockRejectedValue(new Error('DB error'));
+
+      await expect(employeeService.updateEmployee(1, { salary: 120000 })).rejects.toThrow(
+        'DB error'
+      );
+    });
+  });
+
   describe('getEmployeeById', () => {
     it('should call repository getEmployeeById with the given id', async () => {
       vi.mocked(employeeRepository.getEmployeeById).mockResolvedValue(mockCreatedEmployee);

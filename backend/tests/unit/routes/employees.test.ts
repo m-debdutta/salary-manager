@@ -9,6 +9,7 @@ vi.mock('../../../src/services/employeeService', () => ({
     getEmployees: vi.fn(),
     createEmployee: vi.fn(),
     getEmployeeById: vi.fn(),
+    updateEmployee: vi.fn(),
   },
 }));
 
@@ -566,6 +567,194 @@ describe('Employees Router', () => {
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ error: 'Failed to fetch employee' });
+      });
+    });
+  });
+
+  describe('PUT /api/employees/:id', () => {
+    const updateData = {
+      firstName: 'Jane',
+      lastName: 'Smith',
+      jobTitle: 'Senior Engineer',
+      country: 'Canada',
+      salary: 120000,
+      department: 'Product',
+      hireDate: '2023-03-20',
+      employmentType: 'Full-time',
+    };
+
+    describe('Valid Update', () => {
+      it('should return 200 with updated employee', async () => {
+        vi.mocked(employeeService.updateEmployee).mockResolvedValue(
+          makeEmployee({ ...updateData, hireDate: new Date('2023-03-20') })
+        );
+
+        const response = await request(app).put('/api/employees/1').send(updateData);
+
+        expect(response.status).toBe(200);
+        expect(response.headers['content-type']).toMatch(/application\/json/);
+      });
+
+      it('should return all required fields in response', async () => {
+        vi.mocked(employeeService.updateEmployee).mockResolvedValue(
+          makeEmployee({ ...updateData, hireDate: new Date('2023-03-20') })
+        );
+
+        const response = await request(app).put('/api/employees/1').send(updateData);
+
+        expect(response.body).toHaveProperty('id');
+        expect(response.body).toHaveProperty('firstName');
+        expect(response.body).toHaveProperty('lastName');
+        expect(response.body).toHaveProperty('jobTitle');
+        expect(response.body).toHaveProperty('country');
+        expect(response.body).toHaveProperty('salary');
+        expect(response.body).toHaveProperty('department');
+        expect(response.body).toHaveProperty('hireDate');
+        expect(response.body).toHaveProperty('employmentType');
+        expect(response.body).toHaveProperty('createdAt');
+        expect(response.body).toHaveProperty('updatedAt');
+      });
+
+      it('should return updated employee data', async () => {
+        vi.mocked(employeeService.updateEmployee).mockResolvedValue(
+          makeEmployee({
+            id: 1,
+            firstName: 'Jane',
+            lastName: 'Smith',
+            jobTitle: 'Senior Engineer',
+            country: 'Canada',
+            salary: 120000,
+            department: 'Product',
+            hireDate: new Date('2023-03-20'),
+            employmentType: 'Full-time',
+          })
+        );
+
+        const response = await request(app).put('/api/employees/1').send(updateData);
+
+        expect(response.body.id).toBe(1);
+        expect(response.body.firstName).toBe('Jane');
+        expect(response.body.lastName).toBe('Smith');
+        expect(response.body.jobTitle).toBe('Senior Engineer');
+        expect(response.body.country).toBe('Canada');
+        expect(response.body.salary).toBe(120000);
+        expect(response.body.department).toBe('Product');
+        expect(response.body.employmentType).toBe('Full-time');
+      });
+
+      it('should format hireDate as YYYY-MM-DD string', async () => {
+        vi.mocked(employeeService.updateEmployee).mockResolvedValue(
+          makeEmployee({ hireDate: new Date('2023-03-20T00:00:00Z') })
+        );
+
+        const response = await request(app).put('/api/employees/1').send(updateData);
+
+        expect(response.body.hireDate).toBe('2023-03-20');
+      });
+
+      it('should call service with parsed numeric id and validated data', async () => {
+        vi.mocked(employeeService.updateEmployee).mockResolvedValue(
+          makeEmployee({ ...updateData, hireDate: new Date('2023-03-20') })
+        );
+
+        await request(app).put('/api/employees/42').send(updateData);
+
+        expect(employeeService.updateEmployee).toHaveBeenCalledWith(42, updateData);
+      });
+
+      it('should accept partial update with only some fields', async () => {
+        vi.mocked(employeeService.updateEmployee).mockResolvedValue(makeEmployee());
+
+        const response = await request(app).put('/api/employees/1').send({ salary: 95000 });
+
+        expect(response.status).toBe(200);
+        expect(employeeService.updateEmployee).toHaveBeenCalledWith(1, { salary: 95000 });
+      });
+
+      it('should accept null department to clear it', async () => {
+        vi.mocked(employeeService.updateEmployee).mockResolvedValue(
+          makeEmployee({ department: null })
+        );
+
+        const response = await request(app).put('/api/employees/1').send({ department: null });
+
+        expect(response.status).toBe(200);
+        expect(response.body.department).toBeNull();
+      });
+    });
+
+    describe('Invalid ID', () => {
+      it('should return 400 for non-numeric id', async () => {
+        const response = await request(app).put('/api/employees/abc').send(updateData);
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({ error: 'Invalid employee ID' });
+      });
+
+      it('should return 400 for mixed numeric-alpha id', async () => {
+        const response = await request(app).put('/api/employees/1abc').send(updateData);
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({ error: 'Invalid employee ID' });
+      });
+
+      it('should not call service for non-numeric id', async () => {
+        await request(app).put('/api/employees/abc').send(updateData);
+
+        expect(employeeService.updateEmployee).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Invalid Input', () => {
+      it('should return 400 when salary is negative', async () => {
+        const response = await request(app).put('/api/employees/1').send({ salary: -1000 });
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error');
+      });
+
+      it('should return 400 when firstName is too short', async () => {
+        const response = await request(app).put('/api/employees/1').send({ firstName: 'A' });
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error');
+      });
+
+      it('should return 400 when hireDate has invalid format', async () => {
+        const response = await request(app)
+          .put('/api/employees/1')
+          .send({ hireDate: 'not-a-date' });
+
+        expect(response.status).toBe(400);
+        expect(response.body).toHaveProperty('error');
+      });
+
+      it('should not call service when validation fails', async () => {
+        await request(app).put('/api/employees/1').send({ salary: -500 });
+
+        expect(employeeService.updateEmployee).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Not Found', () => {
+      it('should return 404 when employee does not exist', async () => {
+        vi.mocked(employeeService.updateEmployee).mockResolvedValue(null);
+
+        const response = await request(app).put('/api/employees/999').send(updateData);
+
+        expect(response.status).toBe(404);
+        expect(response.body).toEqual({ error: 'Employee not found' });
+      });
+    });
+
+    describe('Service Error', () => {
+      it('should return 500 when service throws', async () => {
+        vi.mocked(employeeService.updateEmployee).mockRejectedValue(new Error('DB error'));
+
+        const response = await request(app).put('/api/employees/1').send(updateData);
+
+        expect(response.status).toBe(500);
+        expect(response.body).toEqual({ error: 'Failed to update employee' });
       });
     });
   });

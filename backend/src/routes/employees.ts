@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { createEmployeeSchema } from '../lib/validation';
+import { createEmployeeSchema, updateEmployeeSchema } from '../lib/validation';
 import { employeeService } from '../services/employeeService';
 
 const router = Router();
@@ -120,6 +120,52 @@ router.post('/', async (req: Request, res: Response) => {
     return res.status(500).json({
       error: 'Failed to create employee',
     });
+  }
+});
+
+/**
+ * PUT /api/employees/:id - Update an existing employee
+ */
+router.put('/:id', async (req: Request, res: Response) => {
+  const raw = req.params.id;
+  const id = /^\d+$/.test(raw as string) ? parseInt(raw as string, 10) : NaN;
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid employee ID' });
+  }
+
+  const validationResult = updateEmployeeSchema.safeParse(req.body);
+
+  if (!validationResult.success) {
+    const errorMessages = validationResult.error.issues.map(
+      (err) => `${err.path.join('.')}: ${err.message}`
+    );
+    return res.status(400).json({ error: errorMessages });
+  }
+
+  try {
+    const employee = await employeeService.updateEmployee(id, validationResult.data);
+
+    if (!employee) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+
+    return res.status(200).json({
+      id: employee.id,
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      jobTitle: employee.jobTitle,
+      country: employee.country,
+      salary: employee.salary,
+      department: employee.department,
+      hireDate: employee.hireDate.toISOString().split('T')[0],
+      employmentType: employee.employmentType,
+      createdAt: employee.createdAt,
+      updatedAt: employee.updatedAt,
+    });
+  } catch (error) {
+    console.error('Error updating employee:', error);
+    return res.status(500).json({ error: 'Failed to update employee' });
   }
 });
 

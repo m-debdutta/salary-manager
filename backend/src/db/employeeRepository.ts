@@ -51,3 +51,20 @@ export const createEmployee = async (data: EmployeeCreateInput) => {
     },
   });
 };
+
+/**
+ * Update an existing employee by ID
+ * Returns the updated employee, or null if not found
+ */
+export const updateEmployee = async (
+  id: number,
+  data: Partial<EmployeeCreateInput>
+): Promise<Awaited<ReturnType<typeof prisma.employee.update>> | null> => {
+  const existing = await prisma.employee.findUnique({ where: { id } });
+  if (!existing) return null;
+
+  return await prisma.employee.update({
+    where: { id },
+    data,
+  });
+};
