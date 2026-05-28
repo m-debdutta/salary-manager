@@ -62,4 +62,18 @@ router.get('/department-summary', async (_req: Request, res: Response) => {
   }
 });
 
+/**
+ * GET /api/analytics/overview
+ * Returns high-level salary statistics across all employees.
+ */
+router.get('/overview', async (_req: Request, res: Response) => {
+  try {
+    const data = await analyticsService.getOverview();
+    return res.status(200).json(data);
+  } catch (error) {
+    console.error('Error fetching analytics overview:', error);
+    return res.status(500).json({ error: 'Failed to fetch analytics overview' });
+  }
+});
+
 export default router;

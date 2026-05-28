@@ -277,4 +277,76 @@ describe('Analytics API - Integration Tests', () => {
       expect(response.body).toEqual([]);
     });
   });
+
+  // ─── GET /api/analytics/overview ──────────────────────────────────────────
+
+  describe('GET /api/analytics/overview', () => {
+    it('should return 200 with overview object', async () => {
+      const response = await request(app).get('/api/analytics/overview');
+
+      expect(response.status).toBe(200);
+      expect(typeof response.body).toBe('object');
+    });
+
+    it('should include all required fields', async () => {
+      const response = await request(app).get('/api/analytics/overview');
+
+      expect(response.body).toHaveProperty('totalEmployees');
+      expect(response.body).toHaveProperty('avgSalary');
+      expect(response.body).toHaveProperty('medianSalary');
+      expect(response.body).toHaveProperty('minSalary');
+      expect(response.body).toHaveProperty('maxSalary');
+      expect(response.body).toHaveProperty('countriesCount');
+      expect(response.body).toHaveProperty('departmentsCount');
+    });
+
+    it('should return correct total employee count', async () => {
+      const response = await request(app).get('/api/analytics/overview');
+
+      expect(response.body.totalEmployees).toBe(4);
+    });
+
+    it('should return correct min and max salary', async () => {
+      const response = await request(app).get('/api/analytics/overview');
+
+      expect(response.body.minSalary).toBe(80_000);
+      expect(response.body.maxSalary).toBe(120_000);
+    });
+
+    it('should return correct average salary', async () => {
+      const response = await request(app).get('/api/analytics/overview');
+
+      // (80k + 90k + 100k + 120k) / 4 = 97_500
+      expect(response.body.avgSalary).toBeCloseTo(97_500, 0);
+    });
+
+    it('should return correct median salary', async () => {
+      const response = await request(app).get('/api/analytics/overview');
+
+      // sorted: 80k, 90k, 100k, 120k → median = (90k + 100k) / 2 = 95k
+      expect(response.body.medianSalary).toBeCloseTo(95_000, 0);
+    });
+
+    it('should return correct distinct country and department counts', async () => {
+      const response = await request(app).get('/api/analytics/overview');
+
+      expect(response.body.countriesCount).toBe(2);
+      expect(response.body.departmentsCount).toBe(2);
+    });
+
+    it('should return all-zero stats when database is empty', async () => {
+      await prisma.employee.deleteMany({});
+
+      const response = await request(app).get('/api/analytics/overview');
+
+      expect(response.status).toBe(200);
+      expect(response.body.totalEmployees).toBe(0);
+      expect(response.body.avgSalary).toBe(0);
+      expect(response.body.medianSalary).toBe(0);
+      expect(response.body.minSalary).toBe(0);
+      expect(response.body.maxSalary).toBe(0);
+      expect(response.body.countriesCount).toBe(0);
+      expect(response.body.departmentsCount).toBe(0);
+    });
+  });
 });

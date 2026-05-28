@@ -41,6 +41,16 @@ export interface DepartmentSummaryRow {
   median: number;
 }
 
+export interface OverviewStats {
+  totalEmployees: number;
+  avgSalary: number;
+  medianSalary: number;
+  minSalary: number;
+  maxSalary: number;
+  countriesCount: number;
+  departmentsCount: number;
+}
+
 // ─── Raw query result types ──────────────────────────────────────────────────
 
 interface RawGroupStats {
@@ -57,6 +67,16 @@ interface RawDistribution {
   range_min: bigint;
   range_max: bigint;
   count: bigint;
+}
+
+interface RawOverview {
+  totalEmployees: bigint;
+  avgSalary: number | null;
+  medianSalary: number | null;
+  minSalary: number | null;
+  maxSalary: number | null;
+  countriesCount: bigint;
+  departmentsCount: bigint;
 }
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
@@ -199,4 +219,62 @@ export const getDepartmentSummary = async (): Promise<DepartmentSummaryRow[]> =>
     avg: r.avg,
     median: r.median,
   }));
+};
+
+/**
+ * GET /api/analytics/overview
+ * Returns a single object with high-level salary statistics.
+ */
+export const getOverview = async (): Promise<OverviewStats> => {
+  const total = await prisma.employee.count();
+
+  if (total === 0) {
+    return {
+      totalEmployees: 0,
+      avgSalary: 0,
+      medianSalary: 0,
+      minSalary: 0,
+      maxSalary: 0,
+      countriesCount: 0,
+      departmentsCount: 0,
+    };
+  }
+
+  const rows = await prisma.$queryRaw<RawOverview[]>`
+    WITH ranked AS (
+      SELECT
+        salary,
+        ROW_NUMBER() OVER (ORDER BY salary) AS rn,
+        COUNT(*)    OVER ()                 AS cnt
+      FROM employees
+    ),
+    median AS (
+      SELECT AVG(salary) AS value
+      FROM ranked
+      WHERE rn IN ((cnt + 1) / 2, (cnt + 2) / 2)
+    ),
+    stats AS (
+      SELECT
+        COUNT(*)              AS totalEmployees,
+        AVG(salary)           AS avgSalary,
+        MIN(salary)           AS minSalary,
+        MAX(salary)           AS maxSalary,
+        COUNT(DISTINCT country)    AS countriesCount,
+        COUNT(DISTINCT department) AS departmentsCount
+      FROM employees
+    )
+    SELECT s.*, m.value AS medianSalary
+    FROM   stats s, median m
+  `;
+
+  const r = rows[0];
+  return {
+    totalEmployees: Number(r.totalEmployees),
+    avgSalary: r.avgSalary ?? 0,
+    medianSalary: r.medianSalary ?? 0,
+    minSalary: r.minSalary ?? 0,
+    maxSalary: r.maxSalary ?? 0,
+    countriesCount: Number(r.countriesCount),
+    departmentsCount: Number(r.departmentsCount),
+  };
 };

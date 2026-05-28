@@ -5,6 +5,7 @@ import {
   getSalaryByJobTitle,
   getSalaryDistribution,
   getDepartmentSummary,
+  getOverview,
 } from '../../../src/db/analyticsRepository';
 
 /**
@@ -27,6 +28,9 @@ import {
  *   Engineering: count=3, min=80k, max=120k, avg=100k, median=100k
  *   HR:          count=1, min=90k, max=90k,  avg=90k,  median=90k
  *
+ * Overview:
+ *   total=4, avg=97_500, median=95_000, min=80k, max=120k,
+ *   countries=2, departments=2
  */
 
 const seed = async () => {
@@ -270,6 +274,58 @@ describe('AnalyticsRepository', () => {
       const result = await getDepartmentSummary();
 
       expect(result).toEqual([]);
+    });
+  });
+
+  // ─── getOverview ─────────────────────────────────────────────────────────
+
+  describe('getOverview', () => {
+    it('should return correct total employee count', async () => {
+      const result = await getOverview();
+
+      expect(result.totalEmployees).toBe(4);
+    });
+
+    it('should return correct min and max salary', async () => {
+      const result = await getOverview();
+
+      expect(result.minSalary).toBe(80_000);
+      expect(result.maxSalary).toBe(120_000);
+    });
+
+    it('should return correct average salary', async () => {
+      const result = await getOverview();
+
+      // (80k + 90k + 100k + 120k) / 4 = 97_500
+      expect(result.avgSalary).toBeCloseTo(97_500, 0);
+    });
+
+    it('should return correct median salary', async () => {
+      const result = await getOverview();
+
+      // sorted: 80k, 90k, 100k, 120k → median = (90k + 100k) / 2 = 95k
+      expect(result.medianSalary).toBeCloseTo(95_000, 0);
+    });
+
+    it('should return correct distinct country and department counts', async () => {
+      const result = await getOverview();
+
+      expect(result.countriesCount).toBe(2);
+      expect(result.departmentsCount).toBe(2);
+    });
+
+    it('should return all-zero stats when no employees exist', async () => {
+      await prisma.employee.deleteMany({});
+
+      const result = await getOverview();
+
+      expect(result.totalEmployees).toBe(0);
+      expect(result.avgSalary).toBe(0);
+      expect(result.medianSalary).toBe(0);
+      expect(result.minSalary).toBe(0);
+      expect(result.maxSalary).toBe(0);
+      expect(result.countriesCount).toBe(0);
+      expect(result.departmentsCount).toBe(0);
     });
   });
 });

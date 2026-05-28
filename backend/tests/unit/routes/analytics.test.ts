@@ -10,6 +10,7 @@ vi.mock('../../../src/services/analyticsService', () => ({
     getSalaryByJobTitle: vi.fn(),
     getSalaryDistribution: vi.fn(),
     getDepartmentSummary: vi.fn(),
+    getOverview: vi.fn(),
   },
 }));
 
@@ -212,6 +213,61 @@ describe('Analytics Router', () => {
       vi.mocked(analyticsService.getDepartmentSummary).mockRejectedValue(new Error('DB error'));
 
       const response = await request(app).get('/api/analytics/department-summary');
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty('error');
+    });
+  });
+
+  // ─── GET /api/analytics/overview ──────────────────────────────────────────
+
+  describe('GET /api/analytics/overview', () => {
+    it('should return 200 with overall salary overview', async () => {
+      vi.mocked(analyticsService.getOverview).mockResolvedValue({
+        totalEmployees: 500,
+        avgSalary: 105000,
+        medianSalary: 98000,
+        minSalary: 25000,
+        maxSalary: 250000,
+        countriesCount: 15,
+        departmentsCount: 8,
+      });
+
+      const response = await request(app).get('/api/analytics/overview');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toMatchObject({
+        totalEmployees: 500,
+        avgSalary: 105000,
+        medianSalary: 98000,
+        minSalary: 25000,
+        maxSalary: 250000,
+        countriesCount: 15,
+        departmentsCount: 8,
+      });
+    });
+
+    it('should return zero values when no employees exist', async () => {
+      vi.mocked(analyticsService.getOverview).mockResolvedValue({
+        totalEmployees: 0,
+        avgSalary: 0,
+        medianSalary: 0,
+        minSalary: 0,
+        maxSalary: 0,
+        countriesCount: 0,
+        departmentsCount: 0,
+      });
+
+      const response = await request(app).get('/api/analytics/overview');
+
+      expect(response.status).toBe(200);
+      expect(response.body.totalEmployees).toBe(0);
+    });
+
+    it('should return 500 when service throws an error', async () => {
+      vi.mocked(analyticsService.getOverview).mockRejectedValue(new Error('DB error'));
+
+      const response = await request(app).get('/api/analytics/overview');
 
       expect(response.status).toBe(500);
       expect(response.body).toHaveProperty('error');

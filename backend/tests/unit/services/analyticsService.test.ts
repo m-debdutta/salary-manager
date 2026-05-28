@@ -153,4 +153,51 @@ describe('AnalyticsService', () => {
       await expect(analyticsService.getDepartmentSummary()).rejects.toThrow('DB error');
     });
   });
+
+  // ─── getOverview ──────────────────────────────────────────────────────────
+
+  describe('getOverview', () => {
+    it('should return overall salary overview stats', async () => {
+      const mockData = {
+        totalEmployees: 500,
+        avgSalary: 105000,
+        medianSalary: 98000,
+        minSalary: 25000,
+        maxSalary: 250000,
+        countriesCount: 15,
+        departmentsCount: 8,
+      };
+      vi.mocked(analyticsRepository.getOverview).mockResolvedValue(mockData);
+
+      const result = await analyticsService.getOverview();
+
+      expect(result).toEqual(mockData);
+      expect(analyticsRepository.getOverview).toHaveBeenCalledOnce();
+    });
+
+    it('should return zeros when no employees exist', async () => {
+      const emptyData = {
+        totalEmployees: 0,
+        avgSalary: 0,
+        medianSalary: 0,
+        minSalary: 0,
+        maxSalary: 0,
+        countriesCount: 0,
+        departmentsCount: 0,
+      };
+      vi.mocked(analyticsRepository.getOverview).mockResolvedValue(emptyData);
+
+      const result = await analyticsService.getOverview();
+
+      expect(result.totalEmployees).toBe(0);
+      expect(result.avgSalary).toBe(0);
+      expect(result.medianSalary).toBe(0);
+    });
+
+    it('should propagate errors from repository', async () => {
+      vi.mocked(analyticsRepository.getOverview).mockRejectedValue(new Error('DB error'));
+
+      await expect(analyticsService.getOverview()).rejects.toThrow('DB error');
+    });
+  });
 });
