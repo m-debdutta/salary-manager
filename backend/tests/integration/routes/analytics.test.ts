@@ -233,4 +233,48 @@ describe('Analytics API - Integration Tests', () => {
       expect(response.body).toEqual([]);
     });
   });
+
+  // ─── GET /api/analytics/department-summary ────────────────────────────────
+
+  describe('GET /api/analytics/department-summary', () => {
+    it('should return 200 with one entry per department', async () => {
+      const response = await request(app).get('/api/analytics/department-summary');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveLength(2);
+    });
+
+    it('should include required fields in each row', async () => {
+      const response = await request(app).get('/api/analytics/department-summary');
+
+      for (const row of response.body) {
+        expect(row).toHaveProperty('department');
+        expect(row).toHaveProperty('count');
+        expect(row).toHaveProperty('min');
+        expect(row).toHaveProperty('max');
+        expect(row).toHaveProperty('avg');
+        expect(row).toHaveProperty('median');
+      }
+    });
+
+    it('should return correct stats for Engineering department', async () => {
+      const response = await request(app).get('/api/analytics/department-summary');
+      const eng = response.body.find((r: { department: string }) => r.department === 'Engineering');
+
+      expect(eng.count).toBe(3);
+      expect(eng.min).toBe(80_000);
+      expect(eng.max).toBe(120_000);
+      expect(eng.avg).toBeCloseTo(100_000, 0);
+      expect(eng.median).toBeCloseTo(100_000, 0);
+    });
+
+    it('should return 200 empty array when database is empty', async () => {
+      await prisma.employee.deleteMany({});
+
+      const response = await request(app).get('/api/analytics/department-summary');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+  });
 });

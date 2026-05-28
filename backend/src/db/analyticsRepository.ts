@@ -31,6 +31,16 @@ export interface SalaryDistributionRow {
   max: number;
   count: number;
 }
+
+export interface DepartmentSummaryRow {
+  department: string;
+  count: number;
+  min: number;
+  max: number;
+  avg: number;
+  median: number;
+}
+
 // ─── Raw query result types ──────────────────────────────────────────────────
 
 interface RawGroupStats {
@@ -48,7 +58,6 @@ interface RawDistribution {
   range_max: bigint;
   count: bigint;
 }
-
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -173,5 +182,21 @@ export const getSalaryDistribution = async (): Promise<SalaryDistributionRow[]> 
     min: Number(r.range_min),
     max: Number(r.range_max),
     count: Number(r.count),
+  }));
+};
+
+/**
+ * GET /api/analytics/department-summary
+ * Returns salary stats per department (employees without department are excluded).
+ */
+export const getDepartmentSummary = async (): Promise<DepartmentSummaryRow[]> => {
+  const rows = await queryGroupStats('department', 'WHERE department IS NOT NULL');
+  return rows.map((r) => ({
+    department: r.group_key,
+    count: Number(r.count),
+    min: r.min,
+    max: r.max,
+    avg: r.avg,
+    median: r.median,
   }));
 };

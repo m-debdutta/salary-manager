@@ -4,6 +4,7 @@ import {
   getSalaryByCountry,
   getSalaryByJobTitle,
   getSalaryDistribution,
+  getDepartmentSummary,
 } from '../../../src/db/analyticsRepository';
 
 /**
@@ -21,6 +22,10 @@ import {
  * By job title:
  *   Engineer: count=3, min=80k, max=120k, avg=100k, median=100k
  *   Manager:  count=1, min=90k, max=90k,  avg=90k,  median=90k
+ *
+ * By department:
+ *   Engineering: count=3, min=80k, max=120k, avg=100k, median=100k
+ *   HR:          count=1, min=90k, max=90k,  avg=90k,  median=90k
  *
  */
 
@@ -221,6 +226,48 @@ describe('AnalyticsRepository', () => {
       await prisma.employee.deleteMany({});
 
       const result = await getSalaryDistribution();
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  // ─── getDepartmentSummary ────────────────────────────────────────────────
+
+  describe('getDepartmentSummary', () => {
+    it('should return one row per department', async () => {
+      const result = await getDepartmentSummary();
+
+      expect(result).toHaveLength(2);
+      const depts = result.map((r) => r.department).sort();
+      expect(depts).toEqual(['Engineering', 'HR']);
+    });
+
+    it('should return correct aggregates for Engineering', async () => {
+      const result = await getDepartmentSummary();
+      const eng = result.find((r) => r.department === 'Engineering')!;
+
+      expect(eng.count).toBe(3);
+      expect(eng.min).toBe(80_000);
+      expect(eng.max).toBe(120_000);
+      expect(eng.avg).toBeCloseTo(100_000, 0);
+      expect(eng.median).toBeCloseTo(100_000, 0);
+    });
+
+    it('should return correct aggregates for HR', async () => {
+      const result = await getDepartmentSummary();
+      const hr = result.find((r) => r.department === 'HR')!;
+
+      expect(hr.count).toBe(1);
+      expect(hr.min).toBe(90_000);
+      expect(hr.max).toBe(90_000);
+      expect(hr.avg).toBeCloseTo(90_000, 0);
+      expect(hr.median).toBeCloseTo(90_000, 0);
+    });
+
+    it('should return empty array when no employees exist', async () => {
+      await prisma.employee.deleteMany({});
+
+      const result = await getDepartmentSummary();
 
       expect(result).toEqual([]);
     });

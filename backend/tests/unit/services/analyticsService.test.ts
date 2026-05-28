@@ -115,4 +115,42 @@ describe('AnalyticsService', () => {
       await expect(analyticsService.getSalaryDistribution()).rejects.toThrow('DB error');
     });
   });
+
+  // ─── getDepartmentSummary ─────────────────────────────────────────────────
+
+  describe('getDepartmentSummary', () => {
+    it('should return salary stats grouped by department', async () => {
+      const mockData = [
+        {
+          department: 'Engineering',
+          count: 80,
+          min: 70000,
+          max: 200000,
+          avg: 140000,
+          median: 135000,
+        },
+        { department: 'HR', count: 20, min: 45000, max: 90000, avg: 65000, median: 62000 },
+      ];
+      vi.mocked(analyticsRepository.getDepartmentSummary).mockResolvedValue(mockData);
+
+      const result = await analyticsService.getDepartmentSummary();
+
+      expect(result).toEqual(mockData);
+      expect(analyticsRepository.getDepartmentSummary).toHaveBeenCalledOnce();
+    });
+
+    it('should return empty array when no employees exist', async () => {
+      vi.mocked(analyticsRepository.getDepartmentSummary).mockResolvedValue([]);
+
+      const result = await analyticsService.getDepartmentSummary();
+
+      expect(result).toEqual([]);
+    });
+
+    it('should propagate errors from repository', async () => {
+      vi.mocked(analyticsRepository.getDepartmentSummary).mockRejectedValue(new Error('DB error'));
+
+      await expect(analyticsService.getDepartmentSummary()).rejects.toThrow('DB error');
+    });
+  });
 });

@@ -2,9 +2,11 @@ import {
   getSalaryByCountry,
   getSalaryByJobTitle,
   getSalaryDistribution,
+  getDepartmentSummary,
   SalaryByCountryRow,
   SalaryByJobTitleRow,
   SalaryDistributionRow,
+  DepartmentSummaryRow,
 } from '../db/analyticsRepository';
 
 /**
@@ -21,6 +23,10 @@ export class AnalyticsService {
 
   async getSalaryDistribution(): Promise<SalaryDistributionRow[]> {
     return getSalaryDistribution();
+  }
+
+  async getDepartmentSummary(): Promise<DepartmentSummaryRow[]> {
+    return getDepartmentSummary();
   }
 }
 

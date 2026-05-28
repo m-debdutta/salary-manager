@@ -9,6 +9,7 @@ vi.mock('../../../src/services/analyticsService', () => ({
     getSalaryByCountry: vi.fn(),
     getSalaryByJobTitle: vi.fn(),
     getSalaryDistribution: vi.fn(),
+    getDepartmentSummary: vi.fn(),
   },
 }));
 
@@ -163,6 +164,54 @@ describe('Analytics Router', () => {
       vi.mocked(analyticsService.getSalaryDistribution).mockRejectedValue(new Error('DB error'));
 
       const response = await request(app).get('/api/analytics/salary-distribution');
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty('error');
+    });
+  });
+
+  // ─── GET /api/analytics/department-summary ────────────────────────────────
+
+  describe('GET /api/analytics/department-summary', () => {
+    it('should return 200 with salary stats grouped by department', async () => {
+      vi.mocked(analyticsService.getDepartmentSummary).mockResolvedValue([
+        {
+          department: 'Engineering',
+          count: 80,
+          min: 70000,
+          max: 200000,
+          avg: 140000,
+          median: 135000,
+        },
+      ]);
+
+      const response = await request(app).get('/api/analytics/department-summary');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveLength(1);
+      expect(response.body[0]).toMatchObject({
+        department: 'Engineering',
+        count: 80,
+        min: 70000,
+        max: 200000,
+        avg: 140000,
+        median: 135000,
+      });
+    });
+
+    it('should return 200 with empty array when no employees exist', async () => {
+      vi.mocked(analyticsService.getDepartmentSummary).mockResolvedValue([]);
+
+      const response = await request(app).get('/api/analytics/department-summary');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+
+    it('should return 500 when service throws an error', async () => {
+      vi.mocked(analyticsService.getDepartmentSummary).mockRejectedValue(new Error('DB error'));
+
+      const response = await request(app).get('/api/analytics/department-summary');
 
       expect(response.status).toBe(500);
       expect(response.body).toHaveProperty('error');
