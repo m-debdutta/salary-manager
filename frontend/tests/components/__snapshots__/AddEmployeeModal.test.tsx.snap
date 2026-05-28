@@ -1,0 +1,571 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AddEmployeeModal > snapshot > matches initial snapshot 1`] = `
+<DocumentFragment>
+  <div
+    aria-labelledby="modal-title"
+    aria-modal="true"
+    class="modal-overlay"
+    role="dialog"
+  >
+    <div
+      class="modal"
+    >
+      <div
+        class="modal__header"
+      >
+        <h2
+          class="modal__title"
+          id="modal-title"
+        >
+          Add Employee
+        </h2>
+        <button
+          aria-label="Close"
+          class="modal__close"
+        >
+          ✕
+        </button>
+      </div>
+      <form
+        class="modal__form"
+        novalidate=""
+      >
+        <div
+          class="form-row"
+        >
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="firstName"
+            >
+              First Name
+            </label>
+            <input
+              autocomplete="given-name"
+              class="form-input"
+              id="firstName"
+              name="firstName"
+              type="text"
+              value=""
+            />
+          </div>
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="lastName"
+            >
+              Last Name
+            </label>
+            <input
+              autocomplete="family-name"
+              class="form-input"
+              id="lastName"
+              name="lastName"
+              type="text"
+              value=""
+            />
+          </div>
+        </div>
+        <div
+          class="form-field"
+        >
+          <label
+            class="form-label"
+            for="jobTitle"
+          >
+            Job Title
+          </label>
+          <div
+            class="combobox"
+          >
+            <button
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              class="form-input combobox__trigger"
+              type="button"
+            >
+              <span
+                class="combobox__placeholder"
+              >
+                Select job title…
+              </span>
+              <span
+                aria-hidden="true"
+                class="combobox__chevron"
+              >
+                ▾
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="form-field"
+        >
+          <label
+            class="form-label"
+            for="department"
+          >
+            Department 
+            <span
+              class="form-optional"
+            >
+              (optional)
+            </span>
+          </label>
+          <div
+            class="combobox"
+          >
+            <button
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              class="form-input combobox__trigger"
+              type="button"
+            >
+              <span
+                class="combobox__placeholder"
+              >
+                Select department…
+              </span>
+              <span
+                aria-hidden="true"
+                class="combobox__chevron"
+              >
+                ▾
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="form-row"
+        >
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="country"
+            >
+              Country
+            </label>
+            <div
+              class="combobox"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                class="form-input combobox__trigger"
+                type="button"
+              >
+                <span
+                  class="combobox__placeholder"
+                >
+                  Select country…
+                </span>
+                <span
+                  aria-hidden="true"
+                  class="combobox__chevron"
+                >
+                  ▾
+                </span>
+              </button>
+            </div>
+          </div>
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="salary"
+            >
+              Salary (USD)
+            </label>
+            <input
+              class="form-input"
+              id="salary"
+              min="0"
+              name="salary"
+              step="1"
+              type="number"
+              value="0"
+            />
+          </div>
+        </div>
+        <div
+          class="form-row"
+        >
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="hireDate"
+            >
+              Hire Date
+            </label>
+            <input
+              class="form-input"
+              id="hireDate"
+              name="hireDate"
+              type="date"
+              value=""
+            />
+          </div>
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="employmentType"
+            >
+              Employment Type
+            </label>
+            <div
+              class="combobox"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                class="form-input combobox__trigger"
+                type="button"
+              >
+                <span
+                  class="combobox__placeholder"
+                >
+                  Select type…
+                </span>
+                <span
+                  aria-hidden="true"
+                  class="combobox__chevron"
+                >
+                  ▾
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+        <div
+          class="modal__actions"
+        >
+          <button
+            class="btn btn--secondary"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button
+            class="btn btn--primary"
+            type="submit"
+          >
+            Add Employee
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`AddEmployeeModal > snapshot > matches snapshot with validation errors 1`] = `
+<DocumentFragment>
+  <div
+    aria-labelledby="modal-title"
+    aria-modal="true"
+    class="modal-overlay"
+    role="dialog"
+  >
+    <div
+      class="modal"
+    >
+      <div
+        class="modal__header"
+      >
+        <h2
+          class="modal__title"
+          id="modal-title"
+        >
+          Add Employee
+        </h2>
+        <button
+          aria-label="Close"
+          class="modal__close"
+        >
+          ✕
+        </button>
+      </div>
+      <form
+        class="modal__form"
+        novalidate=""
+      >
+        <div
+          class="form-row"
+        >
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="firstName"
+            >
+              First Name
+            </label>
+            <input
+              autocomplete="given-name"
+              class="form-input form-input--error"
+              id="firstName"
+              name="firstName"
+              type="text"
+              value=""
+            />
+            <span
+              class="form-error"
+            >
+              First name must be at least 2 characters
+            </span>
+          </div>
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="lastName"
+            >
+              Last Name
+            </label>
+            <input
+              autocomplete="family-name"
+              class="form-input form-input--error"
+              id="lastName"
+              name="lastName"
+              type="text"
+              value=""
+            />
+            <span
+              class="form-error"
+            >
+              Last name must be at least 2 characters
+            </span>
+          </div>
+        </div>
+        <div
+          class="form-field"
+        >
+          <label
+            class="form-label"
+            for="jobTitle"
+          >
+            Job Title
+          </label>
+          <div
+            class="combobox"
+          >
+            <button
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              class="form-input combobox__trigger form-input--error"
+              type="button"
+            >
+              <span
+                class="combobox__placeholder"
+              >
+                Select job title…
+              </span>
+              <span
+                aria-hidden="true"
+                class="combobox__chevron"
+              >
+                ▾
+              </span>
+            </button>
+          </div>
+          <span
+            class="form-error"
+          >
+            Job title must be at least 2 characters
+          </span>
+        </div>
+        <div
+          class="form-field"
+        >
+          <label
+            class="form-label"
+            for="department"
+          >
+            Department 
+            <span
+              class="form-optional"
+            >
+              (optional)
+            </span>
+          </label>
+          <div
+            class="combobox"
+          >
+            <button
+              aria-expanded="false"
+              aria-haspopup="listbox"
+              class="form-input combobox__trigger"
+              type="button"
+            >
+              <span
+                class="combobox__placeholder"
+              >
+                Select department…
+              </span>
+              <span
+                aria-hidden="true"
+                class="combobox__chevron"
+              >
+                ▾
+              </span>
+            </button>
+          </div>
+        </div>
+        <div
+          class="form-row"
+        >
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="country"
+            >
+              Country
+            </label>
+            <div
+              class="combobox"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                class="form-input combobox__trigger form-input--error"
+                type="button"
+              >
+                <span
+                  class="combobox__placeholder"
+                >
+                  Select country…
+                </span>
+                <span
+                  aria-hidden="true"
+                  class="combobox__chevron"
+                >
+                  ▾
+                </span>
+              </button>
+            </div>
+            <span
+              class="form-error"
+            >
+              Country must be at least 2 characters
+            </span>
+          </div>
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="salary"
+            >
+              Salary (USD)
+            </label>
+            <input
+              class="form-input"
+              id="salary"
+              min="0"
+              name="salary"
+              step="1"
+              type="number"
+              value="0"
+            />
+          </div>
+        </div>
+        <div
+          class="form-row"
+        >
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="hireDate"
+            >
+              Hire Date
+            </label>
+            <input
+              class="form-input form-input--error"
+              id="hireDate"
+              name="hireDate"
+              type="date"
+              value=""
+            />
+            <span
+              class="form-error"
+            >
+              Hire date is required
+            </span>
+          </div>
+          <div
+            class="form-field"
+          >
+            <label
+              class="form-label"
+              for="employmentType"
+            >
+              Employment Type
+            </label>
+            <div
+              class="combobox"
+            >
+              <button
+                aria-expanded="false"
+                aria-haspopup="listbox"
+                class="form-input combobox__trigger form-input--error"
+                type="button"
+              >
+                <span
+                  class="combobox__placeholder"
+                >
+                  Select type…
+                </span>
+                <span
+                  aria-hidden="true"
+                  class="combobox__chevron"
+                >
+                  ▾
+                </span>
+              </button>
+            </div>
+            <span
+              class="form-error"
+            >
+              Employment type is required
+            </span>
+          </div>
+        </div>
+        <div
+          class="modal__actions"
+        >
+          <button
+            class="btn btn--secondary"
+            type="button"
+          >
+            Cancel
+          </button>
+          <button
+            class="btn btn--primary"
+            type="submit"
+          >
+            Add Employee
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</DocumentFragment>
+`;

@@ -1,0 +1,177 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Combobox > snapshot > matches closed snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="combobox"
+  >
+    <button
+      aria-expanded="false"
+      aria-haspopup="listbox"
+      class="form-input combobox__trigger"
+      type="button"
+    >
+      <span
+        class="combobox__placeholder"
+      >
+        Select…
+      </span>
+      <span
+        aria-hidden="true"
+        class="combobox__chevron"
+      >
+        ▾
+      </span>
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Combobox > snapshot > matches open flat snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="combobox"
+  >
+    <button
+      aria-expanded="true"
+      aria-haspopup="listbox"
+      class="form-input combobox__trigger"
+      type="button"
+    >
+      <span
+        class="combobox__placeholder"
+      >
+        Select…
+      </span>
+      <span
+        aria-hidden="true"
+        class="combobox__chevron"
+      >
+        ▾
+      </span>
+    </button>
+    <div
+      class="combobox__dropdown"
+      role="listbox"
+    >
+      <ul
+        class="combobox__list"
+      >
+        <li
+          aria-selected="false"
+          class="combobox__option"
+          role="option"
+        >
+          Engineering
+        </li>
+        <li
+          aria-selected="false"
+          class="combobox__option"
+          role="option"
+        >
+          Product
+        </li>
+        <li
+          aria-selected="false"
+          class="combobox__option"
+          role="option"
+        >
+          Design
+        </li>
+      </ul>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Combobox > snapshot > matches open grouped searchable snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="combobox"
+  >
+    <button
+      aria-expanded="true"
+      aria-haspopup="listbox"
+      class="form-input combobox__trigger"
+      type="button"
+    >
+      <span
+        class="combobox__placeholder"
+      >
+        Select…
+      </span>
+      <span
+        aria-hidden="true"
+        class="combobox__chevron"
+      >
+        ▾
+      </span>
+    </button>
+    <div
+      class="combobox__dropdown"
+      role="listbox"
+    >
+      <div
+        class="combobox__search-wrap"
+      >
+        <input
+          class="combobox__search"
+          placeholder="Search…"
+          type="text"
+          value=""
+        />
+      </div>
+      <ul
+        class="combobox__list"
+      >
+        <li>
+          <span
+            class="combobox__group-label"
+          >
+            Engineering
+          </span>
+          <ul>
+            <li
+              aria-selected="false"
+              class="combobox__option"
+              role="option"
+            >
+              Software Engineer
+            </li>
+            <li
+              aria-selected="false"
+              class="combobox__option"
+              role="option"
+            >
+              Backend Developer
+            </li>
+          </ul>
+        </li>
+        <li>
+          <span
+            class="combobox__group-label"
+          >
+            Product
+          </span>
+          <ul>
+            <li
+              aria-selected="false"
+              class="combobox__option"
+              role="option"
+            >
+              Product Manager
+            </li>
+            <li
+              aria-selected="false"
+              class="combobox__option"
+              role="option"
+            >
+              Business Analyst
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</DocumentFragment>
+`;

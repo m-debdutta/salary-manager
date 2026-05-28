@@ -1,13 +1,15 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { fetchEmployees } from '../api/employees';
 import { EmployeeCard } from './EmployeeCard';
+import AddEmployeeModal from './AddEmployeeModal';
 
 const PAGE_SIZE = 80;
 
 export default function Dashboard() {
   const gridRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
+  const [showModal, setShowModal] = useState(false);
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
@@ -55,7 +57,12 @@ export default function Dashboard() {
           <h1 className="dashboard__title">Salary Manager</h1>
           <p className="dashboard__subtitle">Employee Overview</p>
         </div>
+        <button className="btn btn--primary" onClick={() => setShowModal(true)}>
+          + Add Employee
+        </button>
       </header>
+
+      {showModal && <AddEmployeeModal onClose={() => setShowModal(false)} />}
 
       <div className="dashboard__stats">
         <div className="stat-card">

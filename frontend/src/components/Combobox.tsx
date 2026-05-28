@@ -1,0 +1,139 @@
+import { useState, useRef, useEffect } from 'react';
+
+export interface ComboboxGroup {
+  label: string;
+  options: string[];
+}
+
+export interface ComboboxProps {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  searchPlaceholder?: string;
+  hasError?: boolean;
+  searchable?: boolean;
+  options?: string[];
+  groups?: ComboboxGroup[];
+}
+
+export const Combobox = ({
+  value,
+  onChange,
+  placeholder = 'Select…',
+  searchPlaceholder = 'Search…',
+  hasError = false,
+  searchable = false,
+  options = [],
+  groups = [],
+}: ComboboxProps) => {
+  const [open, setOpen] = useState(false);
+  const [query, setQuery] = useState('');
+  const containerRef = useRef<HTMLDivElement>(null);
+  const isGrouped = groups.length > 0;
+
+  useEffect(() => {
+    const handler = (e: MouseEvent) => {
+      if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
+        setOpen(false);
+        setQuery('');
+      }
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, []);
+
+  const filteredOptions = query
+    ? options.filter((o) => o.toLowerCase().includes(query.toLowerCase()))
+    : options;
+
+  const filteredGroups = query
+    ? groups
+        .map((g) => ({
+          ...g,
+          options: g.options.filter((o) => o.toLowerCase().includes(query.toLowerCase())),
+        }))
+        .filter((g) => g.options.length > 0)
+    : groups;
+
+  const isEmpty = isGrouped ? filteredGroups.length === 0 : filteredOptions.length === 0;
+
+  const handleSelect = (option: string) => {
+    onChange(option);
+    setOpen(false);
+    setQuery('');
+  };
+
+  return (
+    <div className="combobox" ref={containerRef}>
+      <button
+        type="button"
+        className={`form-input combobox__trigger${hasError ? ' form-input--error' : ''}`}
+        onClick={() => setOpen((o) => !o)}
+        onKeyDown={(e) => e.key === 'Escape' && setOpen(false)}
+        aria-haspopup="listbox"
+        aria-expanded={open}
+      >
+        <span className={value ? '' : 'combobox__placeholder'}>
+          {value || placeholder}
+        </span>
+        <span className="combobox__chevron" aria-hidden="true">
+          ▾
+        </span>
+      </button>
+
+      {open && (
+        <div className="combobox__dropdown" role="listbox">
+          {searchable && (
+            <div className="combobox__search-wrap">
+              <input
+                className="combobox__search"
+                type="text"
+                placeholder={searchPlaceholder}
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => e.key === 'Escape' && setOpen(false)}
+                autoFocus
+              />
+            </div>
+          )}
+          <ul className="combobox__list">
+            {isEmpty ? (
+              <li className="combobox__empty">No results</li>
+            ) : isGrouped ? (
+              filteredGroups.map((group) => (
+                <li key={group.label}>
+                  <span className="combobox__group-label">{group.label}</span>
+                  <ul>
+                    {group.options.map((o) => (
+                      <li
+                        key={o}
+                        role="option"
+                        aria-selected={o === value}
+                        className={`combobox__option${o === value ? ' combobox__option--selected' : ''}`}
+                        onMouseDown={() => handleSelect(o)}
+                      >
+                        {o}
+                      </li>
+                    ))}
+                  </ul>
+                </li>
+              ))
+            ) : (
+              filteredOptions.map((o) => (
+                <li
+                  key={o}
+                  role="option"
+                  aria-selected={o === value}
+                  className={`combobox__option${o === value ? ' combobox__option--selected' : ''}`}
+                  onMouseDown={() => handleSelect(o)}
+                >
+                  {o}
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
+  );
+};

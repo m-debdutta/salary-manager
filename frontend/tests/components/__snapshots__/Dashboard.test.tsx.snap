@@ -20,6 +20,11 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           Employee Overview
         </p>
       </div>
+      <button
+        class="btn btn--primary"
+      >
+        + Add Employee
+      </button>
     </header>
     <div
       class="dashboard__stats"
@@ -372,6 +377,11 @@ exports[`Dashboard > snapshot > matches loading snapshot 1`] = `
           Employee Overview
         </p>
       </div>
+      <button
+        class="btn btn--primary"
+      >
+        + Add Employee
+      </button>
     </header>
     <div
       class="dashboard__stats"

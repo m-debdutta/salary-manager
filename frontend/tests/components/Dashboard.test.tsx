@@ -1,8 +1,8 @@
-import { render, screen, within, waitFor } from '@testing-library/react';
+import { render, screen, within, waitFor, fireEvent } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import Dashboard from '../../src/components/Dashboard';
-import { fetchEmployees } from '../../src/api/employees';
+import { fetchEmployees, createEmployee } from '../../src/api/employees';
 import {
   MOCK_EMPLOYEES_RESPONSE,
   MOCK_EMPLOYEES,
@@ -37,6 +37,7 @@ const renderDashboard = () => {
 describe('Dashboard', () => {
   beforeEach(() => {
     vi.mocked(fetchEmployees).mockResolvedValue(MOCK_EMPLOYEES_RESPONSE);
+    vi.mocked(createEmployee).mockResolvedValue(MOCK_EMPLOYEES[0]);
   });
 
   afterEach(() => {
@@ -170,6 +171,36 @@ describe('Dashboard', () => {
       expect(
         await screen.findByText('Failed to load employees. Please try again.'),
       ).toBeInTheDocument();
+    });
+  });
+
+  // ── Add employee ──────────────────────────────────────────────────────────────
+  describe('add employee', () => {
+    it('renders the "+ Add Employee" button', () => {
+      renderDashboard();
+      expect(screen.getByRole('button', { name: '+ Add Employee' })).toBeInTheDocument();
+    });
+
+    it('opens the modal when the button is clicked', () => {
+      renderDashboard();
+      fireEvent.click(screen.getByRole('button', { name: '+ Add Employee' }));
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      expect(screen.getByRole('heading', { name: 'Add Employee' })).toBeInTheDocument();
+    });
+
+    it('closes the modal when the × button is clicked', () => {
+      renderDashboard();
+      fireEvent.click(screen.getByRole('button', { name: '+ Add Employee' }));
+      expect(screen.getByRole('dialog')).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    });
+
+    it('closes the modal when Cancel is clicked', () => {
+      renderDashboard();
+      fireEvent.click(screen.getByRole('button', { name: '+ Add Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Cancel' }));
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
   });
 
