@@ -1,12 +1,8 @@
 import './App.css';
+import Dashboard from './components/Dashboard';
 
 function App() {
-  return (
-    <>
-      <h1>Salary Manager</h1>
-      <p>coming soon...</p>
-    </>
-  );
+  return <Dashboard />;
 }
 
 export default App;

@@ -1,0 +1,124 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EmployeeCard > snapshot > matches snapshot for a contract employee 1`] = `
+<DocumentFragment>
+  <div
+    class="employee-card"
+  >
+    <div
+      class="employee-card__header"
+    >
+      <div
+        class="employee-card__avatar"
+      >
+        AJ
+      </div>
+      <div
+        class="employee-card__header-info"
+      >
+        <h3
+          class="employee-card__name"
+        >
+          Alice Johnson
+        </h3>
+        <p
+          class="employee-card__title"
+        >
+          Software Engineer
+        </p>
+      </div>
+      <div
+        class="employee-card__footer"
+      >
+        <span
+          class="badge badge--contract"
+        >
+          contract
+        </span>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`EmployeeCard > snapshot > matches snapshot for a full-time employee 1`] = `
+<DocumentFragment>
+  <div
+    class="employee-card"
+  >
+    <div
+      class="employee-card__header"
+    >
+      <div
+        class="employee-card__avatar"
+      >
+        AJ
+      </div>
+      <div
+        class="employee-card__header-info"
+      >
+        <h3
+          class="employee-card__name"
+        >
+          Alice Johnson
+        </h3>
+        <p
+          class="employee-card__title"
+        >
+          Software Engineer
+        </p>
+      </div>
+      <div
+        class="employee-card__footer"
+      >
+        <span
+          class="badge badge--full-time"
+        >
+          full-time
+        </span>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`EmployeeCard > snapshot > matches snapshot for a part-time employee with null department 1`] = `
+<DocumentFragment>
+  <div
+    class="employee-card"
+  >
+    <div
+      class="employee-card__header"
+    >
+      <div
+        class="employee-card__avatar"
+      >
+        AJ
+      </div>
+      <div
+        class="employee-card__header-info"
+      >
+        <h3
+          class="employee-card__name"
+        >
+          Alice Johnson
+        </h3>
+        <p
+          class="employee-card__title"
+        >
+          Software Engineer
+        </p>
+      </div>
+      <div
+        class="employee-card__footer"
+      >
+        <span
+          class="badge badge--part-time"
+        >
+          part-time
+        </span>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;

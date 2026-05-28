@@ -1,1 +1,175 @@
 /* App-specific styles */
+
+/* ── Dashboard ─────────────────────────────────── */
+.dashboard {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.dashboard__header {
+  margin-bottom: 28px;
+}
+
+.dashboard__title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.dashboard__subtitle {
+  font-size: 1rem;
+  color: #6b7280;
+  margin-top: 4px;
+}
+
+/* ── Summary stats ─────────────────────────────── */
+.dashboard__stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.stat-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.stat-card__value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1a1a2e;
+}
+
+.stat-card__label {
+  font-size: 0.85rem;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* ── Section header ───────────────────────────── */
+.dashboard__section-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.dashboard__section-title {
+  font-size: 1rem;
+  font-weight: 400;
+  color: #6b7280;
+}
+
+.dashboard__section-count {
+  background: #e0e7ff;
+  color: #3730a3;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+/* ── Employee grid ─────────────────────────────── */
+.dashboard__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+/* ── Employee card ─────────────────────────────── */
+.employee-card {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  transition:
+    box-shadow 0.2s ease,
+    transform 0.2s ease;
+}
+
+.employee-card:hover {
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transform: translateY(-2px);
+}
+
+.employee-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.employee-card__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  font-size: 0.875rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.employee-card__header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.employee-card__name {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a2e;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.employee-card__title {
+  font-size: 0.8rem;
+  color: #6b7280;
+  margin: 1px 0 0;
+}
+
+/* ── Badges ────────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.badge--full-time {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge--part-time {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge--contract {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.badge--default {
+  background: #f3f4f6;
+  color: #374151;
+}
