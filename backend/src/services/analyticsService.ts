@@ -1,8 +1,10 @@
 import {
   getSalaryByCountry,
   getSalaryByJobTitle,
+  getSalaryDistribution,
   SalaryByCountryRow,
   SalaryByJobTitleRow,
+  SalaryDistributionRow,
 } from '../db/analyticsRepository';
 
 /**
@@ -15,6 +17,10 @@ export class AnalyticsService {
 
   async getSalaryByJobTitle(country?: string): Promise<SalaryByJobTitleRow[]> {
     return getSalaryByJobTitle(country);
+  }
+
+  async getSalaryDistribution(): Promise<SalaryDistributionRow[]> {
+    return getSalaryDistribution();
   }
 }
 

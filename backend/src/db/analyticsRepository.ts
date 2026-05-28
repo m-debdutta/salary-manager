@@ -25,6 +25,12 @@ export interface SalaryByJobTitleRow {
   median: number;
 }
 
+export interface SalaryDistributionRow {
+  range: string;
+  min: number;
+  max: number;
+  count: number;
+}
 // ─── Raw query result types ──────────────────────────────────────────────────
 
 interface RawGroupStats {
@@ -35,6 +41,14 @@ interface RawGroupStats {
   avg: number;
   median: number;
 }
+
+interface RawDistribution {
+  salary_range: string;
+  range_min: bigint;
+  range_max: bigint;
+  count: bigint;
+}
+
 
 // ─── Helpers ────────────────────────────────────────────────────────────────
 
@@ -114,5 +128,50 @@ export const getSalaryByJobTitle = async (country?: string): Promise<SalaryByJob
     max: r.max,
     avg: r.avg,
     median: r.median,
+  }));
+};
+
+/**
+ * GET /api/analytics/salary-distribution
+ * Returns employee counts bucketed into salary ranges.
+ */
+export const getSalaryDistribution = async (): Promise<SalaryDistributionRow[]> => {
+  const rows = await prisma.$queryRaw<RawDistribution[]>`
+    SELECT
+      CASE
+        WHEN salary <  30000  THEN 'Under $30k'
+        WHEN salary <  60000  THEN '$30k - $60k'
+        WHEN salary <  90000  THEN '$60k - $90k'
+        WHEN salary < 120000  THEN '$90k - $120k'
+        WHEN salary < 150000  THEN '$120k - $150k'
+        ELSE                       'Over $150k'
+      END                    AS salary_range,
+      CASE
+        WHEN salary <  30000  THEN 0
+        WHEN salary <  60000  THEN 30000
+        WHEN salary <  90000  THEN 60000
+        WHEN salary < 120000  THEN 90000
+        WHEN salary < 150000  THEN 120000
+        ELSE                       150000
+      END                    AS range_min,
+      CASE
+        WHEN salary <  30000  THEN 29999
+        WHEN salary <  60000  THEN 59999
+        WHEN salary <  90000  THEN 89999
+        WHEN salary < 120000  THEN 119999
+        WHEN salary < 150000  THEN 149999
+        ELSE                       2147483647
+      END                    AS range_max,
+      COUNT(*)               AS count
+    FROM employees
+    GROUP BY 1, 2, 3
+    ORDER BY 2
+  `;
+
+  return rows.map((r) => ({
+    range: r.salary_range,
+    min: Number(r.range_min),
+    max: Number(r.range_max),
+    count: Number(r.count),
   }));
 };

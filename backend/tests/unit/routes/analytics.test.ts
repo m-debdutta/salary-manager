@@ -8,6 +8,7 @@ vi.mock('../../../src/services/analyticsService', () => ({
   analyticsService: {
     getSalaryByCountry: vi.fn(),
     getSalaryByJobTitle: vi.fn(),
+    getSalaryDistribution: vi.fn(),
   },
 }));
 
@@ -126,6 +127,42 @@ describe('Analytics Router', () => {
       vi.mocked(analyticsService.getSalaryByJobTitle).mockRejectedValue(new Error('DB error'));
 
       const response = await request(app).get('/api/analytics/salary-by-job-title');
+
+      expect(response.status).toBe(500);
+      expect(response.body).toHaveProperty('error');
+    });
+  });
+
+  // ─── GET /api/analytics/salary-distribution ───────────────────────────────
+
+  describe('GET /api/analytics/salary-distribution', () => {
+    it('should return 200 with salary distribution buckets', async () => {
+      vi.mocked(analyticsService.getSalaryDistribution).mockResolvedValue([
+        { range: 'Under $30k', min: 0, max: 29999, count: 5 },
+        { range: '$30k - $60k', min: 30000, max: 59999, count: 20 },
+        { range: '$60k - $90k', min: 60000, max: 89999, count: 40 },
+      ]);
+
+      const response = await request(app).get('/api/analytics/salary-distribution');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toHaveLength(3);
+      expect(response.body[0]).toMatchObject({ range: 'Under $30k', count: 5 });
+    });
+
+    it('should return 200 with empty array when no employees exist', async () => {
+      vi.mocked(analyticsService.getSalaryDistribution).mockResolvedValue([]);
+
+      const response = await request(app).get('/api/analytics/salary-distribution');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+
+    it('should return 500 when service throws an error', async () => {
+      vi.mocked(analyticsService.getSalaryDistribution).mockRejectedValue(new Error('DB error'));
+
+      const response = await request(app).get('/api/analytics/salary-distribution');
 
       expect(response.status).toBe(500);
       expect(response.body).toHaveProperty('error');

@@ -84,4 +84,35 @@ describe('AnalyticsService', () => {
       await expect(analyticsService.getSalaryByJobTitle()).rejects.toThrow('DB error');
     });
   });
+
+  // ─── getSalaryDistribution ────────────────────────────────────────────────
+
+  describe('getSalaryDistribution', () => {
+    it('should return salary distribution buckets', async () => {
+      const mockData = [
+        { range: 'Under $30k', min: 0, max: 29999, count: 5 },
+        { range: '$30k - $60k', min: 30000, max: 59999, count: 20 },
+      ];
+      vi.mocked(analyticsRepository.getSalaryDistribution).mockResolvedValue(mockData);
+
+      const result = await analyticsService.getSalaryDistribution();
+
+      expect(result).toEqual(mockData);
+      expect(analyticsRepository.getSalaryDistribution).toHaveBeenCalledOnce();
+    });
+
+    it('should return empty array when no employees exist', async () => {
+      vi.mocked(analyticsRepository.getSalaryDistribution).mockResolvedValue([]);
+
+      const result = await analyticsService.getSalaryDistribution();
+
+      expect(result).toEqual([]);
+    });
+
+    it('should propagate errors from repository', async () => {
+      vi.mocked(analyticsRepository.getSalaryDistribution).mockRejectedValue(new Error('DB error'));
+
+      await expect(analyticsService.getSalaryDistribution()).rejects.toThrow('DB error');
+    });
+  });
 });

@@ -190,4 +190,47 @@ describe('Analytics API - Integration Tests', () => {
       expect(eng.median).toBeCloseTo(100_000, 0);
     });
   });
+
+  // ─── GET /api/analytics/salary-distribution ───────────────────────────────
+
+  describe('GET /api/analytics/salary-distribution', () => {
+    it('should return 200 with distribution buckets', async () => {
+      const response = await request(app).get('/api/analytics/salary-distribution');
+
+      expect(response.status).toBe(200);
+      expect(Array.isArray(response.body)).toBe(true);
+      expect(response.body.length).toBeGreaterThan(0);
+    });
+
+    it('should include required fields in each row', async () => {
+      const response = await request(app).get('/api/analytics/salary-distribution');
+
+      for (const row of response.body) {
+        expect(row).toHaveProperty('range');
+        expect(row).toHaveProperty('min');
+        expect(row).toHaveProperty('max');
+        expect(row).toHaveProperty('count');
+      }
+    });
+
+    it('should have correct counts per salary bucket', async () => {
+      const response = await request(app).get('/api/analytics/salary-distribution');
+      const byRange = Object.fromEntries(
+        response.body.map((r: { range: string; count: number }) => [r.range, r.count])
+      );
+
+      expect(byRange['$60k - $90k']).toBe(1); // Dave 80k
+      expect(byRange['$90k - $120k']).toBe(2); // Carol 90k, Alice 100k
+      expect(byRange['$120k - $150k']).toBe(1); // Bob 120k
+    });
+
+    it('should return 200 empty array when database is empty', async () => {
+      await prisma.employee.deleteMany({});
+
+      const response = await request(app).get('/api/analytics/salary-distribution');
+
+      expect(response.status).toBe(200);
+      expect(response.body).toEqual([]);
+    });
+  });
 });

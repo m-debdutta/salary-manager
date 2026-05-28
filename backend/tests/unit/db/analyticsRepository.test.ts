@@ -3,6 +3,7 @@ import { prisma } from '../../../src/db/client';
 import {
   getSalaryByCountry,
   getSalaryByJobTitle,
+  getSalaryDistribution,
 } from '../../../src/db/analyticsRepository';
 
 /**
@@ -175,6 +176,51 @@ describe('AnalyticsRepository', () => {
       await prisma.employee.deleteMany({});
 
       const result = await getSalaryByJobTitle();
+
+      expect(result).toEqual([]);
+    });
+  });
+
+  // ─── getSalaryDistribution ───────────────────────────────────────────────
+
+  describe('getSalaryDistribution', () => {
+    it('should return distribution rows for occupied ranges', async () => {
+      const result = await getSalaryDistribution();
+
+      // All 4 employees fall in $60k-$90k, $90k-$120k, or $120k-$150k
+      expect(result.length).toBeGreaterThan(0);
+      const ranges = result.map((r) => r.range);
+      // 80k → "$60k - $90k", 90k+100k → "$90k - $120k", 120k → "$120k - $150k"
+      expect(ranges).toContain('$60k - $90k');
+      expect(ranges).toContain('$90k - $120k');
+      expect(ranges).toContain('$120k - $150k');
+    });
+
+    it('should have correct counts per bucket', async () => {
+      const result = await getSalaryDistribution();
+      const byRange = Object.fromEntries(result.map((r) => [r.range, r.count]));
+
+      expect(byRange['$60k - $90k']).toBe(1); // Dave 80k
+      expect(byRange['$90k - $120k']).toBe(2); // Carol 90k, Alice 100k
+      expect(byRange['$120k - $150k']).toBe(1); // Bob 120k
+    });
+
+    it('should return each row with range, min, max, count fields', async () => {
+      const result = await getSalaryDistribution();
+
+      for (const row of result) {
+        expect(row).toHaveProperty('range');
+        expect(row).toHaveProperty('min');
+        expect(row).toHaveProperty('max');
+        expect(row).toHaveProperty('count');
+        expect(typeof row.count).toBe('number');
+      }
+    });
+
+    it('should return empty array when no employees exist', async () => {
+      await prisma.employee.deleteMany({});
+
+      const result = await getSalaryDistribution();
 
       expect(result).toEqual([]);
     });
