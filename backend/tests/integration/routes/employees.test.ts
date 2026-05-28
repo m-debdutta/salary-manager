@@ -496,3 +496,107 @@ describe('GET /api/employees/:id - Get Single Employee', () => {
     });
   });
 });
+
+describe('DELETE /api/employees/:id - Delete Employee', () => {
+  let app: Express;
+
+  const seedEmployee = (overrides: Record<string, unknown> = {}) =>
+    prisma.employee.create({
+      data: {
+        firstName: 'John',
+        lastName: 'Doe',
+        jobTitle: 'Software Engineer',
+        country: 'USA',
+        salary: 100000,
+        department: 'Engineering',
+        hireDate: new Date('2024-01-15'),
+        employmentType: 'Full-time',
+        ...overrides,
+      },
+    });
+
+  beforeAll(() => {
+    app = createTestApp();
+  });
+
+  afterEach(async () => {
+    await prisma.employee.deleteMany({});
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  describe('Valid Delete', () => {
+    it('should return 204 when employee is deleted', async () => {
+      const created = await seedEmployee();
+
+      const response = await request(app).delete(`/api/employees/${created.id}`);
+
+      expect(response.status).toBe(204);
+    });
+
+    it('should return no body on successful delete', async () => {
+      const created = await seedEmployee();
+
+      const response = await request(app).delete(`/api/employees/${created.id}`);
+
+      expect(response.body).toEqual({});
+    });
+
+    it('should remove the employee from the database', async () => {
+      const created = await seedEmployee();
+
+      await request(app).delete(`/api/employees/${created.id}`);
+
+      const deleted = await prisma.employee.findUnique({ where: { id: created.id } });
+      expect(deleted).toBeNull();
+    });
+
+    it('should only delete the targeted employee', async () => {
+      const target = await seedEmployee({ firstName: 'Alice' });
+      const other = await seedEmployee({ firstName: 'Bob' });
+
+      await request(app).delete(`/api/employees/${target.id}`);
+
+      const remaining = await prisma.employee.findUnique({ where: { id: other.id } });
+      expect(remaining).not.toBeNull();
+      expect(remaining?.firstName).toBe('Bob');
+    });
+  });
+
+  describe('Not Found', () => {
+    it('should return 404 for a non-existent id', async () => {
+      const response = await request(app).delete('/api/employees/999999');
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({ error: 'Employee not found' });
+    });
+
+    it('should return 404 when deleting already-deleted employee', async () => {
+      const created = await seedEmployee();
+      await request(app).delete(`/api/employees/${created.id}`);
+
+      const response = await request(app).delete(`/api/employees/${created.id}`);
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({ error: 'Employee not found' });
+    });
+  });
+
+  describe('Invalid ID', () => {
+    it('should return 400 for a non-numeric id', async () => {
+      const response = await request(app).delete('/api/employees/abc');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: 'Invalid employee ID' });
+    });
+
+    it('should return 400 for a mixed numeric-alpha id', async () => {
+      const response = await request(app).delete('/api/employees/1abc');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: 'Invalid employee ID' });
+    });
+  });
+});

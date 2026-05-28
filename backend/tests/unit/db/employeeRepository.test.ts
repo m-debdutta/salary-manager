@@ -3,6 +3,7 @@ import {
   createEmployee,
   getEmployees,
   getEmployeeById,
+  deleteEmployee,
   EmployeeCreateInput,
 } from '../../../src/db/employeeRepository';
 import { prisma } from '../../../src/db/client';
@@ -407,6 +408,76 @@ describe('EmployeeRepository', () => {
       expect(result!.id).toBe(emp1.id);
       expect(result!.firstName).toBe('Alice');
       expect(result!.id).not.toBe(emp2.id);
+    });
+  });
+
+  describe('deleteEmployee', () => {
+    const makeEmployeeData = (): EmployeeCreateInput => ({
+      firstName: 'Jane',
+      lastName: 'Smith',
+      jobTitle: 'Engineer',
+      country: 'USA',
+      salary: 80000,
+      hireDate: new Date('2024-01-15'),
+      employmentType: 'Full-time',
+    });
+
+    it('should delete an existing employee and return the deleted record', async () => {
+      const created = await createEmployee(makeEmployeeData());
+
+      const result = await deleteEmployee(created.id);
+
+      expect(result).not.toBeNull();
+      expect(result!.id).toBe(created.id);
+    });
+
+    it('should remove the employee from the database', async () => {
+      const created = await createEmployee(makeEmployeeData());
+
+      await deleteEmployee(created.id);
+
+      const found = await prisma.employee.findUnique({ where: { id: created.id } });
+      expect(found).toBeNull();
+    });
+
+    it('should return null when employee does not exist', async () => {
+      const result = await deleteEmployee(999999);
+
+      expect(result).toBeNull();
+    });
+
+    it('should only delete the targeted employee', async () => {
+      const target = await createEmployee({ ...makeEmployeeData(), firstName: 'Alice' });
+      const other = await createEmployee({ ...makeEmployeeData(), firstName: 'Bob' });
+
+      await deleteEmployee(target.id);
+
+      const remaining = await prisma.employee.findUnique({ where: { id: other.id } });
+      expect(remaining).not.toBeNull();
+      expect(remaining!.firstName).toBe('Bob');
+    });
+
+    it('should return null on second delete of same id', async () => {
+      const created = await createEmployee(makeEmployeeData());
+      await deleteEmployee(created.id);
+
+      const result = await deleteEmployee(created.id);
+
+      expect(result).toBeNull();
+    });
+
+    it('should return deleted employee with all correct fields', async () => {
+      const data = makeEmployeeData();
+      const created = await createEmployee(data);
+
+      const result = await deleteEmployee(created.id);
+
+      expect(result!.firstName).toBe(data.firstName);
+      expect(result!.lastName).toBe(data.lastName);
+      expect(result!.jobTitle).toBe(data.jobTitle);
+      expect(result!.country).toBe(data.country);
+      expect(result!.salary).toBe(data.salary);
+      expect(result!.employmentType).toBe(data.employmentType);
     });
   });
 });

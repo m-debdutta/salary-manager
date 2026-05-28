@@ -1,4 +1,11 @@
-import { createEmployee, getEmployees, getEmployeeById, updateEmployee, EmployeeCreateInput } from '../db/employeeRepository';
+import {
+  createEmployee,
+  getEmployees,
+  getEmployeeById,
+  updateEmployee,
+  deleteEmployee,
+  EmployeeCreateInput,
+} from '../db/employeeRepository';
 import { CreateEmployeeInput, UpdateEmployeeInput } from '../lib/validation';
 
 /**
@@ -51,6 +58,10 @@ export class EmployeeService {
       page: Math.floor(skip / take) + 1,
       pageSize: take,
     };
+  }
+
+  async deleteEmployee(id: number) {
+    return await deleteEmployee(id);
   }
 }
 

@@ -210,4 +210,36 @@ describe('EmployeeService', () => {
       await expect(employeeService.getEmployeeById(1)).rejects.toThrow('DB error');
     });
   });
+
+  describe('deleteEmployee', () => {
+    it('should call repository deleteEmployee with the given id', async () => {
+      vi.mocked(employeeRepository.deleteEmployee).mockResolvedValue(mockCreatedEmployee);
+
+      await employeeService.deleteEmployee(1);
+
+      expect(employeeRepository.deleteEmployee).toHaveBeenCalledWith(1);
+    });
+
+    it('should return the deleted employee when found', async () => {
+      vi.mocked(employeeRepository.deleteEmployee).mockResolvedValue(mockCreatedEmployee);
+
+      const result = await employeeService.deleteEmployee(1);
+
+      expect(result).toEqual(mockCreatedEmployee);
+    });
+
+    it('should return null when employee does not exist', async () => {
+      vi.mocked(employeeRepository.deleteEmployee).mockResolvedValue(null);
+
+      const result = await employeeService.deleteEmployee(999);
+
+      expect(result).toBeNull();
+    });
+
+    it('should propagate repository errors', async () => {
+      vi.mocked(employeeRepository.deleteEmployee).mockRejectedValue(new Error('DB error'));
+
+      await expect(employeeService.deleteEmployee(1)).rejects.toThrow('DB error');
+    });
+  });
 });

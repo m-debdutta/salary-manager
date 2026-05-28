@@ -169,4 +169,29 @@ router.put('/:id', async (req: Request, res: Response) => {
   }
 });
 
+/**
+ * DELETE /api/employees/:id - Delete an employee by ID
+ */
+router.delete('/:id', async (req: Request, res: Response) => {
+  const raw = req.params.id;
+  const id = /^\d+$/.test(raw as string) ? parseInt(raw as string, 10) : NaN;
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid employee ID' });
+  }
+
+  try {
+    const deleted = await employeeService.deleteEmployee(id);
+
+    if (!deleted) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+
+    return res.status(204).send();
+  } catch (error) {
+    console.error('Error deleting employee:', error);
+    return res.status(500).json({ error: 'Failed to delete employee' });
+  }
+});
+
 export default router;

@@ -10,6 +10,7 @@ vi.mock('../../../src/services/employeeService', () => ({
     createEmployee: vi.fn(),
     getEmployeeById: vi.fn(),
     updateEmployee: vi.fn(),
+    deleteEmployee: vi.fn(),
   },
 }));
 
@@ -755,6 +756,78 @@ describe('Employees Router', () => {
 
         expect(response.status).toBe(500);
         expect(response.body).toEqual({ error: 'Failed to update employee' });
+      });
+    });
+  });
+
+  describe('DELETE /api/employees/:id', () => {
+    describe('Valid Delete', () => {
+      it('should return 204 when employee is deleted', async () => {
+        vi.mocked(employeeService.deleteEmployee).mockResolvedValue(makeEmployee());
+
+        const response = await request(app).delete('/api/employees/1');
+
+        expect(response.status).toBe(204);
+      });
+
+      it('should return no body on successful delete', async () => {
+        vi.mocked(employeeService.deleteEmployee).mockResolvedValue(makeEmployee());
+
+        const response = await request(app).delete('/api/employees/1');
+
+        expect(response.body).toEqual({});
+      });
+
+      it('should call service with parsed numeric id', async () => {
+        vi.mocked(employeeService.deleteEmployee).mockResolvedValue(makeEmployee({ id: 42 }));
+
+        await request(app).delete('/api/employees/42');
+
+        expect(employeeService.deleteEmployee).toHaveBeenCalledWith(42);
+      });
+    });
+
+    describe('Not Found', () => {
+      it('should return 404 when employee does not exist', async () => {
+        vi.mocked(employeeService.deleteEmployee).mockResolvedValue(null);
+
+        const response = await request(app).delete('/api/employees/999');
+
+        expect(response.status).toBe(404);
+        expect(response.body).toEqual({ error: 'Employee not found' });
+      });
+    });
+
+    describe('Invalid ID', () => {
+      it('should return 400 for non-numeric id', async () => {
+        const response = await request(app).delete('/api/employees/abc');
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({ error: 'Invalid employee ID' });
+      });
+
+      it('should return 400 for mixed numeric-alpha id', async () => {
+        const response = await request(app).delete('/api/employees/1abc');
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({ error: 'Invalid employee ID' });
+      });
+
+      it('should not call service for non-numeric id', async () => {
+        await request(app).delete('/api/employees/abc');
+
+        expect(employeeService.deleteEmployee).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Service Error', () => {
+      it('should return 500 when service throws', async () => {
+        vi.mocked(employeeService.deleteEmployee).mockRejectedValue(new Error('DB error'));
+
+        const response = await request(app).delete('/api/employees/1');
+
+        expect(response.status).toBe(500);
+        expect(response.body).toEqual({ error: 'Failed to delete employee' });
       });
     });
   });

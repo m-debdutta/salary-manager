@@ -68,3 +68,16 @@ export const updateEmployee = async (
     data,
   });
 };
+
+/**
+ * Delete an employee by ID
+ * Returns the deleted employee, or null if not found
+ */
+export const deleteEmployee = async (
+  id: number
+): Promise<Awaited<ReturnType<typeof prisma.employee.delete>> | null> => {
+  const existing = await prisma.employee.findUnique({ where: { id } });
+  if (!existing) return null;
+
+  return await prisma.employee.delete({ where: { id } });
+};
