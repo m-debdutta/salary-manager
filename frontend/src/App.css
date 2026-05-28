@@ -7,6 +7,21 @@
   padding: 32px 24px;
 }
 
+.dashboard__loading,
+.dashboard__error {
+  font-size: 0.95rem;
+  padding: 40px 0;
+  text-align: center;
+}
+
+.dashboard__loading {
+  color: #6b7280;
+}
+
+.dashboard__error {
+  color: #dc2626;
+}
+
 .dashboard__header {
   margin-bottom: 28px;
 }
