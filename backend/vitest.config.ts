@@ -4,6 +4,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    fileParallelism: false,
     globalSetup: ['./tests/globalSetup.ts'],
     env: {
       DATABASE_URL: 'file:./prisma/test.db',
