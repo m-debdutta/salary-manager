@@ -1,8 +1,9 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { fetchEmployees } from '../api/employees';
-import { EmployeeCard } from './EmployeeCard';
+import { EmployeeCard, type Employee } from './EmployeeCard';
 import AddEmployeeModal from './AddEmployeeModal';
+import EmployeeDetailsModal from './EmployeeDetailsModal';
 
 const PAGE_SIZE = 80;
 
@@ -10,6 +11,7 @@ export default function Dashboard() {
   const gridRef = useRef<HTMLDivElement>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [showModal, setShowModal] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
@@ -63,6 +65,12 @@ export default function Dashboard() {
       </header>
 
       {showModal && <AddEmployeeModal onClose={() => setShowModal(false)} />}
+      {selectedEmployee && (
+        <EmployeeDetailsModal
+          employee={selectedEmployee}
+          onClose={() => setSelectedEmployee(null)}
+        />
+      )}
 
       <div className="dashboard__stats">
         <div className="stat-card">
@@ -85,7 +93,11 @@ export default function Dashboard() {
       ) : (
         <div className="dashboard__grid" ref={gridRef}>
           {employees.map((employee) => (
-            <EmployeeCard key={employee.id} employee={employee} />
+            <EmployeeCard
+              key={employee.id}
+              employee={employee}
+              onClick={() => setSelectedEmployee(employee)}
+            />
           ))}
           <div ref={sentinelRef} className="dashboard__sentinel" />
           {isFetchingNextPage && (

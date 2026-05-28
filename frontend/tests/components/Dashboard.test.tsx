@@ -204,6 +204,50 @@ describe('Dashboard', () => {
     });
   });
 
+  // ── Employee details modal ─────────────────────────────────────────────────────
+  describe('employee details modal', () => {
+    it('opens the details modal when an employee card is clicked', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      expect(
+        screen.getByRole('heading', { name: 'Employee Details' }),
+      ).toBeInTheDocument();
+    });
+
+    it('shows the selected employee details in the modal', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      const dialog = screen.getByRole('dialog', { name: 'Employee Details' });
+      expect(within(dialog).getByText('$120,000')).toBeInTheDocument();
+    });
+
+    it('closes the details modal when the × button is clicked', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      expect(
+        screen.getByRole('heading', { name: 'Employee Details' }),
+      ).toBeInTheDocument();
+      fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+      expect(
+        screen.queryByRole('heading', { name: 'Employee Details' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('updates the modal when a different employee card is clicked', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      expect(screen.getByText('$120,000')).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Close' }));
+      fireEvent.click(screen.getByRole('heading', { name: 'Bob Smith' }));
+      expect(screen.getByText('$105,000')).toBeInTheDocument();
+    });
+  });
+
   // ── Structure ─────────────────────────────────────────────────────────────────
   describe('structure', () => {
     it('renders the root dashboard element', () => {

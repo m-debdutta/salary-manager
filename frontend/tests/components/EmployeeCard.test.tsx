@@ -1,5 +1,5 @@
-import { render, screen } from '@testing-library/react';
-import { describe, it, expect } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, vi } from 'vitest';
 import { EmployeeCard, type Employee } from '../../src/components/EmployeeCard';
 
 const baseEmployee: Employee = {
@@ -105,6 +105,36 @@ describe('EmployeeCard', () => {
       const { container } = renderCard();
       expect(container.querySelector('.employee-card__header')).toBeInTheDocument();
       expect(container.querySelector('.employee-card__footer')).toBeInTheDocument();
+    });
+  });
+
+  // ── onClick ───────────────────────────────────────────────────────────────────
+  describe('onClick', () => {
+    it('calls onClick when the card is clicked', () => {
+      const onClick = vi.fn();
+      render(<EmployeeCard employee={baseEmployee} onClick={onClick} />);
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      expect(onClick).toHaveBeenCalledTimes(1);
+    });
+
+    it('applies cursor: pointer style when onClick is provided', () => {
+      const onClick = vi.fn();
+      const { container } = render(
+        <EmployeeCard employee={baseEmployee} onClick={onClick} />,
+      );
+      expect(container.firstChild).toHaveStyle({ cursor: 'pointer' });
+    });
+
+    it('does not apply a cursor style when onClick is not provided', () => {
+      const { container } = renderCard();
+      expect(container.firstChild).not.toHaveStyle({ cursor: 'pointer' });
+    });
+
+    it('matches snapshot with onClick handler', () => {
+      const { asFragment } = render(
+        <EmployeeCard employee={baseEmployee} onClick={vi.fn()} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
     });
   });
 });

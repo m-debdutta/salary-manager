@@ -12,6 +12,7 @@ export interface Employee {
 
 interface EmployeeCardProps {
   employee: Employee;
+  onClick?: () => void;
 }
 
 const employmentTypeBadgeColor: Record<string, string> = {
@@ -20,14 +21,19 @@ const employmentTypeBadgeColor: Record<string, string> = {
   contract: 'badge badge--contract',
 };
 
-export const EmployeeCard = ({ employee }: EmployeeCardProps) => {
+export const EmployeeCard = ({ employee, onClick }: EmployeeCardProps) => {
   const initials = `${employee.firstName[0]}${employee.lastName[0]}`.toUpperCase();
   const fullName = `${employee.firstName} ${employee.lastName}`;
   const badgeClass =
-    employmentTypeBadgeColor[employee.employmentType] ?? 'badge badge--default';
+    employmentTypeBadgeColor[employee.employmentType.toLowerCase()] ??
+    'badge badge--default';
 
   return (
-    <div className="employee-card">
+    <div
+      className="employee-card"
+      onClick={onClick}
+      style={onClick ? { cursor: 'pointer' } : undefined}
+    >
       <div className="employee-card__header">
         <div className="employee-card__avatar">{initials}</div>
         <div className="employee-card__header-info">
