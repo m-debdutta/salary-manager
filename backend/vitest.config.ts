@@ -4,6 +4,10 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    globalSetup: ['./tests/globalSetup.ts'],
+    env: {
+      DATABASE_URL: 'file:./prisma/test.db',
+    },
     exclude: ['**/node_modules/**', '**/dist/**'],
     coverage: {
       provider: 'v8',
