@@ -1,7 +1,12 @@
 import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createEmployee, type CreateEmployeeInput } from '../api/employees';
+import {
+  createEmployee,
+  updateEmployee,
+  type CreateEmployeeInput,
+} from '../api/employees';
 import { Combobox } from './Combobox';
+import type { Employee } from './EmployeeCard';
 import countriesData from '../../../data/countries.json';
 import departmentsData from '../../../data/departments.json';
 import employmentTypesData from '../../../data/employment_types.json';
@@ -27,15 +32,32 @@ const INITIAL_FORM: CreateEmployeeInput = {
 
 interface AddEmployeeModalProps {
   onClose: () => void;
+  employee?: Employee;
 }
 
-export default function AddEmployeeModal({ onClose }: AddEmployeeModalProps) {
-  const [form, setForm] = useState<CreateEmployeeInput>(INITIAL_FORM);
+export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModalProps) {
+  const isEditMode = !!employee;
+
+  const [form, setForm] = useState<CreateEmployeeInput>(
+    isEditMode
+      ? {
+          firstName: employee.firstName,
+          lastName: employee.lastName,
+          jobTitle: employee.jobTitle,
+          country: employee.country,
+          salary: employee.salary,
+          department: employee.department ?? '',
+          hireDate: employee.hireDate,
+          employmentType: employee.employmentType,
+        }
+      : INITIAL_FORM,
+  );
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
   const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: createEmployee,
+    mutationFn: (payload: CreateEmployeeInput) =>
+      isEditMode ? updateEmployee(employee.id, payload) : createEmployee(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
       onClose();
@@ -93,7 +115,7 @@ export default function AddEmployeeModal({ onClose }: AddEmployeeModalProps) {
       <div className="modal">
         <div className="modal__header">
           <h2 className="modal__title" id="modal-title">
-            Add Employee
+            {isEditMode ? 'Edit Employee' : 'Add Employee'}
           </h2>
           <button className="modal__close" onClick={onClose} aria-label="Close">
             ✕
@@ -242,7 +264,9 @@ export default function AddEmployeeModal({ onClose }: AddEmployeeModalProps) {
 
           {mutation.isError && (
             <p className="form-submit-error">
-              Failed to create employee. Please try again.
+              {isEditMode
+                ? 'Failed to update employee. Please try again.'
+                : 'Failed to create employee. Please try again.'}
             </p>
           )}
 
@@ -255,7 +279,11 @@ export default function AddEmployeeModal({ onClose }: AddEmployeeModalProps) {
               className="btn btn--primary"
               disabled={mutation.isPending}
             >
-              {mutation.isPending ? 'Saving…' : 'Add Employee'}
+              {mutation.isPending
+                ? 'Saving…'
+                : isEditMode
+                  ? 'Save Changes'
+                  : 'Add Employee'}
             </button>
           </div>
         </form>

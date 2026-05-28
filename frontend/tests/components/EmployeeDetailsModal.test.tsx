@@ -16,12 +16,14 @@ const baseEmployee: Employee = {
 };
 
 const onClose = vi.fn();
+const onEdit = vi.fn();
 
-const renderModal = (overrides: Partial<Employee> = {}) =>
+const renderModal = (overrides: Partial<Employee> = {}, { withEdit = true } = {}) =>
   render(
     <EmployeeDetailsModal
       employee={{ ...baseEmployee, ...overrides }}
       onClose={onClose}
+      onEdit={withEdit ? onEdit : undefined}
     />,
   );
 
@@ -43,7 +45,6 @@ describe('EmployeeDetailsModal', () => {
   afterEach(() => {
     vi.clearAllMocks();
   });
-
   // ── Snapshot ─────────────────────────────────────────────────────────────────
   describe('snapshot', () => {
     it('matches snapshot for a full-time employee', () => {
@@ -175,6 +176,29 @@ describe('EmployeeDetailsModal', () => {
       renderModal();
       fireEvent.click(screen.getByRole('heading', { name: 'Employee Details' }));
       expect(onClose).not.toHaveBeenCalled();
+    });
+  });
+
+  // ── Edit button ───────────────────────────────────────────────────────────────
+  describe('edit button', () => {
+    it('renders an "Edit Employee" button', () => {
+      renderModal();
+      expect(screen.getByRole('button', { name: 'Edit Employee' })).toBeInTheDocument();
+    });
+
+    it('calls onEdit when the "Edit Employee" button is clicked', () => {
+      renderModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Employee' }));
+      expect(onEdit).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not throw when onEdit is not provided', () => {
+      renderModal({}, { withEdit: false });
+      expect(screen.getByRole('button', { name: 'Edit Employee' })).toBeInTheDocument();
+      // Clicking should not throw
+      expect(() =>
+        fireEvent.click(screen.getByRole('button', { name: 'Edit Employee' })),
+      ).not.toThrow();
     });
   });
 });

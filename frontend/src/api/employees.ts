@@ -19,6 +19,8 @@ export interface CreateEmployeeInput {
   employmentType: string;
 }
 
+export type UpdateEmployeeInput = Partial<CreateEmployeeInput>;
+
 export const fetchEmployees = async (
   page = 1,
   pageSize = 50,
@@ -31,5 +33,13 @@ export const fetchEmployees = async (
 
 export const createEmployee = async (input: CreateEmployeeInput): Promise<Employee> => {
   const { data } = await axios.post<Employee>('/api/employees', input);
+  return data;
+};
+
+export const updateEmployee = async (
+  id: number,
+  input: UpdateEmployeeInput,
+): Promise<Employee> => {
+  const { data } = await axios.put<Employee>(`/api/employees/${id}`, input);
   return data;
 };

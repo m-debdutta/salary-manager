@@ -12,6 +12,7 @@ export default function Dashboard() {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const [showModal, setShowModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
@@ -65,10 +66,20 @@ export default function Dashboard() {
       </header>
 
       {showModal && <AddEmployeeModal onClose={() => setShowModal(false)} />}
+      {employeeToEdit && (
+        <AddEmployeeModal
+          employee={employeeToEdit}
+          onClose={() => setEmployeeToEdit(null)}
+        />
+      )}
       {selectedEmployee && (
         <EmployeeDetailsModal
           employee={selectedEmployee}
           onClose={() => setSelectedEmployee(null)}
+          onEdit={() => {
+            setEmployeeToEdit(selectedEmployee);
+            setSelectedEmployee(null);
+          }}
         />
       )}
 
@@ -97,6 +108,7 @@ export default function Dashboard() {
               key={employee.id}
               employee={employee}
               onClick={() => setSelectedEmployee(employee)}
+              onEdit={() => setEmployeeToEdit(employee)}
             />
           ))}
           <div ref={sentinelRef} className="dashboard__sentinel" />

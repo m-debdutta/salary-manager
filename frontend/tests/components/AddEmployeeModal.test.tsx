@@ -2,21 +2,11 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import AddEmployeeModal from '../../src/components/AddEmployeeModal';
-import { createEmployee } from '../../src/api/employees';
+import { createEmployee, updateEmployee } from '../../src/api/employees';
+import type { Employee } from '../../src/components/EmployeeCard';
+import { MOCK_CREATED_EMPLOYEE, MOCK_EXISTING_EMPLOYEE } from '../fixtures/employees';
 
 vi.mock('../../src/api/employees');
-
-const MOCK_CREATED_EMPLOYEE = {
-  id: 99,
-  firstName: 'Jane',
-  lastName: 'Doe',
-  jobTitle: 'Software Engineer',
-  country: 'United States',
-  salary: 100000,
-  department: 'Engineering',
-  hireDate: '2024-01-01',
-  employmentType: 'Full-time',
-};
 
 const onClose = vi.fn();
 
@@ -27,6 +17,17 @@ const renderModal = () => {
   return render(
     <QueryClientProvider client={queryClient}>
       <AddEmployeeModal onClose={onClose} />
+    </QueryClientProvider>,
+  );
+};
+
+const renderEditModal = (employee: Employee = MOCK_EXISTING_EMPLOYEE) => {
+  const queryClient = new QueryClient({
+    defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+  });
+  return render(
+    <QueryClientProvider client={queryClient}>
+      <AddEmployeeModal onClose={onClose} employee={employee} />
     </QueryClientProvider>,
   );
 };
@@ -54,6 +55,10 @@ const fillValidForm = () => {
 describe('AddEmployeeModal', () => {
   beforeEach(() => {
     vi.mocked(createEmployee).mockResolvedValue(MOCK_CREATED_EMPLOYEE);
+    vi.mocked(updateEmployee).mockResolvedValue({
+      ...MOCK_EXISTING_EMPLOYEE,
+      salary: 130000,
+    });
   });
 
   afterEach(() => {
@@ -202,7 +207,6 @@ describe('AddEmployeeModal', () => {
             hireDate: '2024-01-01',
             employmentType: 'Full-time',
           }),
-          expect.anything(),
         ),
       );
     });
@@ -230,6 +234,157 @@ describe('AddEmployeeModal', () => {
       expect(
         await screen.findByText('Failed to create employee. Please try again.'),
       ).toBeInTheDocument();
+    });
+  });
+});
+
+// ─── Edit mode ────────────────────────────────────────────────────────────────
+describe('AddEmployeeModal – edit mode', () => {
+  beforeEach(() => {
+    vi.mocked(updateEmployee).mockResolvedValue({
+      ...MOCK_EXISTING_EMPLOYEE,
+      salary: 130000,
+    });
+  });
+
+  afterEach(() => {
+    vi.clearAllMocks();
+  });
+
+  // ── Snapshot ────────────────────────────────────────────────────────────────
+  describe('snapshot', () => {
+    it('matches initial edit mode snapshot', () => {
+      const { asFragment } = renderEditModal();
+      expect(asFragment()).toMatchSnapshot();
+    });
+  });
+
+  // ── Structure ────────────────────────────────────────────────────────────────
+  describe('structure', () => {
+    it('renders "Edit Employee" as the modal title', () => {
+      renderEditModal();
+      expect(screen.getByRole('heading', { name: 'Edit Employee' })).toBeInTheDocument();
+    });
+
+    it('renders "Save Changes" as the submit button', () => {
+      renderEditModal();
+      expect(screen.getByRole('button', { name: 'Save Changes' })).toBeInTheDocument();
+    });
+
+    it('does not render "Add Employee" submit button in edit mode', () => {
+      renderEditModal();
+      expect(
+        screen.queryByRole('button', { name: 'Add Employee' }),
+      ).not.toBeInTheDocument();
+    });
+  });
+
+  // ── Pre-population ───────────────────────────────────────────────────────────
+  describe('pre-population', () => {
+    it('pre-populates the first name input', () => {
+      renderEditModal();
+      expect(screen.getByLabelText('First Name')).toHaveValue('Alice');
+    });
+
+    it('pre-populates the last name input', () => {
+      renderEditModal();
+      expect(screen.getByLabelText('Last Name')).toHaveValue('Johnson');
+    });
+
+    it('pre-populates the salary input', () => {
+      renderEditModal();
+      expect(screen.getByLabelText('Salary (USD)')).toHaveValue(120000);
+    });
+
+    it('pre-populates the hire date input', () => {
+      renderEditModal();
+      expect(screen.getByLabelText('Hire Date')).toHaveValue('2021-03-15');
+    });
+
+    it('pre-populates the job title combobox', () => {
+      renderEditModal();
+      expect(
+        screen.getByRole('button', { name: 'Software Engineer' }),
+      ).toBeInTheDocument();
+    });
+
+    it('pre-populates the country combobox', () => {
+      renderEditModal();
+      expect(screen.getByRole('button', { name: 'United States' })).toBeInTheDocument();
+    });
+
+    it('pre-populates the department combobox', () => {
+      renderEditModal();
+      expect(screen.getByRole('button', { name: 'Engineering' })).toBeInTheDocument();
+    });
+
+    it('pre-populates the employment type combobox', () => {
+      renderEditModal();
+      expect(screen.getByRole('button', { name: 'Full-time' })).toBeInTheDocument();
+    });
+  });
+
+  // ── Submission ────────────────────────────────────────────────────────────────
+  describe('submission', () => {
+    it('calls updateEmployee instead of createEmployee', async () => {
+      renderEditModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+      await waitFor(() => expect(vi.mocked(updateEmployee)).toHaveBeenCalled());
+      expect(vi.mocked(createEmployee)).not.toHaveBeenCalled();
+    });
+
+    it('calls updateEmployee with the employee id and form data', async () => {
+      renderEditModal();
+      fireEvent.change(screen.getByLabelText('Salary (USD)'), {
+        target: { value: '130000' },
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+
+      await waitFor(() =>
+        expect(vi.mocked(updateEmployee)).toHaveBeenCalledWith(
+          MOCK_EXISTING_EMPLOYEE.id,
+          expect.objectContaining({
+            firstName: 'Alice',
+            lastName: 'Johnson',
+            salary: 130000,
+          }),
+        ),
+      );
+    });
+
+    it('calls onClose after a successful update', async () => {
+      renderEditModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+      await waitFor(() => expect(onClose).toHaveBeenCalled());
+    });
+
+    it('shows "Saving…" while the request is in flight', async () => {
+      vi.mocked(updateEmployee).mockImplementation(() => new Promise(() => {}));
+      renderEditModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+      expect(await screen.findByRole('button', { name: 'Saving…' })).toBeInTheDocument();
+    });
+
+    it('shows an error message when updateEmployee rejects', async () => {
+      vi.mocked(updateEmployee).mockRejectedValueOnce(new Error('Server Error'));
+      renderEditModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+      expect(
+        await screen.findByText('Failed to update employee. Please try again.'),
+      ).toBeInTheDocument();
+    });
+  });
+
+  // ── Validation ────────────────────────────────────────────────────────────────
+  describe('validation', () => {
+    it('validates the form before calling updateEmployee', () => {
+      renderEditModal();
+      fireEvent.change(screen.getByLabelText('First Name'), { target: { value: 'A' } });
+      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+      expect(
+        screen.getByText('First name must be at least 2 characters'),
+      ).toBeInTheDocument();
+      expect(vi.mocked(updateEmployee)).not.toHaveBeenCalled();
     });
   });
 });

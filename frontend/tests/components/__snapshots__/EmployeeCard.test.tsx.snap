@@ -1,5 +1,71 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
+exports[`EmployeeCard > edit button > matches snapshot with onEdit handler 1`] = `
+<DocumentFragment>
+  <div
+    class="employee-card"
+  >
+    <button
+      aria-label="Edit Alice Johnson"
+      class="employee-card__edit-btn"
+      type="button"
+    >
+      <svg
+        aria-hidden="true"
+        fill="none"
+        height="14"
+        stroke="currentColor"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        stroke-width="2"
+        viewBox="0 0 24 24"
+        width="14"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"
+        />
+        <path
+          d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"
+        />
+      </svg>
+    </button>
+    <div
+      class="employee-card__header"
+    >
+      <div
+        class="employee-card__avatar"
+      >
+        AJ
+      </div>
+      <div
+        class="employee-card__header-info"
+      >
+        <h3
+          class="employee-card__name"
+        >
+          Alice Johnson
+        </h3>
+        <p
+          class="employee-card__title"
+        >
+          Software Engineer
+        </p>
+      </div>
+      <div
+        class="employee-card__footer"
+      >
+        <span
+          class="badge badge--full-time"
+        >
+          full-time
+        </span>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
 exports[`EmployeeCard > onClick > matches snapshot with onClick handler 1`] = `
 <DocumentFragment>
   <div

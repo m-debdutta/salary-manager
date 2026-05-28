@@ -3,6 +3,7 @@ import type { Employee } from './EmployeeCard';
 interface EmployeeDetailsModalProps {
   employee: Employee;
   onClose: () => void;
+  onEdit?: () => void;
 }
 
 const employmentTypeBadgeColor: Record<string, string> = {
@@ -14,11 +15,13 @@ const employmentTypeBadgeColor: Record<string, string> = {
 export default function EmployeeDetailsModal({
   employee,
   onClose,
+  onEdit,
 }: EmployeeDetailsModalProps) {
   const initials = `${employee.firstName[0]}${employee.lastName[0]}`.toUpperCase();
   const fullName = `${employee.firstName} ${employee.lastName}`;
   const badgeClass =
-    employmentTypeBadgeColor[employee.employmentType.toLowerCase()] ?? 'badge badge--default';
+    employmentTypeBadgeColor[employee.employmentType.toLowerCase()] ??
+    'badge badge--default';
 
   const formattedSalary = new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -85,6 +88,12 @@ export default function EmployeeDetailsModal({
             <dd className="employee-details__value">#{employee.id}</dd>
           </div>
         </dl>
+
+        <div className="modal__actions">
+          <button type="button" className="btn btn--primary" onClick={() => onEdit?.()}>
+            Edit Employee
+          </button>
+        </div>
       </div>
     </div>
   );

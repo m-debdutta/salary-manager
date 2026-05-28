@@ -2,7 +2,7 @@ import { render, screen, within, waitFor, fireEvent } from '@testing-library/rea
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import Dashboard from '../../src/components/Dashboard';
-import { fetchEmployees, createEmployee } from '../../src/api/employees';
+import { fetchEmployees, createEmployee, updateEmployee } from '../../src/api/employees';
 import {
   MOCK_EMPLOYEES_RESPONSE,
   MOCK_EMPLOYEES,
@@ -38,6 +38,7 @@ describe('Dashboard', () => {
   beforeEach(() => {
     vi.mocked(fetchEmployees).mockResolvedValue(MOCK_EMPLOYEES_RESPONSE);
     vi.mocked(createEmployee).mockResolvedValue(MOCK_EMPLOYEES[0]);
+    vi.mocked(updateEmployee).mockResolvedValue(MOCK_EMPLOYEES[0]);
   });
 
   afterEach(() => {
@@ -263,6 +264,86 @@ describe('Dashboard', () => {
     it('renders the stats section', () => {
       const { container } = renderDashboard();
       expect(container.querySelector('.dashboard__stats')).toBeInTheDocument();
+    });
+  });
+
+  // ── Edit employee ─────────────────────────────────────────────────────────────
+  describe('edit employee', () => {
+    it('opens the edit form when "Edit Employee" is clicked in the details modal', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      expect(
+        screen.getByRole('heading', { name: 'Employee Details' }),
+      ).toBeInTheDocument();
+
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Employee' }));
+
+      expect(screen.getByRole('heading', { name: 'Edit Employee' })).toBeInTheDocument();
+    });
+
+    it('closes the details modal when the edit form opens', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Employee' }));
+
+      expect(
+        screen.queryByRole('heading', { name: 'Employee Details' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('pre-populates the edit form with the selected employee', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Employee' }));
+
+      expect(screen.getByLabelText('First Name')).toHaveValue('Alice');
+      expect(screen.getByLabelText('Last Name')).toHaveValue('Johnson');
+    });
+
+    it('calls updateEmployee when the edit form is submitted', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+
+      await waitFor(() => expect(vi.mocked(updateEmployee)).toHaveBeenCalled());
+    });
+
+    it('closes the edit form after a successful update', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+
+      await waitFor(() =>
+        expect(
+          screen.queryByRole('heading', { name: 'Edit Employee' }),
+        ).not.toBeInTheDocument(),
+      );
+    });
+
+    it('opens the edit form when the edit button on a card is clicked', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Alice Johnson' }));
+
+      expect(screen.getByRole('heading', { name: 'Edit Employee' })).toBeInTheDocument();
+      expect(screen.getByLabelText('First Name')).toHaveValue('Alice');
+    });
+
+    it('does not open the details modal when the card edit button is clicked', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Alice Johnson' }));
+
+      expect(
+        screen.queryByRole('heading', { name: 'Employee Details' }),
+      ).not.toBeInTheDocument();
     });
   });
 });

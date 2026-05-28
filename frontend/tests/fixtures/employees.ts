@@ -1,4 +1,5 @@
 import type { EmployeesResponse } from '../../src/api/employees';
+import type { Employee } from '../../src/components/EmployeeCard';
 
 export const MOCK_EMPLOYEES: EmployeesResponse['employees'] = [
   {
@@ -96,6 +97,30 @@ export const MOCK_EMPLOYEES_RESPONSE: EmployeesResponse = {
   total: 8,
   page: 1,
   pageSize: 50,
+};
+
+export const MOCK_EXISTING_EMPLOYEE: Employee = {
+  id: 7,
+  firstName: 'Alice',
+  lastName: 'Johnson',
+  jobTitle: 'Software Engineer',
+  country: 'United States',
+  salary: 120000,
+  department: 'Engineering',
+  hireDate: '2021-03-15',
+  employmentType: 'Full-time',
+};
+
+export const MOCK_CREATED_EMPLOYEE = {
+  id: 99,
+  firstName: 'Jane',
+  lastName: 'Doe',
+  jobTitle: 'Software Engineer',
+  country: 'United States',
+  salary: 100000,
+  department: 'Engineering',
+  hireDate: '2024-01-01',
+  employmentType: 'Full-time',
 };
 
 export const EMPLOYEE_NAMES = MOCK_EMPLOYEES.map((e) => `${e.firstName} ${e.lastName}`);

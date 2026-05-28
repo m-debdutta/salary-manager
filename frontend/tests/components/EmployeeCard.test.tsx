@@ -16,7 +16,6 @@ const baseEmployee: Employee = {
 
 const renderCard = (overrides: Partial<Employee> = {}) =>
   render(<EmployeeCard employee={{ ...baseEmployee, ...overrides }} />);
-
 describe('EmployeeCard', () => {
   // ── Snapshot ────────────────────────────────────────────────────────────────
   describe('snapshot', () => {
@@ -133,6 +132,46 @@ describe('EmployeeCard', () => {
     it('matches snapshot with onClick handler', () => {
       const { asFragment } = render(
         <EmployeeCard employee={baseEmployee} onClick={vi.fn()} />,
+      );
+      expect(asFragment()).toMatchSnapshot();
+    });
+  });
+
+  // ── Edit button ───────────────────────────────────────────────────────────────
+  describe('edit button', () => {
+    it('renders an edit button when onEdit is provided', () => {
+      render(<EmployeeCard employee={baseEmployee} onEdit={vi.fn()} />);
+      expect(
+        screen.getByRole('button', { name: 'Edit Alice Johnson' }),
+      ).toBeInTheDocument();
+    });
+
+    it('does not render an edit button when onEdit is not provided', () => {
+      renderCard();
+      expect(
+        screen.queryByRole('button', { name: 'Edit Alice Johnson' }),
+      ).not.toBeInTheDocument();
+    });
+
+    it('calls onEdit when the edit button is clicked', () => {
+      const onEdit = vi.fn();
+      render(<EmployeeCard employee={baseEmployee} onEdit={onEdit} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Alice Johnson' }));
+      expect(onEdit).toHaveBeenCalledTimes(1);
+    });
+
+    it('does not call onClick when the edit button is clicked', () => {
+      const onClick = vi.fn();
+      const onEdit = vi.fn();
+      render(<EmployeeCard employee={baseEmployee} onClick={onClick} onEdit={onEdit} />);
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Alice Johnson' }));
+      expect(onEdit).toHaveBeenCalledTimes(1);
+      expect(onClick).not.toHaveBeenCalled();
+    });
+
+    it('matches snapshot with onEdit handler', () => {
+      const { asFragment } = render(
+        <EmployeeCard employee={baseEmployee} onEdit={vi.fn()} />,
       );
       expect(asFragment()).toMatchSnapshot();
     });

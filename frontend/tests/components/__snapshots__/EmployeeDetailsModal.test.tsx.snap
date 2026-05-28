@@ -127,6 +127,16 @@ exports[`EmployeeDetailsModal > snapshot > matches snapshot for a full-time empl
           </dd>
         </div>
       </dl>
+      <div
+        class="modal__actions"
+      >
+        <button
+          class="btn btn--primary"
+          type="button"
+        >
+          Edit Employee
+        </button>
+      </div>
     </div>
   </div>
 </DocumentFragment>
@@ -259,6 +269,16 @@ exports[`EmployeeDetailsModal > snapshot > matches snapshot when department is n
           </dd>
         </div>
       </dl>
+      <div
+        class="modal__actions"
+      >
+        <button
+          class="btn btn--primary"
+          type="button"
+        >
+          Edit Employee
+        </button>
+      </div>
     </div>
   </div>
 </DocumentFragment>
