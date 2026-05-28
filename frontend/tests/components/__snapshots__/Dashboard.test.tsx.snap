@@ -581,6 +581,9 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
         class="_sentinel_4b4f5e"
       />
     </div>
+    <div
+      data-testid="salary-by-country-chart"
+    />
   </div>
 </DocumentFragment>
 `;
@@ -646,6 +649,9 @@ exports[`Dashboard > snapshot > matches loading snapshot 1`] = `
     >
       Loading employees…
     </p>
+    <div
+      data-testid="salary-by-country-chart"
+    />
   </div>
 </DocumentFragment>
 `;

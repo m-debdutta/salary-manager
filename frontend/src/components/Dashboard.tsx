@@ -4,6 +4,7 @@ import { fetchEmployees, deleteEmployee } from '../api/employees';
 import { EmployeeCard, type Employee } from './EmployeeCard';
 import AddEmployeeModal from './AddEmployeeModal';
 import EmployeeDetailsModal from './EmployeeDetailsModal';
+import SalaryByCountryChart from './SalaryByCountryChart';
 import styles from './Dashboard.module.css';
 
 const PAGE_SIZE = 80;
@@ -101,7 +102,6 @@ export default function Dashboard() {
           <span className={styles.statLabel}>Total Employees</span>
         </div>
       </div>
-
       <div className={styles.sectionHeader}>
         <p className={styles.sectionTitle}>Employees</p>
         {!isLoading && <span className={styles.sectionCount}>{total}</span>}
@@ -129,6 +129,9 @@ export default function Dashboard() {
           )}
         </div>
       )}
+
+      <SalaryByCountryChart />
+
     </div>
   );
 }

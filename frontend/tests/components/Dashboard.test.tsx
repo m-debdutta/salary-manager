@@ -15,6 +15,9 @@ import {
 } from '../fixtures/employees';
 
 vi.mock('../../src/api/employees');
+vi.mock('../../src/components/SalaryByCountryChart', () => ({
+  default: () => <div data-testid="salary-by-country-chart" />,
+}));
 
 const contractCount = MOCK_EMPLOYEES.filter(
   (e) => e.employmentType === 'contract',
@@ -92,7 +95,9 @@ describe('Dashboard', () => {
 
     it('does not render the grid while loading', () => {
       const { container } = renderDashboard();
-      expect(container.querySelector('[data-testid="employee-grid"]')).not.toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="employee-grid"]'),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -135,7 +140,9 @@ describe('Dashboard', () => {
     it('renders the grid container after loading', async () => {
       const { container } = renderDashboard();
       await waitFor(() =>
-        expect(container.querySelector('[data-testid="employee-grid"]')).toBeInTheDocument(),
+        expect(
+          container.querySelector('[data-testid="employee-grid"]'),
+        ).toBeInTheDocument(),
       );
     });
   });
@@ -269,7 +276,9 @@ describe('Dashboard', () => {
 
     it('renders the stats section', () => {
       const { container } = renderDashboard();
-      expect(container.querySelector('[data-testid="stats-section"]')).toBeInTheDocument();
+      expect(
+        container.querySelector('[data-testid="stats-section"]'),
+      ).toBeInTheDocument();
     });
   });
 
