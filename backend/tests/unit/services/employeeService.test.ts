@@ -81,6 +81,53 @@ describe('EmployeeService', () => {
       expect(employee.department).toBeNull();
     });
   });
+
+  describe('getEmployees', () => {
+    it('should call repository getEmployees with correct skip and take', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(10, 20);
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(10, 20);
+    });
+
+    it('should return paginated result with employees and total', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({
+        employees: [mockCreatedEmployee],
+        total: 5,
+      });
+
+      const result = await employeeService.getEmployees(0, 50);
+
+      expect(result.employees).toEqual([mockCreatedEmployee]);
+      expect(result.total).toBe(5);
+      expect(result.page).toBe(1);
+      expect(result.pageSize).toBe(50);
+    });
+
+    it('should calculate page number correctly from skip and take', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      const result = await employeeService.getEmployees(20, 10);
+
+      expect(result.page).toBe(3); // Math.floor(20 / 10) + 1
+      expect(result.pageSize).toBe(10);
+    });
+
+    it('should use defaults of skip=0 and take=50', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees();
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50);
+    });
+
+    it('should propagate repository errors', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockRejectedValue(new Error('DB connection lost'));
+
+      await expect(employeeService.getEmployees()).rejects.toThrow('DB connection lost');
+    });
+  });
 });
 
 describe('createEmployeeSchema validation', () => {

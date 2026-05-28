@@ -1,5 +1,9 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { createEmployee, EmployeeCreateInput } from '../../../src/db/employeeRepository';
+import {
+  createEmployee,
+  getEmployees,
+  EmployeeCreateInput,
+} from '../../../src/db/employeeRepository';
 import { prisma } from '../../../src/db/client';
 
 describe('EmployeeRepository', () => {
@@ -307,6 +311,103 @@ describe('EmployeeRepository', () => {
       expect(employee).toHaveProperty('employmentType');
       expect(employee).toHaveProperty('createdAt');
       expect(employee).toHaveProperty('updatedAt');
+    });
+  });
+
+  describe('getEmployees', () => {
+    const makeEmployeeData = (
+      overrides: Partial<EmployeeCreateInput> = {}
+    ): EmployeeCreateInput => ({
+      firstName: 'Jane',
+      lastName: 'Smith',
+      jobTitle: 'Engineer',
+      country: 'USA',
+      salary: 80000,
+      hireDate: new Date('2024-01-15'),
+      employmentType: 'Full-time',
+      ...overrides,
+    });
+
+    it('should return empty array and total 0 when no employees exist', async () => {
+      const result = await getEmployees();
+
+      expect(result.employees).toHaveLength(0);
+      expect(result.total).toBe(0);
+    });
+
+    it('should return all employees and correct total', async () => {
+      await createEmployee(makeEmployeeData({ firstName: 'Alice' }));
+      await createEmployee(makeEmployeeData({ firstName: 'Bob' }));
+
+      const result = await getEmployees();
+
+      expect(result.employees).toHaveLength(2);
+      expect(result.total).toBe(2);
+    });
+
+    it('should apply skip to offset results', async () => {
+      await createEmployee(makeEmployeeData({ firstName: 'First' }));
+      await createEmployee(makeEmployeeData({ firstName: 'Second' }));
+      await createEmployee(makeEmployeeData({ firstName: 'Third' }));
+
+      const result = await getEmployees(1, 10);
+
+      expect(result.employees).toHaveLength(2);
+      expect(result.total).toBe(3);
+      expect(result.employees[0].firstName).toBe('Second');
+    });
+
+    it('should apply take to limit results', async () => {
+      await createEmployee(makeEmployeeData({ firstName: 'Alice' }));
+      await createEmployee(makeEmployeeData({ firstName: 'Bob' }));
+      await createEmployee(makeEmployeeData({ firstName: 'Carol' }));
+
+      const result = await getEmployees(0, 2);
+
+      expect(result.employees).toHaveLength(2);
+      expect(result.total).toBe(3);
+    });
+
+    it('should return total reflecting full count regardless of pagination', async () => {
+      await createEmployee(makeEmployeeData({ firstName: 'Alice' }));
+      await createEmployee(makeEmployeeData({ firstName: 'Bob' }));
+      await createEmployee(makeEmployeeData({ firstName: 'Carol' }));
+      await createEmployee(makeEmployeeData({ firstName: 'Dave' }));
+      await createEmployee(makeEmployeeData({ firstName: 'Eve' }));
+
+      const result = await getEmployees(0, 2);
+
+      expect(result.total).toBe(5);
+      expect(result.employees).toHaveLength(2);
+    });
+
+    it('should order results by id ascending', async () => {
+      await createEmployee(makeEmployeeData({ firstName: 'Alice' }));
+      await createEmployee(makeEmployeeData({ firstName: 'Bob' }));
+      await createEmployee(makeEmployeeData({ firstName: 'Carol' }));
+
+      const result = await getEmployees();
+
+      const ids = result.employees.map((e) => e.id);
+      expect(ids).toEqual([...ids].sort((a, b) => a - b));
+    });
+
+    it('should return empty array when skip exceeds total count', async () => {
+      await createEmployee(makeEmployeeData());
+
+      const result = await getEmployees(10, 50);
+
+      expect(result.employees).toHaveLength(0);
+      expect(result.total).toBe(1);
+    });
+
+    it('should use defaults of skip=0 and take=50', async () => {
+      await createEmployee(makeEmployeeData());
+
+      const result = await getEmployees();
+
+      expect(result.employees).toHaveLength(1);
+      expect(result.total).toBe(1);
     });
   });
 });

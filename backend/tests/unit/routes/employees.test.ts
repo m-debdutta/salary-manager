@@ -1,10 +1,15 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import request from 'supertest';
 import express, { Express } from 'express';
 import employeeRouter from '../../../src/routes/employees';
-import * as employeeServiceModule from '../../../src/services/employeeService';
+import { employeeService } from '../../../src/services/employeeService';
 
-vi.mock('../../../src/services/employeeService');
+vi.mock('../../../src/services/employeeService', () => ({
+  employeeService: {
+    getEmployees: vi.fn(),
+    createEmployee: vi.fn(),
+  },
+}));
 
 const createApp = (): Express => {
   const app = express();
@@ -13,33 +18,34 @@ const createApp = (): Express => {
   return app;
 };
 
+const makeEmployee = (overrides = {}) => ({
+  id: 1,
+  firstName: 'John',
+  lastName: 'Doe',
+  jobTitle: 'Software Engineer',
+  country: 'USA',
+  salary: 100000,
+  department: 'Engineering',
+  hireDate: new Date('2024-01-15'),
+  employmentType: 'Full-time',
+  createdAt: new Date('2024-01-15T00:00:00Z'),
+  updatedAt: new Date('2024-01-15T00:00:00Z'),
+  ...overrides,
+});
+
+const validEmployeeData = {
+  firstName: 'John',
+  lastName: 'Doe',
+  jobTitle: 'Software Engineer',
+  country: 'USA',
+  salary: 100000,
+  department: 'Engineering',
+  hireDate: '2024-01-15',
+  employmentType: 'Full-time',
+};
+
 describe('Employees Router', () => {
   let app: Express;
-
-  const validEmployeeData = {
-    firstName: 'John',
-    lastName: 'Doe',
-    jobTitle: 'Software Engineer',
-    country: 'USA',
-    salary: 100000,
-    department: 'Engineering',
-    hireDate: '2024-01-15',
-    employmentType: 'Full-time',
-  };
-
-  const mockEmployeeResponse = {
-    id: 1,
-    firstName: 'John',
-    lastName: 'Doe',
-    jobTitle: 'Software Engineer',
-    country: 'USA',
-    salary: 100000,
-    department: 'Engineering',
-    hireDate: new Date('2024-01-15'),
-    employmentType: 'Full-time',
-    createdAt: new Date('2024-01-15T10:00:00.000Z'),
-    updatedAt: new Date('2024-01-15T10:00:00.000Z'),
-  };
 
   beforeEach(() => {
     app = createApp();
@@ -51,12 +57,184 @@ describe('Employees Router', () => {
     expect(typeof employeeRouter).toBe('function');
   });
 
+  describe('GET /api/employees', () => {
+    it('should return 200 with employees list', async () => {
+      const employee = makeEmployee();
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [employee],
+        total: 1,
+        page: 1,
+        pageSize: 50,
+      });
+
+      const response = await request(app).get('/api/employees');
+
+      expect(response.status).toBe(200);
+      expect(response.headers['content-type']).toMatch(/application\/json/);
+      expect(response.body.employees).toHaveLength(1);
+      expect(response.body.total).toBe(1);
+      expect(response.body.page).toBe(1);
+      expect(response.body.pageSize).toBe(50);
+    });
+
+    it('should return employees with correct shape', async () => {
+      const employee = makeEmployee();
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [employee],
+        total: 1,
+        page: 1,
+        pageSize: 50,
+      });
+
+      const response = await request(app).get('/api/employees');
+      const result = response.body.employees[0];
+
+      expect(result).toHaveProperty('id', 1);
+      expect(result).toHaveProperty('firstName', 'John');
+      expect(result).toHaveProperty('lastName', 'Doe');
+      expect(result).toHaveProperty('jobTitle', 'Software Engineer');
+      expect(result).toHaveProperty('country', 'USA');
+      expect(result).toHaveProperty('salary', 100000);
+      expect(result).toHaveProperty('department', 'Engineering');
+      expect(result).toHaveProperty('hireDate', '2024-01-15');
+      expect(result).toHaveProperty('employmentType', 'Full-time');
+      expect(result).toHaveProperty('createdAt');
+      expect(result).toHaveProperty('updatedAt');
+    });
+
+    it('should return empty list when no employees exist', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      const response = await request(app).get('/api/employees');
+
+      expect(response.status).toBe(200);
+      expect(response.body.employees).toHaveLength(0);
+      expect(response.body.total).toBe(0);
+    });
+
+    it('should pass page and pageSize to service', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 2,
+        pageSize: 10,
+      });
+
+      await request(app).get('/api/employees?page=2&pageSize=10');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(10, 10); // skip=(2-1)*10=10
+    });
+
+    it('should default to page 1 and pageSize 50 when not specified', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50);
+    });
+
+    it('should format hireDate as YYYY-MM-DD string', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [makeEmployee({ hireDate: new Date('2023-06-15T12:00:00Z') })],
+        total: 1,
+        page: 1,
+        pageSize: 50,
+      });
+
+      const response = await request(app).get('/api/employees');
+
+      expect(response.body.employees[0].hireDate).toBe('2023-06-15');
+    });
+
+    it('should handle null department', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [makeEmployee({ department: null })],
+        total: 1,
+        page: 1,
+        pageSize: 50,
+      });
+
+      const response = await request(app).get('/api/employees');
+
+      expect(response.body.employees[0].department).toBeNull();
+    });
+
+    it('should return 500 when service throws', async () => {
+      vi.mocked(employeeService.getEmployees).mockRejectedValue(new Error('DB connection failed'));
+
+      const response = await request(app).get('/api/employees');
+
+      expect(response.status).toBe(500);
+      expect(response.body).toEqual({ error: 'Failed to fetch employees' });
+    });
+
+    it('should ignore invalid page/pageSize and fall back to defaults', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees?page=abc&pageSize=xyz');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50);
+    });
+
+    it('should cap pageSize at 100 when pageSize exceeds maximum', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 100,
+      });
+
+      await request(app).get('/api/employees?pageSize=200');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 100);
+    });
+
+    it('should default page to 1 when page is 0 or negative', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees?page=-5');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50);
+    });
+
+    it('should default pageSize to 1 when pageSize is negative', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 1,
+      });
+
+      await request(app).get('/api/employees?pageSize=-10');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 1);
+    });
+  });
+
   describe('POST /api/employees', () => {
     describe('Valid Input', () => {
       it('should return 201 for valid employee data', async () => {
-        vi.spyOn(employeeServiceModule.employeeService, 'createEmployee').mockResolvedValue(
-          mockEmployeeResponse
-        );
+        vi.mocked(employeeService.createEmployee).mockResolvedValue(makeEmployee());
 
         const response = await request(app).post('/api/employees').send(validEmployeeData);
 
@@ -64,9 +242,7 @@ describe('Employees Router', () => {
       });
 
       it('should return JSON content type', async () => {
-        vi.spyOn(employeeServiceModule.employeeService, 'createEmployee').mockResolvedValue(
-          mockEmployeeResponse
-        );
+        vi.mocked(employeeService.createEmployee).mockResolvedValue(makeEmployee());
 
         const response = await request(app).post('/api/employees').send(validEmployeeData);
 
@@ -74,9 +250,7 @@ describe('Employees Router', () => {
       });
 
       it('should return all required fields in response', async () => {
-        vi.spyOn(employeeServiceModule.employeeService, 'createEmployee').mockResolvedValue(
-          mockEmployeeResponse
-        );
+        vi.mocked(employeeService.createEmployee).mockResolvedValue(makeEmployee());
 
         const response = await request(app).post('/api/employees').send(validEmployeeData);
 
@@ -94,9 +268,7 @@ describe('Employees Router', () => {
       });
 
       it('should return correct employee data', async () => {
-        vi.spyOn(employeeServiceModule.employeeService, 'createEmployee').mockResolvedValue(
-          mockEmployeeResponse
-        );
+        vi.mocked(employeeService.createEmployee).mockResolvedValue(makeEmployee());
 
         const response = await request(app).post('/api/employees').send(validEmployeeData);
 
@@ -111,9 +283,7 @@ describe('Employees Router', () => {
       });
 
       it('should format hireDate as YYYY-MM-DD string', async () => {
-        vi.spyOn(employeeServiceModule.employeeService, 'createEmployee').mockResolvedValue(
-          mockEmployeeResponse
-        );
+        vi.mocked(employeeService.createEmployee).mockResolvedValue(makeEmployee());
 
         const response = await request(app).post('/api/employees').send(validEmployeeData);
 
@@ -121,22 +291,18 @@ describe('Employees Router', () => {
       });
 
       it('should call employeeService.createEmployee with validated data', async () => {
-        const createEmployeeSpy = vi
-          .spyOn(employeeServiceModule.employeeService, 'createEmployee')
-          .mockResolvedValue(mockEmployeeResponse);
+        vi.mocked(employeeService.createEmployee).mockResolvedValue(makeEmployee());
 
         await request(app).post('/api/employees').send(validEmployeeData);
 
-        expect(createEmployeeSpy).toHaveBeenCalledTimes(1);
-        expect(createEmployeeSpy).toHaveBeenCalledWith(validEmployeeData);
+        expect(employeeService.createEmployee).toHaveBeenCalledTimes(1);
+        expect(employeeService.createEmployee).toHaveBeenCalledWith(validEmployeeData);
       });
 
       it('should accept employee without optional department field', async () => {
         const { department: _, ...dataWithoutDepartment } = validEmployeeData;
-        const mockWithoutDept = { ...mockEmployeeResponse, department: null };
-
-        vi.spyOn(employeeServiceModule.employeeService, 'createEmployee').mockResolvedValue(
-          mockWithoutDept
+        vi.mocked(employeeService.createEmployee).mockResolvedValue(
+          makeEmployee({ department: null })
         );
 
         const response = await request(app).post('/api/employees').send(dataWithoutDepartment);
@@ -146,10 +312,8 @@ describe('Employees Router', () => {
 
       it('should accept null department value', async () => {
         const dataWithNullDept = { ...validEmployeeData, department: null };
-        const mockWithNullDept = { ...mockEmployeeResponse, department: null };
-
-        vi.spyOn(employeeServiceModule.employeeService, 'createEmployee').mockResolvedValue(
-          mockWithNullDept
+        vi.mocked(employeeService.createEmployee).mockResolvedValue(
+          makeEmployee({ department: null })
         );
 
         const response = await request(app).post('/api/employees').send(dataWithNullDept);
@@ -159,11 +323,7 @@ describe('Employees Router', () => {
 
       it('should accept zero salary', async () => {
         const dataWithZeroSalary = { ...validEmployeeData, salary: 0 };
-        const mockZeroSalary = { ...mockEmployeeResponse, salary: 0 };
-
-        vi.spyOn(employeeServiceModule.employeeService, 'createEmployee').mockResolvedValue(
-          mockZeroSalary
-        );
+        vi.mocked(employeeService.createEmployee).mockResolvedValue(makeEmployee({ salary: 0 }));
 
         const response = await request(app).post('/api/employees').send(dataWithZeroSalary);
 
@@ -277,19 +437,15 @@ describe('Employees Router', () => {
       });
 
       it('should not call employeeService when validation fails', async () => {
-        const createEmployeeSpy = vi.spyOn(employeeServiceModule.employeeService, 'createEmployee');
-
         await request(app).post('/api/employees').send({ firstName: 'J' });
 
-        expect(createEmployeeSpy).not.toHaveBeenCalled();
+        expect(employeeService.createEmployee).not.toHaveBeenCalled();
       });
     });
 
     describe('Service Error Handling', () => {
       it('should return 500 when service throws an error', async () => {
-        vi.spyOn(employeeServiceModule.employeeService, 'createEmployee').mockRejectedValue(
-          new Error('Database error')
-        );
+        vi.mocked(employeeService.createEmployee).mockRejectedValue(new Error('Database error'));
 
         const response = await request(app).post('/api/employees').send(validEmployeeData);
 
@@ -297,9 +453,7 @@ describe('Employees Router', () => {
       });
 
       it('should return "Failed to create employee" error message on service failure', async () => {
-        vi.spyOn(employeeServiceModule.employeeService, 'createEmployee').mockRejectedValue(
-          new Error('Connection failed')
-        );
+        vi.mocked(employeeService.createEmployee).mockRejectedValue(new Error('Connection failed'));
 
         const response = await request(app).post('/api/employees').send(validEmployeeData);
 

@@ -1,4 +1,4 @@
-import { createEmployee, EmployeeCreateInput } from '../db/employeeRepository';
+import { createEmployee, getEmployees, EmployeeCreateInput } from '../db/employeeRepository';
 import { CreateEmployeeInput } from '../lib/validation';
 
 /**
@@ -26,6 +26,17 @@ export class EmployeeService {
       console.error('Error creating employee:', error);
       throw error;
     }
+  }
+
+  async getEmployees(skip: number = 0, take: number = 50) {
+    const { employees, total } = await getEmployees(skip, take);
+
+    return {
+      employees,
+      total,
+      page: Math.floor(skip / take) + 1,
+      pageSize: take,
+    };
   }
 }
 

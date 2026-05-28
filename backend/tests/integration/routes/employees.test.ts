@@ -423,3 +423,131 @@ describe('POST /api/employees - Create Employee', () => {
     });
   });
 });
+
+describe('GET /api/employees - List Employees', () => {
+  let app: Express;
+
+  const seedEmployee = (overrides: Record<string, unknown> = {}) =>
+    prisma.employee.create({
+      data: {
+        firstName: 'John',
+        lastName: 'Doe',
+        jobTitle: 'Software Engineer',
+        country: 'USA',
+        salary: 100000,
+        department: 'Engineering',
+        hireDate: new Date('2024-01-15'),
+        employmentType: 'Full-time',
+        ...overrides,
+      },
+    });
+
+  beforeAll(() => {
+    app = createTestApp();
+  });
+
+  afterEach(async () => {
+    await prisma.employee.deleteMany({});
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  it('should return 200 with empty list when no employees exist', async () => {
+    const response = await request(app).get('/api/employees');
+
+    expect(response.status).toBe(200);
+    expect(response.headers['content-type']).toMatch(/application\/json/);
+    expect(response.body.employees).toEqual([]);
+    expect(response.body.total).toBe(0);
+    expect(response.body.page).toBe(1);
+    expect(response.body.pageSize).toBe(50);
+  });
+
+  it('should return 200 with created employees', async () => {
+    await seedEmployee({ firstName: 'Alice' });
+    await seedEmployee({ firstName: 'Bob' });
+
+    const response = await request(app).get('/api/employees');
+
+    expect(response.status).toBe(200);
+    expect(response.body.employees).toHaveLength(2);
+    expect(response.body.total).toBe(2);
+  });
+
+  it('should return employees with correct shape', async () => {
+    await seedEmployee();
+
+    const response = await request(app).get('/api/employees');
+
+    const employee = response.body.employees[0];
+    expect(employee).toHaveProperty('id');
+    expect(employee).toHaveProperty('firstName', 'John');
+    expect(employee).toHaveProperty('lastName', 'Doe');
+    expect(employee).toHaveProperty('jobTitle', 'Software Engineer');
+    expect(employee).toHaveProperty('country', 'USA');
+    expect(employee).toHaveProperty('salary', 100000);
+    expect(employee).toHaveProperty('department', 'Engineering');
+    expect(employee).toHaveProperty('employmentType', 'Full-time');
+    expect(employee).toHaveProperty('createdAt');
+    expect(employee).toHaveProperty('updatedAt');
+  });
+
+  it('should format hireDate as YYYY-MM-DD string', async () => {
+    await seedEmployee({ hireDate: new Date('2024-01-15') });
+
+    const response = await request(app).get('/api/employees');
+
+    expect(response.body.employees[0].hireDate).toBe('2024-01-15');
+    expect(response.body.employees[0].hireDate).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  });
+
+  it('should default to page=1 and pageSize=50 when not specified', async () => {
+    const response = await request(app).get('/api/employees');
+
+    expect(response.body.page).toBe(1);
+    expect(response.body.pageSize).toBe(50);
+  });
+
+  it('should return second page of results with correct pagination metadata', async () => {
+    await Promise.all([
+      seedEmployee({ firstName: 'Alice' }),
+      seedEmployee({ firstName: 'Bob' }),
+      seedEmployee({ firstName: 'Carol' }),
+    ]);
+
+    const response = await request(app).get('/api/employees?page=2&pageSize=2');
+
+    expect(response.status).toBe(200);
+    expect(response.body.employees).toHaveLength(1);
+    expect(response.body.total).toBe(3);
+    expect(response.body.page).toBe(2);
+    expect(response.body.pageSize).toBe(2);
+  });
+
+  it('should return null department when department is not set', async () => {
+    await seedEmployee({ department: undefined });
+
+    const response = await request(app).get('/api/employees');
+
+    expect(response.body.employees[0].department).toBeNull();
+  });
+
+  it('should persist and return total count across pages', async () => {
+    await Promise.all([
+      seedEmployee({ firstName: 'Alice' }),
+      seedEmployee({ firstName: 'Bob' }),
+      seedEmployee({ firstName: 'Carol' }),
+      seedEmployee({ firstName: 'Dave' }),
+    ]);
+
+    const page1 = await request(app).get('/api/employees?page=1&pageSize=2');
+    const page2 = await request(app).get('/api/employees?page=2&pageSize=2');
+
+    expect(page1.body.total).toBe(4);
+    expect(page2.body.total).toBe(4);
+    expect(page1.body.employees).toHaveLength(2);
+    expect(page2.body.employees).toHaveLength(2);
+  });
+});

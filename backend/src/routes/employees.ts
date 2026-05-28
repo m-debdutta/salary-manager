@@ -5,6 +5,42 @@ import { employeeService } from '../services/employeeService';
 const router = Router();
 
 /**
+ * GET /api/employees - Get all employees with optional pagination
+ * Query params: page (default 1), pageSize (default 50)
+ */
+router.get('/', async (req: Request, res: Response) => {
+  const page = Math.max(1, parseInt(req.query.page as string) || 1);
+  const pageSize = Math.min(100, Math.max(1, parseInt(req.query.pageSize as string) || 50));
+  const skip = (page - 1) * pageSize;
+
+  try {
+    const result = await employeeService.getEmployees(skip, pageSize);
+
+    return res.status(200).json({
+      employees: result.employees.map((e) => ({
+        id: e.id,
+        firstName: e.firstName,
+        lastName: e.lastName,
+        jobTitle: e.jobTitle,
+        country: e.country,
+        salary: e.salary,
+        department: e.department,
+        hireDate: e.hireDate.toISOString().split('T')[0],
+        employmentType: e.employmentType,
+        createdAt: e.createdAt,
+        updatedAt: e.updatedAt,
+      })),
+      total: result.total,
+      page: result.page,
+      pageSize: result.pageSize,
+    });
+  } catch (error) {
+    console.error('Error fetching employees:', error);
+    return res.status(500).json({ error: 'Failed to fetch employees' });
+  }
+});
+
+/**
  * POST /api/employees - Create a new employee
  * @param {Request} req - Express request with employee data in body
  * @param {Response} res - Express response
@@ -14,8 +50,9 @@ router.post('/', async (req: Request, res: Response) => {
   const validationResult = createEmployeeSchema.safeParse(req.body);
 
   if (!validationResult.success) {
-    const errorMessages = validationResult.error.issues
-      .map((err) => `${err.path.join('.')}: ${err.message}`);
+    const errorMessages = validationResult.error.issues.map(
+      (err) => `${err.path.join('.')}: ${err.message}`
+    );
 
     return res.status(400).json({
       error: errorMessages,

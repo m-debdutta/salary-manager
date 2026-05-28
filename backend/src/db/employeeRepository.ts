@@ -17,6 +17,17 @@ export interface EmployeeCreateInput {
 }
 
 /**
+ * Get a paginated list of employees with total count
+ */
+export const getEmployees = async (skip: number = 0, take: number = 50) => {
+  const [employees, total] = await Promise.all([
+    prisma.employee.findMany({ skip, take, orderBy: { id: 'asc' } }),
+    prisma.employee.count(),
+  ]);
+  return { employees, total };
+};
+
+/**
  * Create a new employee
  */
 export const createEmployee = async (data: EmployeeCreateInput) => {
