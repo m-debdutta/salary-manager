@@ -1,0 +1,44 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.optional {
+  font-weight: 400;
+  text-transform: none;
+  color: #9ca3af;
+  letter-spacing: 0;
+}
+
+.fieldError {
+  font-size: 0.78rem;
+  color: #dc2626;
+}
+
+.submitError {
+  font-size: 0.85rem;
+  color: #dc2626;
+  text-align: center;
+  margin: 0;
+}

@@ -9,7 +9,7 @@ exports[`EmployeeDetailsModal > delete button > matches snapshot in confirmation
     role="dialog"
   >
     <div
-      class="modal employee-details-modal"
+      class="modal _detailsModal_6280d9"
     >
       <div
         class="modal__header"
@@ -28,21 +28,21 @@ exports[`EmployeeDetailsModal > delete button > matches snapshot in confirmation
         </button>
       </div>
       <div
-        class="employee-details__hero"
+        class="_hero_6280d9"
       >
         <div
-          class="employee-details__avatar"
+          class="_avatar_6280d9"
         >
           AJ
         </div>
         <div>
           <h3
-            class="employee-details__name"
+            class="_name_6280d9"
           >
             Alice Johnson
           </h3>
           <p
-            class="employee-details__job-title"
+            class="_jobTitle_6280d9"
           >
             Software Engineer
           </p>
@@ -54,74 +54,74 @@ exports[`EmployeeDetailsModal > delete button > matches snapshot in confirmation
         </div>
       </div>
       <dl
-        class="employee-details__grid"
+        class="_grid_6280d9"
       >
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Department
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             Engineering
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Country
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             USA
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Salary
           </dt>
           <dd
-            class="employee-details__value employee-details__value--salary"
+            class="_fieldValue_6280d9 _fieldValueSalary_6280d9"
           >
             $120,000
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Hire Date
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             March 15, 2021
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Employee ID
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             #42
           </dd>
@@ -131,7 +131,7 @@ exports[`EmployeeDetailsModal > delete button > matches snapshot in confirmation
         class="modal__actions"
       >
         <p
-          class="modal__confirm-text"
+          class="_confirmText_6280d9"
         >
           Delete Alice Johnson? This cannot be undone.
         </p>
@@ -162,7 +162,7 @@ exports[`EmployeeDetailsModal > snapshot > matches snapshot for a full-time empl
     role="dialog"
   >
     <div
-      class="modal employee-details-modal"
+      class="modal _detailsModal_6280d9"
     >
       <div
         class="modal__header"
@@ -181,21 +181,21 @@ exports[`EmployeeDetailsModal > snapshot > matches snapshot for a full-time empl
         </button>
       </div>
       <div
-        class="employee-details__hero"
+        class="_hero_6280d9"
       >
         <div
-          class="employee-details__avatar"
+          class="_avatar_6280d9"
         >
           AJ
         </div>
         <div>
           <h3
-            class="employee-details__name"
+            class="_name_6280d9"
           >
             Alice Johnson
           </h3>
           <p
-            class="employee-details__job-title"
+            class="_jobTitle_6280d9"
           >
             Software Engineer
           </p>
@@ -207,74 +207,74 @@ exports[`EmployeeDetailsModal > snapshot > matches snapshot for a full-time empl
         </div>
       </div>
       <dl
-        class="employee-details__grid"
+        class="_grid_6280d9"
       >
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Department
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             Engineering
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Country
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             USA
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Salary
           </dt>
           <dd
-            class="employee-details__value employee-details__value--salary"
+            class="_fieldValue_6280d9 _fieldValueSalary_6280d9"
           >
             $120,000
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Hire Date
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             March 15, 2021
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Employee ID
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             #42
           </dd>
@@ -310,7 +310,7 @@ exports[`EmployeeDetailsModal > snapshot > matches snapshot when department is n
     role="dialog"
   >
     <div
-      class="modal employee-details-modal"
+      class="modal _detailsModal_6280d9"
     >
       <div
         class="modal__header"
@@ -329,21 +329,21 @@ exports[`EmployeeDetailsModal > snapshot > matches snapshot when department is n
         </button>
       </div>
       <div
-        class="employee-details__hero"
+        class="_hero_6280d9"
       >
         <div
-          class="employee-details__avatar"
+          class="_avatar_6280d9"
         >
           AJ
         </div>
         <div>
           <h3
-            class="employee-details__name"
+            class="_name_6280d9"
           >
             Alice Johnson
           </h3>
           <p
-            class="employee-details__job-title"
+            class="_jobTitle_6280d9"
           >
             Software Engineer
           </p>
@@ -355,74 +355,74 @@ exports[`EmployeeDetailsModal > snapshot > matches snapshot when department is n
         </div>
       </div>
       <dl
-        class="employee-details__grid"
+        class="_grid_6280d9"
       >
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Department
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             —
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Country
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             USA
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Salary
           </dt>
           <dd
-            class="employee-details__value employee-details__value--salary"
+            class="_fieldValue_6280d9 _fieldValueSalary_6280d9"
           >
             $120,000
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Hire Date
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             March 15, 2021
           </dd>
         </div>
         <div
-          class="employee-details__field"
+          class="_field_6280d9"
         >
           <dt
-            class="employee-details__label"
+            class="_fieldLabel_6280d9"
           >
             Employee ID
           </dt>
           <dd
-            class="employee-details__value"
+            class="_fieldValue_6280d9"
           >
             #42
           </dd>

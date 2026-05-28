@@ -97,13 +97,13 @@ describe('EmployeeCard', () => {
   describe('structure', () => {
     it('renders the root card element with the correct class', () => {
       const { container } = renderCard();
-      expect(container.firstChild).toHaveClass('employee-card');
+      expect(container.querySelector('[data-testid="employee-card"]')).toBeInTheDocument();
     });
 
     it('renders the header and footer sections', () => {
       const { container } = renderCard();
-      expect(container.querySelector('.employee-card__header')).toBeInTheDocument();
-      expect(container.querySelector('.employee-card__footer')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="card-header"]')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="card-footer"]')).toBeInTheDocument();
     });
   });
 

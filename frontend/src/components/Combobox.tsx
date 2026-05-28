@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import styles from './Combobox.module.css';
 
 export interface ComboboxGroup {
   label: string;
@@ -64,29 +65,27 @@ export const Combobox = ({
   };
 
   return (
-    <div className="combobox" ref={containerRef}>
+    <div className={styles.combobox} ref={containerRef}>
       <button
         type="button"
-        className={`form-input combobox__trigger${hasError ? ' form-input--error' : ''}`}
+        className={`form-input ${styles.trigger}${hasError ? ' form-input--error' : ''}`}
         onClick={() => setOpen((o) => !o)}
         onKeyDown={(e) => e.key === 'Escape' && setOpen(false)}
         aria-haspopup="listbox"
         aria-expanded={open}
       >
-        <span className={value ? '' : 'combobox__placeholder'}>
-          {value || placeholder}
-        </span>
-        <span className="combobox__chevron" aria-hidden="true">
+        <span className={value ? '' : styles.placeholder}>{value || placeholder}</span>
+        <span className={styles.chevron} aria-hidden="true">
           ▾
         </span>
       </button>
 
       {open && (
-        <div className="combobox__dropdown" role="listbox">
+        <div className={styles.dropdown} role="listbox">
           {searchable && (
-            <div className="combobox__search-wrap">
+            <div className={styles.searchWrap}>
               <input
-                className="combobox__search"
+                className={styles.search}
                 type="text"
                 placeholder={searchPlaceholder}
                 value={query}
@@ -96,20 +95,20 @@ export const Combobox = ({
               />
             </div>
           )}
-          <ul className="combobox__list">
+          <ul className={styles.list}>
             {isEmpty ? (
-              <li className="combobox__empty">No results</li>
+              <li className={styles.empty}>No results</li>
             ) : isGrouped ? (
               filteredGroups.map((group) => (
                 <li key={group.label}>
-                  <span className="combobox__group-label">{group.label}</span>
+                  <span className={styles.groupLabel}>{group.label}</span>
                   <ul>
                     {group.options.map((o) => (
                       <li
                         key={o}
                         role="option"
                         aria-selected={o === value}
-                        className={`combobox__option${o === value ? ' combobox__option--selected' : ''}`}
+                        className={`${styles.option}${o === value ? ` ${styles.optionSelected}` : ''}`}
                         onMouseDown={() => handleSelect(o)}
                       >
                         {o}
@@ -124,7 +123,7 @@ export const Combobox = ({
                   key={o}
                   role="option"
                   aria-selected={o === value}
-                  className={`combobox__option${o === value ? ' combobox__option--selected' : ''}`}
+                  className={`${styles.option}${o === value ? ` ${styles.optionSelected}` : ''}`}
                   onMouseDown={() => handleSelect(o)}
                 >
                   {o}

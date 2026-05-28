@@ -1,213 +1,4 @@
-/* App-specific styles */
-
-/* ── Dashboard ─────────────────────────────────── */
-.dashboard {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 32px 24px;
-}
-
-.dashboard__loading,
-.dashboard__error {
-  font-size: 0.95rem;
-  padding: 64px;
-  text-align: center;
-}
-
-.dashboard__loading {
-  color: #6b7280;
-}
-
-.dashboard__error {
-  color: #dc2626;
-}
-
-.dashboard__header {
-  margin-bottom: 28px;
-}
-
-.dashboard__title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #1a1a2e;
-}
-
-.dashboard__subtitle {
-  font-size: 1rem;
-  color: #6b7280;
-  margin-top: 4px;
-}
-
-/* ── Summary stats ─────────────────────────────── */
-.dashboard__stats {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 16px;
-  margin-bottom: 32px;
-}
-
-.stat-card {
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 20px 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-}
-
-.stat-card__value {
-  font-size: 1.75rem;
-  font-weight: 700;
-  color: #1a1a2e;
-}
-
-.stat-card__label {
-  font-size: 0.85rem;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
-/* ── Section header ───────────────────────────── */
-.dashboard__section-header {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-.dashboard__section-title {
-  font-size: 1rem;
-  font-weight: 400;
-  color: #6b7280;
-}
-
-.dashboard__section-count {
-  background: #e0e7ff;
-  color: #3730a3;
-  font-size: 0.75rem;
-  font-weight: 700;
-  padding: 2px 8px;
-  border-radius: 999px;
-}
-
-/* ── Employee grid ─────────────────────────────── */
-.dashboard__grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 20px;
-  max-height: 65vh;
-  overflow-y: auto;
-  padding-right: 6px;
-  scroll-behavior: smooth;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: contain;
-}
-
-.dashboard__sentinel {
-  grid-column: 1 / -1;
-  height: 1px;
-}
-
-.dashboard__loading--paging {
-  grid-column: 1 / -1;
-  padding: 32px;
-}
-
-/* ── Employee card ─────────────────────────────── */
-.employee-card {
-  position: relative;
-  background: #ffffff;
-  border-radius: 12px;
-  padding: 16px 18px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 10px;
-  height: 94px;
-  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
-  transition:
-    box-shadow 0.2s ease,
-    transform 0.2s ease;
-}
-
-.employee-card:hover {
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
-  transform: translateY(-2px);
-}
-
-.employee-card__edit-btn {
-  position: absolute;
-  top: 4px;
-  right: 4px;
-  width: 26px;
-  height: 26px;
-  padding: 0;
-  border: none;
-  border-radius: 6px;
-  background: transparent;
-  color: #9ca3af;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition:
-    opacity 0.15s ease,
-    background 0.15s ease,
-    color 0.15s ease;
-}
-
-.employee-card:hover .employee-card__edit-btn {
-  opacity: 1;
-}
-
-.employee-card__edit-btn:hover {
-  background: #ede9fe;
-  color: #4f46e5;
-}
-
-.employee-card__header {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.employee-card__avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
-  font-size: 0.875rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.employee-card__header-info {
-  flex: 1;
-  min-width: 0;
-}
-
-.employee-card__name {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1a1a2e;
-  margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.employee-card__title {
-  font-size: 0.8rem;
-  color: #6b7280;
-  margin: 1px 0 0;
-}
+/* Shared styles — used across multiple components */
 
 /* ── Badges ────────────────────────────────────── */
 .badge {
@@ -237,13 +28,6 @@
 .badge--default {
   background: #f3f4f6;
   color: #374151;
-}
-
-/* ── Dashboard header button ───────────────────── */
-.dashboard__header {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
 }
 
 /* ── Buttons ───────────────────────────────────── */
@@ -285,7 +69,51 @@
   background: #e5e7eb;
 }
 
-/* ── Modal overlay ─────────────────────────────── */
+.btn--danger {
+  background: #dc2626;
+  color: #fff;
+}
+
+.btn--danger:hover:not(:disabled) {
+  background: #b91c1c;
+}
+
+/* ── Form inputs ───────────────────────────────── */
+.form-input {
+  padding: 9px 12px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  color: #1a1a2e;
+  outline: none;
+  transition: border-color 0.15s ease;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.form-input:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+
+.form-input--error {
+  border-color: #dc2626;
+}
+
+.form-input--error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
+}
+
+.form-select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 32px;
+}
+
+/* ── Modal overlay & container ─────────────────── */
 .modal-overlay {
   position: fixed;
   inset: 0;
@@ -338,271 +166,9 @@
   color: #374151;
 }
 
-/* ── Form ──────────────────────────────────────── */
-.modal__form {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-}
-
-.form-field {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
-.form-label {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: #374151;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-
-.form-optional {
-  font-weight: 400;
-  text-transform: none;
-  color: #9ca3af;
-  letter-spacing: 0;
-}
-
-.form-input {
-  padding: 9px 12px;
-  border: 1.5px solid #d1d5db;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  color: #1a1a2e;
-  outline: none;
-  transition: border-color 0.15s ease;
-  background: #fff;
-  width: 100%;
-  box-sizing: border-box;
-}
-
-.form-input:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-}
-
-.form-input--error {
-  border-color: #dc2626;
-}
-
-.form-input--error:focus {
-  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
-}
-
-.form-select {
-  appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7280' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  padding-right: 32px;
-}
-
-.form-error {
-  font-size: 0.78rem;
-  color: #dc2626;
-}
-
-.form-submit-error {
-  font-size: 0.85rem;
-  color: #dc2626;
-  text-align: center;
-  margin: 0;
-}
-
 .modal__actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
   margin-top: 8px;
-}
-
-/* ── Job Title Combobox ─────────────────────────── */
-.combobox {
-  position: relative;
-}
-
-.combobox__trigger {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  cursor: pointer;
-  text-align: left;
-  background: #fff;
-  width: 100%;
-  gap: 8px;
-}
-
-.combobox__placeholder {
-  color: #9ca3af;
-}
-
-.combobox__chevron {
-  font-size: 0.75rem;
-  color: #6b7280;
-  flex-shrink: 0;
-}
-
-.combobox__dropdown {
-  position: absolute;
-  top: calc(100% + 4px);
-  left: 0;
-  right: 0;
-  background: #fff;
-  border: 1.5px solid #d1d5db;
-  border-radius: 8px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-  z-index: 200;
-  overflow: hidden;
-}
-
-.combobox__search-wrap {
-  padding: 8px;
-  border-bottom: 1px solid #f3f4f6;
-}
-
-.combobox__search {
-  width: 100%;
-  padding: 7px 10px;
-  border: 1.5px solid #e5e7eb;
-  border-radius: 6px;
-  font-size: 0.875rem;
-  outline: none;
-  box-sizing: border-box;
-}
-
-.combobox__search:focus {
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
-}
-
-.combobox__list {
-  list-style: none;
-  margin: 0;
-  padding: 4px 0;
-  max-height: 220px;
-  overflow-y: auto;
-}
-
-.combobox__list ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.combobox__group-label {
-  display: block;
-  padding: 6px 12px 3px;
-  font-size: 0.7rem;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: #9ca3af;
-}
-
-.combobox__option {
-  padding: 7px 16px;
-  font-size: 0.875rem;
-  color: #374151;
-  cursor: pointer;
-}
-
-.combobox__option:hover {
-  background: #f5f3ff;
-  color: #4f46e5;
-}
-
-.combobox__option--selected {
-  color: #4f46e5;
-  font-weight: 600;
-}
-
-.combobox__empty {
-  padding: 12px 16px;
-  font-size: 0.875rem;
-  color: #9ca3af;
-  text-align: center;
-}
-
-/* ── Employee Details Modal ─────────────────────── */
-.employee-details-modal {
-  max-width: 480px;
-}
-
-.employee-details__hero {
-  display: flex;
-  align-items: center;
-  gap: 20px;
-  padding: 20px 0 24px;
-  border-bottom: 1px solid #f3f4f6;
-  margin-bottom: 24px;
-}
-
-.employee-details__avatar {
-  width: 64px;
-  height: 64px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  color: #fff;
-  font-size: 1.25rem;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.employee-details__name {
-  font-size: 1.15rem;
-  font-weight: 700;
-  color: #1a1a2e;
-  margin: 0 0 4px;
-}
-
-.employee-details__job-title {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin: 0 0 8px;
-}
-
-.employee-details__grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 20px;
-  margin: 0;
-}
-
-.employee-details__field {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.employee-details__label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #9ca3af;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.employee-details__value {
-  font-size: 0.9rem;
-  color: #1a1a2e;
-  font-weight: 500;
-  margin: 0;
-}
-
-.employee-details__value--salary {
-  color: #059669;
-  font-weight: 700;
-  font-size: 1rem;
 }

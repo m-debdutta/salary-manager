@@ -4,6 +4,7 @@ import { fetchEmployees, deleteEmployee } from '../api/employees';
 import { EmployeeCard, type Employee } from './EmployeeCard';
 import AddEmployeeModal from './AddEmployeeModal';
 import EmployeeDetailsModal from './EmployeeDetailsModal';
+import styles from './Dashboard.module.css';
 
 const PAGE_SIZE = 80;
 
@@ -64,11 +65,11 @@ export default function Dashboard() {
   }, [isLoading]);
 
   return (
-    <div className="dashboard">
-      <header className="dashboard__header">
+    <div className={styles.dashboard} data-testid="dashboard">
+      <header className={styles.header}>
         <div>
-          <h1 className="dashboard__title">Salary Manager</h1>
-          <p className="dashboard__subtitle">Employee Overview</p>
+          <h1 className={styles.title}>Salary Manager</h1>
+          <p className={styles.subtitle}>Employee Overview</p>
         </div>
         <button className="btn btn--primary" onClick={() => setShowModal(true)}>
           + Add Employee
@@ -94,26 +95,26 @@ export default function Dashboard() {
         />
       )}
 
-      <div className="dashboard__stats">
-        <div className="stat-card">
-          <span className="stat-card__value">{isLoading ? '—' : total}</span>
-          <span className="stat-card__label">Total Employees</span>
+      <div className={styles.stats} data-testid="stats-section">
+        <div className={styles.statCard} data-testid="stat-card">
+          <span className={styles.statValue}>{isLoading ? '—' : total}</span>
+          <span className={styles.statLabel}>Total Employees</span>
         </div>
       </div>
 
-      <div className="dashboard__section-header">
-        <p className="dashboard__section-title">Employees</p>
-        {!isLoading && <span className="dashboard__section-count">{total}</span>}
+      <div className={styles.sectionHeader}>
+        <p className={styles.sectionTitle}>Employees</p>
+        {!isLoading && <span className={styles.sectionCount}>{total}</span>}
       </div>
 
       {isError && (
-        <p className="dashboard__error">Failed to load employees. Please try again.</p>
+        <p className={styles.error}>Failed to load employees. Please try again.</p>
       )}
 
       {isLoading ? (
-        <p className="dashboard__loading">Loading employees…</p>
+        <p className={styles.loading}>Loading employees…</p>
       ) : (
-        <div className="dashboard__grid" ref={gridRef}>
+        <div className={styles.grid} data-testid="employee-grid" ref={gridRef}>
           {employees.map((employee) => (
             <EmployeeCard
               key={employee.id}
@@ -122,9 +123,9 @@ export default function Dashboard() {
               onEdit={() => setEmployeeToEdit(employee)}
             />
           ))}
-          <div ref={sentinelRef} className="dashboard__sentinel" />
+          <div ref={sentinelRef} className={styles.sentinel} />
           {isFetchingNextPage && (
-            <p className="dashboard__loading dashboard__loading--paging">Loading more…</p>
+            <p className={`${styles.loading} ${styles.loadingPaging}`}>Loading more…</p>
           )}
         </div>
       )}

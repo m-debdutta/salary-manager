@@ -1,3 +1,5 @@
+import styles from './EmployeeCard.module.css';
+
 export interface Employee {
   id: number;
   firstName: string;
@@ -31,14 +33,15 @@ export const EmployeeCard = ({ employee, onClick, onEdit }: EmployeeCardProps) =
 
   return (
     <div
-      className="employee-card"
+      className={styles.card}
+      data-testid="employee-card"
       onClick={onClick}
       style={onClick ? { cursor: 'pointer' } : undefined}
     >
       {onEdit && (
         <button
           type="button"
-          className="employee-card__edit-btn"
+          className={styles.editBtn}
           aria-label={`Edit ${fullName}`}
           onClick={(e) => {
             e.stopPropagation();
@@ -62,13 +65,13 @@ export const EmployeeCard = ({ employee, onClick, onEdit }: EmployeeCardProps) =
           </svg>
         </button>
       )}
-      <div className="employee-card__header">
-        <div className="employee-card__avatar">{initials}</div>
-        <div className="employee-card__header-info">
-          <h3 className="employee-card__name">{fullName}</h3>
-          <p className="employee-card__title">{employee.jobTitle}</p>
+      <div className={styles.header} data-testid="card-header">
+        <div className={styles.avatar}>{initials}</div>
+        <div className={styles.headerInfo}>
+          <h3 className={styles.name}>{fullName}</h3>
+          <p className={styles.jobTitle}>{employee.jobTitle}</p>
         </div>
-        <div className="employee-card__footer">
+        <div data-testid="card-footer">
           <span className={badgeClass}>{employee.employmentType}</span>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Employee } from './EmployeeCard';
+import styles from './EmployeeDetailsModal.module.css';
 
 interface EmployeeDetailsModalProps {
   employee: Employee;
@@ -49,7 +50,7 @@ export default function EmployeeDetailsModal({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="modal employee-details-modal">
+      <div className={`modal ${styles.detailsModal}`}>
         <div className="modal__header">
           <h2 className="modal__title" id="employee-details-title">
             Employee Details
@@ -59,44 +60,44 @@ export default function EmployeeDetailsModal({
           </button>
         </div>
 
-        <div className="employee-details__hero">
-          <div className="employee-details__avatar">{initials}</div>
+        <div className={styles.hero}>
+          <div className={styles.avatar}>{initials}</div>
           <div>
-            <h3 className="employee-details__name">{fullName}</h3>
-            <p className="employee-details__job-title">{employee.jobTitle}</p>
+            <h3 className={styles.name}>{fullName}</h3>
+            <p className={styles.jobTitle}>{employee.jobTitle}</p>
             <span className={badgeClass}>{employee.employmentType}</span>
           </div>
         </div>
 
-        <dl className="employee-details__grid">
-          <div className="employee-details__field">
-            <dt className="employee-details__label">Department</dt>
-            <dd className="employee-details__value">{employee.department ?? '—'}</dd>
+        <dl className={styles.grid}>
+          <div className={styles.field}>
+            <dt className={styles.fieldLabel}>Department</dt>
+            <dd className={styles.fieldValue}>{employee.department ?? '—'}</dd>
           </div>
-          <div className="employee-details__field">
-            <dt className="employee-details__label">Country</dt>
-            <dd className="employee-details__value">{employee.country}</dd>
+          <div className={styles.field}>
+            <dt className={styles.fieldLabel}>Country</dt>
+            <dd className={styles.fieldValue}>{employee.country}</dd>
           </div>
-          <div className="employee-details__field">
-            <dt className="employee-details__label">Salary</dt>
-            <dd className="employee-details__value employee-details__value--salary">
+          <div className={styles.field}>
+            <dt className={styles.fieldLabel}>Salary</dt>
+            <dd className={`${styles.fieldValue} ${styles.fieldValueSalary}`}>
               {formattedSalary}
             </dd>
           </div>
-          <div className="employee-details__field">
-            <dt className="employee-details__label">Hire Date</dt>
-            <dd className="employee-details__value">{formattedHireDate}</dd>
+          <div className={styles.field}>
+            <dt className={styles.fieldLabel}>Hire Date</dt>
+            <dd className={styles.fieldValue}>{formattedHireDate}</dd>
           </div>
-          <div className="employee-details__field">
-            <dt className="employee-details__label">Employee ID</dt>
-            <dd className="employee-details__value">#{employee.id}</dd>
+          <div className={styles.field}>
+            <dt className={styles.fieldLabel}>Employee ID</dt>
+            <dd className={styles.fieldValue}>#{employee.id}</dd>
           </div>
         </dl>
 
         <div className="modal__actions">
           {confirmingDelete ? (
             <>
-              <p className="modal__confirm-text">
+              <p className={styles.confirmText}>
                 Delete {fullName}? This cannot be undone.
               </p>
               <button type="button" className="btn btn--danger" onClick={onDelete}>

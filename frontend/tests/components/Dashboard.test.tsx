@@ -92,7 +92,7 @@ describe('Dashboard', () => {
 
     it('does not render the grid while loading', () => {
       const { container } = renderDashboard();
-      expect(container.querySelector('.dashboard__grid')).not.toBeInTheDocument();
+      expect(container.querySelector('[data-testid="employee-grid"]')).not.toBeInTheDocument();
     });
   });
 
@@ -102,7 +102,7 @@ describe('Dashboard', () => {
       renderDashboard();
       const totalCard = screen
         .getByText('Total Employees')
-        .closest('.stat-card') as HTMLElement;
+        .closest('[data-testid="stat-card"]') as HTMLElement;
       await waitFor(() =>
         expect(
           within(totalCard).getByText(String(EXPECTED.totalEmployees)),
@@ -112,7 +112,7 @@ describe('Dashboard', () => {
 
     it('renders exactly one stat card', () => {
       const { container } = renderDashboard();
-      expect(container.querySelectorAll('.stat-card')).toHaveLength(1);
+      expect(container.querySelectorAll('[data-testid="stat-card"]')).toHaveLength(1);
     });
   });
 
@@ -121,7 +121,7 @@ describe('Dashboard', () => {
     it('renders a card for every employee', async () => {
       const { container } = renderDashboard();
       await waitFor(() =>
-        expect(container.querySelectorAll('.employee-card')).toHaveLength(
+        expect(container.querySelectorAll('[data-testid="employee-card"]')).toHaveLength(
           EXPECTED.totalEmployees,
         ),
       );
@@ -135,7 +135,7 @@ describe('Dashboard', () => {
     it('renders the grid container after loading', async () => {
       const { container } = renderDashboard();
       await waitFor(() =>
-        expect(container.querySelector('.dashboard__grid')).toBeInTheDocument(),
+        expect(container.querySelector('[data-testid="employee-grid"]')).toBeInTheDocument(),
       );
     });
   });
@@ -259,17 +259,17 @@ describe('Dashboard', () => {
   describe('structure', () => {
     it('renders the root dashboard element', () => {
       const { container } = renderDashboard();
-      expect(container.firstChild).toHaveClass('dashboard');
+      expect(container.querySelector('[data-testid="dashboard"]')).toBeInTheDocument();
     });
 
     it('renders the header section', () => {
       const { container } = renderDashboard();
-      expect(container.querySelector('.dashboard__header')).toBeInTheDocument();
+      expect(container.querySelector('header')).toBeInTheDocument();
     });
 
     it('renders the stats section', () => {
       const { container } = renderDashboard();
-      expect(container.querySelector('.dashboard__stats')).toBeInTheDocument();
+      expect(container.querySelector('[data-testid="stats-section"]')).toBeInTheDocument();
     });
   });
 

@@ -10,6 +10,7 @@ import type { Employee } from './EmployeeCard';
 import countriesData from '../../../data/countries.json';
 import departmentsData from '../../../data/departments.json';
 import employmentTypesData from '../../../data/employment_types.json';
+import styles from './AddEmployeeModal.module.css';
 
 const EMPLOYMENT_TYPES = employmentTypesData;
 const COUNTRIES = countriesData.map((c) => c.name);
@@ -122,10 +123,10 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
           </button>
         </div>
 
-        <form className="modal__form" onSubmit={handleSubmit} noValidate>
-          <div className="form-row">
-            <div className="form-field">
-              <label className="form-label" htmlFor="firstName">
+        <form className={styles.form} onSubmit={handleSubmit} noValidate>
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="firstName">
                 First Name
               </label>
               <input
@@ -138,11 +139,11 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
                 autoComplete="given-name"
               />
               {fieldErrors.firstName && (
-                <span className="form-error">{fieldErrors.firstName}</span>
+                <span className={styles.fieldError}>{fieldErrors.firstName}</span>
               )}
             </div>
-            <div className="form-field">
-              <label className="form-label" htmlFor="lastName">
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="lastName">
                 Last Name
               </label>
               <input
@@ -155,13 +156,13 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
                 autoComplete="family-name"
               />
               {fieldErrors.lastName && (
-                <span className="form-error">{fieldErrors.lastName}</span>
+                <span className={styles.fieldError}>{fieldErrors.lastName}</span>
               )}
             </div>
           </div>
 
-          <div className="form-field">
-            <label className="form-label" htmlFor="jobTitle">
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="jobTitle">
               Job Title
             </label>
             <Combobox
@@ -174,13 +175,13 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
               hasError={!!fieldErrors.jobTitle}
             />
             {fieldErrors.jobTitle && (
-              <span className="form-error">{fieldErrors.jobTitle}</span>
+              <span className={styles.fieldError}>{fieldErrors.jobTitle}</span>
             )}
           </div>
 
-          <div className="form-field">
-            <label className="form-label" htmlFor="department">
-              Department <span className="form-optional">(optional)</span>
+          <div className={styles.field}>
+            <label className={styles.label} htmlFor="department">
+              Department <span className={styles.optional}>(optional)</span>
             </label>
             <Combobox
               value={form.department ?? ''}
@@ -190,9 +191,9 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
             />
           </div>
 
-          <div className="form-row">
-            <div className="form-field">
-              <label className="form-label" htmlFor="country">
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="country">
                 Country
               </label>
               <Combobox
@@ -205,11 +206,11 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
                 hasError={!!fieldErrors.country}
               />
               {fieldErrors.country && (
-                <span className="form-error">{fieldErrors.country}</span>
+                <span className={styles.fieldError}>{fieldErrors.country}</span>
               )}
             </div>
-            <div className="form-field">
-              <label className="form-label" htmlFor="salary">
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="salary">
                 Salary (USD)
               </label>
               <input
@@ -223,14 +224,14 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
                 onChange={handleChange}
               />
               {fieldErrors.salary && (
-                <span className="form-error">{fieldErrors.salary}</span>
+                <span className={styles.fieldError}>{fieldErrors.salary}</span>
               )}
             </div>
           </div>
 
-          <div className="form-row">
-            <div className="form-field">
-              <label className="form-label" htmlFor="hireDate">
+          <div className={styles.row}>
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="hireDate">
                 Hire Date
               </label>
               <input
@@ -242,11 +243,11 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
                 onChange={handleChange}
               />
               {fieldErrors.hireDate && (
-                <span className="form-error">{fieldErrors.hireDate}</span>
+                <span className={styles.fieldError}>{fieldErrors.hireDate}</span>
               )}
             </div>
-            <div className="form-field">
-              <label className="form-label" htmlFor="employmentType">
+            <div className={styles.field}>
+              <label className={styles.label} htmlFor="employmentType">
                 Employment Type
               </label>
               <Combobox
@@ -257,13 +258,13 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
                 hasError={!!fieldErrors.employmentType}
               />
               {fieldErrors.employmentType && (
-                <span className="form-error">{fieldErrors.employmentType}</span>
+                <span className={styles.fieldError}>{fieldErrors.employmentType}</span>
               )}
             </div>
           </div>
 
           {mutation.isError && (
-            <p className="form-submit-error">
+            <p className={styles.submitError}>
               {isEditMode
                 ? 'Failed to update employee. Please try again.'
                 : 'Failed to create employee. Please try again.'}

@@ -3,19 +3,20 @@
 exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="dashboard"
+    class="_dashboard_4b4f5e"
+    data-testid="dashboard"
   >
     <header
-      class="dashboard__header"
+      class="_header_4b4f5e"
     >
       <div>
         <h1
-          class="dashboard__title"
+          class="_title_4b4f5e"
         >
           Salary Manager
         </h1>
         <p
-          class="dashboard__subtitle"
+          class="_subtitle_4b4f5e"
         >
           Employee Overview
         </p>
@@ -27,47 +28,51 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
       </button>
     </header>
     <div
-      class="dashboard__stats"
+      class="_stats_4b4f5e"
+      data-testid="stats-section"
     >
       <div
-        class="stat-card"
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
       >
         <span
-          class="stat-card__value"
+          class="_statValue_4b4f5e"
         >
           8
         </span>
         <span
-          class="stat-card__label"
+          class="_statLabel_4b4f5e"
         >
           Total Employees
         </span>
       </div>
     </div>
     <div
-      class="dashboard__section-header"
+      class="_sectionHeader_4b4f5e"
     >
       <p
-        class="dashboard__section-title"
+        class="_sectionTitle_4b4f5e"
       >
         Employees
       </p>
       <span
-        class="dashboard__section-count"
+        class="_sectionCount_4b4f5e"
       >
         8
       </span>
     </div>
     <div
-      class="dashboard__grid"
+      class="_grid_4b4f5e"
+      data-testid="employee-grid"
     >
       <div
-        class="employee-card"
+        class="_card_bdb005"
+        data-testid="employee-card"
         style="cursor: pointer;"
       >
         <button
           aria-label="Edit Alice Johnson"
-          class="employee-card__edit-btn"
+          class="_editBtn_bdb005"
           type="button"
         >
           <svg
@@ -91,29 +96,30 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           </svg>
         </button>
         <div
-          class="employee-card__header"
+          class="_header_bdb005"
+          data-testid="card-header"
         >
           <div
-            class="employee-card__avatar"
+            class="_avatar_bdb005"
           >
             AJ
           </div>
           <div
-            class="employee-card__header-info"
+            class="_headerInfo_bdb005"
           >
             <h3
-              class="employee-card__name"
+              class="_name_bdb005"
             >
               Alice Johnson
             </h3>
             <p
-              class="employee-card__title"
+              class="_jobTitle_bdb005"
             >
               Software Engineer
             </p>
           </div>
           <div
-            class="employee-card__footer"
+            data-testid="card-footer"
           >
             <span
               class="badge badge--full-time"
@@ -124,12 +130,13 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
         </div>
       </div>
       <div
-        class="employee-card"
+        class="_card_bdb005"
+        data-testid="employee-card"
         style="cursor: pointer;"
       >
         <button
           aria-label="Edit Bob Smith"
-          class="employee-card__edit-btn"
+          class="_editBtn_bdb005"
           type="button"
         >
           <svg
@@ -153,29 +160,30 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           </svg>
         </button>
         <div
-          class="employee-card__header"
+          class="_header_bdb005"
+          data-testid="card-header"
         >
           <div
-            class="employee-card__avatar"
+            class="_avatar_bdb005"
           >
             BS
           </div>
           <div
-            class="employee-card__header-info"
+            class="_headerInfo_bdb005"
           >
             <h3
-              class="employee-card__name"
+              class="_name_bdb005"
             >
               Bob Smith
             </h3>
             <p
-              class="employee-card__title"
+              class="_jobTitle_bdb005"
             >
               Product Manager
             </p>
           </div>
           <div
-            class="employee-card__footer"
+            data-testid="card-footer"
           >
             <span
               class="badge badge--full-time"
@@ -186,12 +194,13 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
         </div>
       </div>
       <div
-        class="employee-card"
+        class="_card_bdb005"
+        data-testid="employee-card"
         style="cursor: pointer;"
       >
         <button
           aria-label="Edit Clara Nguyen"
-          class="employee-card__edit-btn"
+          class="_editBtn_bdb005"
           type="button"
         >
           <svg
@@ -215,29 +224,30 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           </svg>
         </button>
         <div
-          class="employee-card__header"
+          class="_header_bdb005"
+          data-testid="card-header"
         >
           <div
-            class="employee-card__avatar"
+            class="_avatar_bdb005"
           >
             CN
           </div>
           <div
-            class="employee-card__header-info"
+            class="_headerInfo_bdb005"
           >
             <h3
-              class="employee-card__name"
+              class="_name_bdb005"
             >
               Clara Nguyen
             </h3>
             <p
-              class="employee-card__title"
+              class="_jobTitle_bdb005"
             >
               UX Designer
             </p>
           </div>
           <div
-            class="employee-card__footer"
+            data-testid="card-footer"
           >
             <span
               class="badge badge--full-time"
@@ -248,12 +258,13 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
         </div>
       </div>
       <div
-        class="employee-card"
+        class="_card_bdb005"
+        data-testid="employee-card"
         style="cursor: pointer;"
       >
         <button
           aria-label="Edit David Müller"
-          class="employee-card__edit-btn"
+          class="_editBtn_bdb005"
           type="button"
         >
           <svg
@@ -277,29 +288,30 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           </svg>
         </button>
         <div
-          class="employee-card__header"
+          class="_header_bdb005"
+          data-testid="card-header"
         >
           <div
-            class="employee-card__avatar"
+            class="_avatar_bdb005"
           >
             DM
           </div>
           <div
-            class="employee-card__header-info"
+            class="_headerInfo_bdb005"
           >
             <h3
-              class="employee-card__name"
+              class="_name_bdb005"
             >
               David Müller
             </h3>
             <p
-              class="employee-card__title"
+              class="_jobTitle_bdb005"
             >
               Backend Developer
             </p>
           </div>
           <div
-            class="employee-card__footer"
+            data-testid="card-footer"
           >
             <span
               class="badge badge--contract"
@@ -310,12 +322,13 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
         </div>
       </div>
       <div
-        class="employee-card"
+        class="_card_bdb005"
+        data-testid="employee-card"
         style="cursor: pointer;"
       >
         <button
           aria-label="Edit Eva Martinez"
-          class="employee-card__edit-btn"
+          class="_editBtn_bdb005"
           type="button"
         >
           <svg
@@ -339,29 +352,30 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           </svg>
         </button>
         <div
-          class="employee-card__header"
+          class="_header_bdb005"
+          data-testid="card-header"
         >
           <div
-            class="employee-card__avatar"
+            class="_avatar_bdb005"
           >
             EM
           </div>
           <div
-            class="employee-card__header-info"
+            class="_headerInfo_bdb005"
           >
             <h3
-              class="employee-card__name"
+              class="_name_bdb005"
             >
               Eva Martinez
             </h3>
             <p
-              class="employee-card__title"
+              class="_jobTitle_bdb005"
             >
               Data Analyst
             </p>
           </div>
           <div
-            class="employee-card__footer"
+            data-testid="card-footer"
           >
             <span
               class="badge badge--part-time"
@@ -372,12 +386,13 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
         </div>
       </div>
       <div
-        class="employee-card"
+        class="_card_bdb005"
+        data-testid="employee-card"
         style="cursor: pointer;"
       >
         <button
           aria-label="Edit Frank Lee"
-          class="employee-card__edit-btn"
+          class="_editBtn_bdb005"
           type="button"
         >
           <svg
@@ -401,29 +416,30 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           </svg>
         </button>
         <div
-          class="employee-card__header"
+          class="_header_bdb005"
+          data-testid="card-header"
         >
           <div
-            class="employee-card__avatar"
+            class="_avatar_bdb005"
           >
             FL
           </div>
           <div
-            class="employee-card__header-info"
+            class="_headerInfo_bdb005"
           >
             <h3
-              class="employee-card__name"
+              class="_name_bdb005"
             >
               Frank Lee
             </h3>
             <p
-              class="employee-card__title"
+              class="_jobTitle_bdb005"
             >
               DevOps Engineer
             </p>
           </div>
           <div
-            class="employee-card__footer"
+            data-testid="card-footer"
           >
             <span
               class="badge badge--full-time"
@@ -434,12 +450,13 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
         </div>
       </div>
       <div
-        class="employee-card"
+        class="_card_bdb005"
+        data-testid="employee-card"
         style="cursor: pointer;"
       >
         <button
           aria-label="Edit Grace Patel"
-          class="employee-card__edit-btn"
+          class="_editBtn_bdb005"
           type="button"
         >
           <svg
@@ -463,29 +480,30 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           </svg>
         </button>
         <div
-          class="employee-card__header"
+          class="_header_bdb005"
+          data-testid="card-header"
         >
           <div
-            class="employee-card__avatar"
+            class="_avatar_bdb005"
           >
             GP
           </div>
           <div
-            class="employee-card__header-info"
+            class="_headerInfo_bdb005"
           >
             <h3
-              class="employee-card__name"
+              class="_name_bdb005"
             >
               Grace Patel
             </h3>
             <p
-              class="employee-card__title"
+              class="_jobTitle_bdb005"
             >
               HR Manager
             </p>
           </div>
           <div
-            class="employee-card__footer"
+            data-testid="card-footer"
           >
             <span
               class="badge badge--full-time"
@@ -496,12 +514,13 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
         </div>
       </div>
       <div
-        class="employee-card"
+        class="_card_bdb005"
+        data-testid="employee-card"
         style="cursor: pointer;"
       >
         <button
           aria-label="Edit Henry Dubois"
-          class="employee-card__edit-btn"
+          class="_editBtn_bdb005"
           type="button"
         >
           <svg
@@ -525,29 +544,30 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           </svg>
         </button>
         <div
-          class="employee-card__header"
+          class="_header_bdb005"
+          data-testid="card-header"
         >
           <div
-            class="employee-card__avatar"
+            class="_avatar_bdb005"
           >
             HD
           </div>
           <div
-            class="employee-card__header-info"
+            class="_headerInfo_bdb005"
           >
             <h3
-              class="employee-card__name"
+              class="_name_bdb005"
             >
               Henry Dubois
             </h3>
             <p
-              class="employee-card__title"
+              class="_jobTitle_bdb005"
             >
               Frontend Developer
             </p>
           </div>
           <div
-            class="employee-card__footer"
+            data-testid="card-footer"
           >
             <span
               class="badge badge--contract"
@@ -558,7 +578,7 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
         </div>
       </div>
       <div
-        class="dashboard__sentinel"
+        class="_sentinel_4b4f5e"
       />
     </div>
   </div>
@@ -568,19 +588,20 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
 exports[`Dashboard > snapshot > matches loading snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="dashboard"
+    class="_dashboard_4b4f5e"
+    data-testid="dashboard"
   >
     <header
-      class="dashboard__header"
+      class="_header_4b4f5e"
     >
       <div>
         <h1
-          class="dashboard__title"
+          class="_title_4b4f5e"
         >
           Salary Manager
         </h1>
         <p
-          class="dashboard__subtitle"
+          class="_subtitle_4b4f5e"
         >
           Employee Overview
         </p>
@@ -592,34 +613,36 @@ exports[`Dashboard > snapshot > matches loading snapshot 1`] = `
       </button>
     </header>
     <div
-      class="dashboard__stats"
+      class="_stats_4b4f5e"
+      data-testid="stats-section"
     >
       <div
-        class="stat-card"
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
       >
         <span
-          class="stat-card__value"
+          class="_statValue_4b4f5e"
         >
           —
         </span>
         <span
-          class="stat-card__label"
+          class="_statLabel_4b4f5e"
         >
           Total Employees
         </span>
       </div>
     </div>
     <div
-      class="dashboard__section-header"
+      class="_sectionHeader_4b4f5e"
     >
       <p
-        class="dashboard__section-title"
+        class="_sectionTitle_4b4f5e"
       >
         Employees
       </p>
     </div>
     <p
-      class="dashboard__loading"
+      class="_loading_4b4f5e"
     >
       Loading employees…
     </p>

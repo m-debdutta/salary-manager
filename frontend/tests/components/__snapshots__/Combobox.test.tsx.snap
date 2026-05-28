@@ -3,22 +3,22 @@
 exports[`Combobox > snapshot > matches closed snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="combobox"
+    class="_combobox_53f94f"
   >
     <button
       aria-expanded="false"
       aria-haspopup="listbox"
-      class="form-input combobox__trigger"
+      class="form-input _trigger_53f94f"
       type="button"
     >
       <span
-        class="combobox__placeholder"
+        class="_placeholder_53f94f"
       >
         Select…
       </span>
       <span
         aria-hidden="true"
-        class="combobox__chevron"
+        class="_chevron_53f94f"
       >
         ▾
       </span>
@@ -30,50 +30,50 @@ exports[`Combobox > snapshot > matches closed snapshot 1`] = `
 exports[`Combobox > snapshot > matches open flat snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="combobox"
+    class="_combobox_53f94f"
   >
     <button
       aria-expanded="true"
       aria-haspopup="listbox"
-      class="form-input combobox__trigger"
+      class="form-input _trigger_53f94f"
       type="button"
     >
       <span
-        class="combobox__placeholder"
+        class="_placeholder_53f94f"
       >
         Select…
       </span>
       <span
         aria-hidden="true"
-        class="combobox__chevron"
+        class="_chevron_53f94f"
       >
         ▾
       </span>
     </button>
     <div
-      class="combobox__dropdown"
+      class="_dropdown_53f94f"
       role="listbox"
     >
       <ul
-        class="combobox__list"
+        class="_list_53f94f"
       >
         <li
           aria-selected="false"
-          class="combobox__option"
+          class="_option_53f94f"
           role="option"
         >
           Engineering
         </li>
         <li
           aria-selected="false"
-          class="combobox__option"
+          class="_option_53f94f"
           role="option"
         >
           Product
         </li>
         <li
           aria-selected="false"
-          class="combobox__option"
+          class="_option_53f94f"
           role="option"
         >
           Design
@@ -87,60 +87,60 @@ exports[`Combobox > snapshot > matches open flat snapshot 1`] = `
 exports[`Combobox > snapshot > matches open grouped searchable snapshot 1`] = `
 <DocumentFragment>
   <div
-    class="combobox"
+    class="_combobox_53f94f"
   >
     <button
       aria-expanded="true"
       aria-haspopup="listbox"
-      class="form-input combobox__trigger"
+      class="form-input _trigger_53f94f"
       type="button"
     >
       <span
-        class="combobox__placeholder"
+        class="_placeholder_53f94f"
       >
         Select…
       </span>
       <span
         aria-hidden="true"
-        class="combobox__chevron"
+        class="_chevron_53f94f"
       >
         ▾
       </span>
     </button>
     <div
-      class="combobox__dropdown"
+      class="_dropdown_53f94f"
       role="listbox"
     >
       <div
-        class="combobox__search-wrap"
+        class="_searchWrap_53f94f"
       >
         <input
-          class="combobox__search"
+          class="_search_53f94f"
           placeholder="Search…"
           type="text"
           value=""
         />
       </div>
       <ul
-        class="combobox__list"
+        class="_list_53f94f"
       >
         <li>
           <span
-            class="combobox__group-label"
+            class="_groupLabel_53f94f"
           >
             Engineering
           </span>
           <ul>
             <li
               aria-selected="false"
-              class="combobox__option"
+              class="_option_53f94f"
               role="option"
             >
               Software Engineer
             </li>
             <li
               aria-selected="false"
-              class="combobox__option"
+              class="_option_53f94f"
               role="option"
             >
               Backend Developer
@@ -149,21 +149,21 @@ exports[`Combobox > snapshot > matches open grouped searchable snapshot 1`] = `
         </li>
         <li>
           <span
-            class="combobox__group-label"
+            class="_groupLabel_53f94f"
           >
             Product
           </span>
           <ul>
             <li
               aria-selected="false"
-              class="combobox__option"
+              class="_option_53f94f"
               role="option"
             >
               Product Manager
             </li>
             <li
               aria-selected="false"
-              class="combobox__option"
+              class="_option_53f94f"
               role="option"
             >
               Business Analyst

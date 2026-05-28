@@ -28,17 +28,17 @@ exports[`AddEmployeeModal > snapshot > matches initial snapshot 1`] = `
         </button>
       </div>
       <form
-        class="modal__form"
+        class="_form_46e4a7"
         novalidate=""
       >
         <div
-          class="form-row"
+          class="_row_46e4a7"
         >
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="firstName"
             >
               First Name
@@ -53,10 +53,10 @@ exports[`AddEmployeeModal > snapshot > matches initial snapshot 1`] = `
             />
           </div>
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="lastName"
             >
               Last Name
@@ -72,31 +72,31 @@ exports[`AddEmployeeModal > snapshot > matches initial snapshot 1`] = `
           </div>
         </div>
         <div
-          class="form-field"
+          class="_field_46e4a7"
         >
           <label
-            class="form-label"
+            class="_label_46e4a7"
             for="jobTitle"
           >
             Job Title
           </label>
           <div
-            class="combobox"
+            class="_combobox_53f94f"
           >
             <button
               aria-expanded="false"
               aria-haspopup="listbox"
-              class="form-input combobox__trigger"
+              class="form-input _trigger_53f94f"
               type="button"
             >
               <span
-                class="combobox__placeholder"
+                class="_placeholder_53f94f"
               >
                 Select job title…
               </span>
               <span
                 aria-hidden="true"
-                class="combobox__chevron"
+                class="_chevron_53f94f"
               >
                 ▾
               </span>
@@ -104,36 +104,36 @@ exports[`AddEmployeeModal > snapshot > matches initial snapshot 1`] = `
           </div>
         </div>
         <div
-          class="form-field"
+          class="_field_46e4a7"
         >
           <label
-            class="form-label"
+            class="_label_46e4a7"
             for="department"
           >
             Department 
             <span
-              class="form-optional"
+              class="_optional_46e4a7"
             >
               (optional)
             </span>
           </label>
           <div
-            class="combobox"
+            class="_combobox_53f94f"
           >
             <button
               aria-expanded="false"
               aria-haspopup="listbox"
-              class="form-input combobox__trigger"
+              class="form-input _trigger_53f94f"
               type="button"
             >
               <span
-                class="combobox__placeholder"
+                class="_placeholder_53f94f"
               >
                 Select department…
               </span>
               <span
                 aria-hidden="true"
-                class="combobox__chevron"
+                class="_chevron_53f94f"
               >
                 ▾
               </span>
@@ -141,34 +141,34 @@ exports[`AddEmployeeModal > snapshot > matches initial snapshot 1`] = `
           </div>
         </div>
         <div
-          class="form-row"
+          class="_row_46e4a7"
         >
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="country"
             >
               Country
             </label>
             <div
-              class="combobox"
+              class="_combobox_53f94f"
             >
               <button
                 aria-expanded="false"
                 aria-haspopup="listbox"
-                class="form-input combobox__trigger"
+                class="form-input _trigger_53f94f"
                 type="button"
               >
                 <span
-                  class="combobox__placeholder"
+                  class="_placeholder_53f94f"
                 >
                   Select country…
                 </span>
                 <span
                   aria-hidden="true"
-                  class="combobox__chevron"
+                  class="_chevron_53f94f"
                 >
                   ▾
                 </span>
@@ -176,10 +176,10 @@ exports[`AddEmployeeModal > snapshot > matches initial snapshot 1`] = `
             </div>
           </div>
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="salary"
             >
               Salary (USD)
@@ -196,13 +196,13 @@ exports[`AddEmployeeModal > snapshot > matches initial snapshot 1`] = `
           </div>
         </div>
         <div
-          class="form-row"
+          class="_row_46e4a7"
         >
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="hireDate"
             >
               Hire Date
@@ -216,31 +216,31 @@ exports[`AddEmployeeModal > snapshot > matches initial snapshot 1`] = `
             />
           </div>
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="employmentType"
             >
               Employment Type
             </label>
             <div
-              class="combobox"
+              class="_combobox_53f94f"
             >
               <button
                 aria-expanded="false"
                 aria-haspopup="listbox"
-                class="form-input combobox__trigger"
+                class="form-input _trigger_53f94f"
                 type="button"
               >
                 <span
-                  class="combobox__placeholder"
+                  class="_placeholder_53f94f"
                 >
                   Select type…
                 </span>
                 <span
                   aria-hidden="true"
-                  class="combobox__chevron"
+                  class="_chevron_53f94f"
                 >
                   ▾
                 </span>
@@ -298,17 +298,17 @@ exports[`AddEmployeeModal > snapshot > matches snapshot with validation errors 1
         </button>
       </div>
       <form
-        class="modal__form"
+        class="_form_46e4a7"
         novalidate=""
       >
         <div
-          class="form-row"
+          class="_row_46e4a7"
         >
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="firstName"
             >
               First Name
@@ -322,16 +322,16 @@ exports[`AddEmployeeModal > snapshot > matches snapshot with validation errors 1
               value=""
             />
             <span
-              class="form-error"
+              class="_fieldError_46e4a7"
             >
               First name must be at least 2 characters
             </span>
           </div>
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="lastName"
             >
               Last Name
@@ -345,80 +345,80 @@ exports[`AddEmployeeModal > snapshot > matches snapshot with validation errors 1
               value=""
             />
             <span
-              class="form-error"
+              class="_fieldError_46e4a7"
             >
               Last name must be at least 2 characters
             </span>
           </div>
         </div>
         <div
-          class="form-field"
+          class="_field_46e4a7"
         >
           <label
-            class="form-label"
+            class="_label_46e4a7"
             for="jobTitle"
           >
             Job Title
           </label>
           <div
-            class="combobox"
+            class="_combobox_53f94f"
           >
             <button
               aria-expanded="false"
               aria-haspopup="listbox"
-              class="form-input combobox__trigger form-input--error"
+              class="form-input _trigger_53f94f form-input--error"
               type="button"
             >
               <span
-                class="combobox__placeholder"
+                class="_placeholder_53f94f"
               >
                 Select job title…
               </span>
               <span
                 aria-hidden="true"
-                class="combobox__chevron"
+                class="_chevron_53f94f"
               >
                 ▾
               </span>
             </button>
           </div>
           <span
-            class="form-error"
+            class="_fieldError_46e4a7"
           >
             Job title must be at least 2 characters
           </span>
         </div>
         <div
-          class="form-field"
+          class="_field_46e4a7"
         >
           <label
-            class="form-label"
+            class="_label_46e4a7"
             for="department"
           >
             Department 
             <span
-              class="form-optional"
+              class="_optional_46e4a7"
             >
               (optional)
             </span>
           </label>
           <div
-            class="combobox"
+            class="_combobox_53f94f"
           >
             <button
               aria-expanded="false"
               aria-haspopup="listbox"
-              class="form-input combobox__trigger"
+              class="form-input _trigger_53f94f"
               type="button"
             >
               <span
-                class="combobox__placeholder"
+                class="_placeholder_53f94f"
               >
                 Select department…
               </span>
               <span
                 aria-hidden="true"
-                class="combobox__chevron"
+                class="_chevron_53f94f"
               >
                 ▾
               </span>
@@ -426,50 +426,50 @@ exports[`AddEmployeeModal > snapshot > matches snapshot with validation errors 1
           </div>
         </div>
         <div
-          class="form-row"
+          class="_row_46e4a7"
         >
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="country"
             >
               Country
             </label>
             <div
-              class="combobox"
+              class="_combobox_53f94f"
             >
               <button
                 aria-expanded="false"
                 aria-haspopup="listbox"
-                class="form-input combobox__trigger form-input--error"
+                class="form-input _trigger_53f94f form-input--error"
                 type="button"
               >
                 <span
-                  class="combobox__placeholder"
+                  class="_placeholder_53f94f"
                 >
                   Select country…
                 </span>
                 <span
                   aria-hidden="true"
-                  class="combobox__chevron"
+                  class="_chevron_53f94f"
                 >
                   ▾
                 </span>
               </button>
             </div>
             <span
-              class="form-error"
+              class="_fieldError_46e4a7"
             >
               Country must be at least 2 characters
             </span>
           </div>
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="salary"
             >
               Salary (USD)
@@ -486,13 +486,13 @@ exports[`AddEmployeeModal > snapshot > matches snapshot with validation errors 1
           </div>
         </div>
         <div
-          class="form-row"
+          class="_row_46e4a7"
         >
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="hireDate"
             >
               Hire Date
@@ -505,44 +505,44 @@ exports[`AddEmployeeModal > snapshot > matches snapshot with validation errors 1
               value=""
             />
             <span
-              class="form-error"
+              class="_fieldError_46e4a7"
             >
               Hire date is required
             </span>
           </div>
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="employmentType"
             >
               Employment Type
             </label>
             <div
-              class="combobox"
+              class="_combobox_53f94f"
             >
               <button
                 aria-expanded="false"
                 aria-haspopup="listbox"
-                class="form-input combobox__trigger form-input--error"
+                class="form-input _trigger_53f94f form-input--error"
                 type="button"
               >
                 <span
-                  class="combobox__placeholder"
+                  class="_placeholder_53f94f"
                 >
                   Select type…
                 </span>
                 <span
                   aria-hidden="true"
-                  class="combobox__chevron"
+                  class="_chevron_53f94f"
                 >
                   ▾
                 </span>
               </button>
             </div>
             <span
-              class="form-error"
+              class="_fieldError_46e4a7"
             >
               Employment type is required
             </span>
@@ -598,17 +598,17 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
         </button>
       </div>
       <form
-        class="modal__form"
+        class="_form_46e4a7"
         novalidate=""
       >
         <div
-          class="form-row"
+          class="_row_46e4a7"
         >
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="firstName"
             >
               First Name
@@ -623,10 +623,10 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
             />
           </div>
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="lastName"
             >
               Last Name
@@ -642,21 +642,21 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
           </div>
         </div>
         <div
-          class="form-field"
+          class="_field_46e4a7"
         >
           <label
-            class="form-label"
+            class="_label_46e4a7"
             for="jobTitle"
           >
             Job Title
           </label>
           <div
-            class="combobox"
+            class="_combobox_53f94f"
           >
             <button
               aria-expanded="false"
               aria-haspopup="listbox"
-              class="form-input combobox__trigger"
+              class="form-input _trigger_53f94f"
               type="button"
             >
               <span
@@ -666,7 +666,7 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
               </span>
               <span
                 aria-hidden="true"
-                class="combobox__chevron"
+                class="_chevron_53f94f"
               >
                 ▾
               </span>
@@ -674,26 +674,26 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
           </div>
         </div>
         <div
-          class="form-field"
+          class="_field_46e4a7"
         >
           <label
-            class="form-label"
+            class="_label_46e4a7"
             for="department"
           >
             Department 
             <span
-              class="form-optional"
+              class="_optional_46e4a7"
             >
               (optional)
             </span>
           </label>
           <div
-            class="combobox"
+            class="_combobox_53f94f"
           >
             <button
               aria-expanded="false"
               aria-haspopup="listbox"
-              class="form-input combobox__trigger"
+              class="form-input _trigger_53f94f"
               type="button"
             >
               <span
@@ -703,7 +703,7 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
               </span>
               <span
                 aria-hidden="true"
-                class="combobox__chevron"
+                class="_chevron_53f94f"
               >
                 ▾
               </span>
@@ -711,24 +711,24 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
           </div>
         </div>
         <div
-          class="form-row"
+          class="_row_46e4a7"
         >
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="country"
             >
               Country
             </label>
             <div
-              class="combobox"
+              class="_combobox_53f94f"
             >
               <button
                 aria-expanded="false"
                 aria-haspopup="listbox"
-                class="form-input combobox__trigger"
+                class="form-input _trigger_53f94f"
                 type="button"
               >
                 <span
@@ -738,7 +738,7 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
                 </span>
                 <span
                   aria-hidden="true"
-                  class="combobox__chevron"
+                  class="_chevron_53f94f"
                 >
                   ▾
                 </span>
@@ -746,10 +746,10 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
             </div>
           </div>
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="salary"
             >
               Salary (USD)
@@ -766,13 +766,13 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
           </div>
         </div>
         <div
-          class="form-row"
+          class="_row_46e4a7"
         >
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="hireDate"
             >
               Hire Date
@@ -786,21 +786,21 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
             />
           </div>
           <div
-            class="form-field"
+            class="_field_46e4a7"
           >
             <label
-              class="form-label"
+              class="_label_46e4a7"
               for="employmentType"
             >
               Employment Type
             </label>
             <div
-              class="combobox"
+              class="_combobox_53f94f"
             >
               <button
                 aria-expanded="false"
                 aria-haspopup="listbox"
-                class="form-input combobox__trigger"
+                class="form-input _trigger_53f94f"
                 type="button"
               >
                 <span
@@ -810,7 +810,7 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
                 </span>
                 <span
                   aria-hidden="true"
-                  class="combobox__chevron"
+                  class="_chevron_53f94f"
                 >
                   ▾
                 </span>

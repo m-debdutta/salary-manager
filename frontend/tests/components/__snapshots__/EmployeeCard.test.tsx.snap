@@ -3,11 +3,12 @@
 exports[`EmployeeCard > edit button > matches snapshot with onEdit handler 1`] = `
 <DocumentFragment>
   <div
-    class="employee-card"
+    class="_card_bdb005"
+    data-testid="employee-card"
   >
     <button
       aria-label="Edit Alice Johnson"
-      class="employee-card__edit-btn"
+      class="_editBtn_bdb005"
       type="button"
     >
       <svg
@@ -31,29 +32,30 @@ exports[`EmployeeCard > edit button > matches snapshot with onEdit handler 1`] =
       </svg>
     </button>
     <div
-      class="employee-card__header"
+      class="_header_bdb005"
+      data-testid="card-header"
     >
       <div
-        class="employee-card__avatar"
+        class="_avatar_bdb005"
       >
         AJ
       </div>
       <div
-        class="employee-card__header-info"
+        class="_headerInfo_bdb005"
       >
         <h3
-          class="employee-card__name"
+          class="_name_bdb005"
         >
           Alice Johnson
         </h3>
         <p
-          class="employee-card__title"
+          class="_jobTitle_bdb005"
         >
           Software Engineer
         </p>
       </div>
       <div
-        class="employee-card__footer"
+        data-testid="card-footer"
       >
         <span
           class="badge badge--full-time"
@@ -69,33 +71,35 @@ exports[`EmployeeCard > edit button > matches snapshot with onEdit handler 1`] =
 exports[`EmployeeCard > onClick > matches snapshot with onClick handler 1`] = `
 <DocumentFragment>
   <div
-    class="employee-card"
+    class="_card_bdb005"
+    data-testid="employee-card"
     style="cursor: pointer;"
   >
     <div
-      class="employee-card__header"
+      class="_header_bdb005"
+      data-testid="card-header"
     >
       <div
-        class="employee-card__avatar"
+        class="_avatar_bdb005"
       >
         AJ
       </div>
       <div
-        class="employee-card__header-info"
+        class="_headerInfo_bdb005"
       >
         <h3
-          class="employee-card__name"
+          class="_name_bdb005"
         >
           Alice Johnson
         </h3>
         <p
-          class="employee-card__title"
+          class="_jobTitle_bdb005"
         >
           Software Engineer
         </p>
       </div>
       <div
-        class="employee-card__footer"
+        data-testid="card-footer"
       >
         <span
           class="badge badge--full-time"
@@ -111,32 +115,34 @@ exports[`EmployeeCard > onClick > matches snapshot with onClick handler 1`] = `
 exports[`EmployeeCard > snapshot > matches snapshot for a contract employee 1`] = `
 <DocumentFragment>
   <div
-    class="employee-card"
+    class="_card_bdb005"
+    data-testid="employee-card"
   >
     <div
-      class="employee-card__header"
+      class="_header_bdb005"
+      data-testid="card-header"
     >
       <div
-        class="employee-card__avatar"
+        class="_avatar_bdb005"
       >
         AJ
       </div>
       <div
-        class="employee-card__header-info"
+        class="_headerInfo_bdb005"
       >
         <h3
-          class="employee-card__name"
+          class="_name_bdb005"
         >
           Alice Johnson
         </h3>
         <p
-          class="employee-card__title"
+          class="_jobTitle_bdb005"
         >
           Software Engineer
         </p>
       </div>
       <div
-        class="employee-card__footer"
+        data-testid="card-footer"
       >
         <span
           class="badge badge--contract"
@@ -152,32 +158,34 @@ exports[`EmployeeCard > snapshot > matches snapshot for a contract employee 1`] 
 exports[`EmployeeCard > snapshot > matches snapshot for a full-time employee 1`] = `
 <DocumentFragment>
   <div
-    class="employee-card"
+    class="_card_bdb005"
+    data-testid="employee-card"
   >
     <div
-      class="employee-card__header"
+      class="_header_bdb005"
+      data-testid="card-header"
     >
       <div
-        class="employee-card__avatar"
+        class="_avatar_bdb005"
       >
         AJ
       </div>
       <div
-        class="employee-card__header-info"
+        class="_headerInfo_bdb005"
       >
         <h3
-          class="employee-card__name"
+          class="_name_bdb005"
         >
           Alice Johnson
         </h3>
         <p
-          class="employee-card__title"
+          class="_jobTitle_bdb005"
         >
           Software Engineer
         </p>
       </div>
       <div
-        class="employee-card__footer"
+        data-testid="card-footer"
       >
         <span
           class="badge badge--full-time"
@@ -193,32 +201,34 @@ exports[`EmployeeCard > snapshot > matches snapshot for a full-time employee 1`]
 exports[`EmployeeCard > snapshot > matches snapshot for a part-time employee with null department 1`] = `
 <DocumentFragment>
   <div
-    class="employee-card"
+    class="_card_bdb005"
+    data-testid="employee-card"
   >
     <div
-      class="employee-card__header"
+      class="_header_bdb005"
+      data-testid="card-header"
     >
       <div
-        class="employee-card__avatar"
+        class="_avatar_bdb005"
       >
         AJ
       </div>
       <div
-        class="employee-card__header-info"
+        class="_headerInfo_bdb005"
       >
         <h3
-          class="employee-card__name"
+          class="_name_bdb005"
         >
           Alice Johnson
         </h3>
         <p
-          class="employee-card__title"
+          class="_jobTitle_bdb005"
         >
           Software Engineer
         </p>
       </div>
       <div
-        class="employee-card__footer"
+        data-testid="card-footer"
       >
         <span
           class="badge badge--part-time"
