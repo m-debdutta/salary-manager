@@ -8,6 +8,7 @@ vi.mock('../../../src/services/employeeService', () => ({
   employeeService: {
     getEmployees: vi.fn(),
     createEmployee: vi.fn(),
+    getEmployeeById: vi.fn(),
   },
 }));
 
@@ -454,6 +455,117 @@ describe('Employees Router', () => {
 
         expect(response.body).toHaveProperty('error');
         expect(response.body.error).toBe('Failed to create employee');
+      });
+    });
+  });
+
+  describe('GET /api/employees/:id', () => {
+    describe('Valid ID', () => {
+      it('should return 200 with the employee when found', async () => {
+        vi.mocked(employeeService.getEmployeeById).mockResolvedValue(makeEmployee());
+
+        const response = await request(app).get('/api/employees/1');
+
+        expect(response.status).toBe(200);
+        expect(response.headers['content-type']).toMatch(/application\/json/);
+      });
+
+      it('should return employee with correct shape', async () => {
+        vi.mocked(employeeService.getEmployeeById).mockResolvedValue(makeEmployee());
+
+        const response = await request(app).get('/api/employees/1');
+        const result = response.body;
+
+        expect(result).toHaveProperty('id', 1);
+        expect(result).toHaveProperty('firstName', 'John');
+        expect(result).toHaveProperty('lastName', 'Doe');
+        expect(result).toHaveProperty('jobTitle', 'Software Engineer');
+        expect(result).toHaveProperty('country', 'USA');
+        expect(result).toHaveProperty('salary', 100000);
+        expect(result).toHaveProperty('department', 'Engineering');
+        expect(result).toHaveProperty('hireDate', '2024-01-15');
+        expect(result).toHaveProperty('employmentType', 'Full-time');
+        expect(result).toHaveProperty('createdAt');
+        expect(result).toHaveProperty('updatedAt');
+      });
+
+      it('should format hireDate as YYYY-MM-DD string', async () => {
+        vi.mocked(employeeService.getEmployeeById).mockResolvedValue(
+          makeEmployee({ hireDate: new Date('2023-06-15T12:00:00Z') })
+        );
+
+        const response = await request(app).get('/api/employees/1');
+
+        expect(response.body.hireDate).toBe('2023-06-15');
+      });
+
+      it('should call service with parsed numeric id', async () => {
+        vi.mocked(employeeService.getEmployeeById).mockResolvedValue(makeEmployee({ id: 42 }));
+
+        await request(app).get('/api/employees/42');
+
+        expect(employeeService.getEmployeeById).toHaveBeenCalledWith(42);
+      });
+
+      it('should handle null department', async () => {
+        vi.mocked(employeeService.getEmployeeById).mockResolvedValue(
+          makeEmployee({ department: null })
+        );
+
+        const response = await request(app).get('/api/employees/1');
+
+        expect(response.body.department).toBeNull();
+      });
+    });
+
+    describe('Not Found', () => {
+      it('should return 404 when employee does not exist', async () => {
+        vi.mocked(employeeService.getEmployeeById).mockResolvedValue(null);
+
+        const response = await request(app).get('/api/employees/999');
+
+        expect(response.status).toBe(404);
+      });
+
+      it('should return error message when employee not found', async () => {
+        vi.mocked(employeeService.getEmployeeById).mockResolvedValue(null);
+
+        const response = await request(app).get('/api/employees/999');
+
+        expect(response.body).toEqual({ error: 'Employee not found' });
+      });
+    });
+
+    describe('Invalid ID', () => {
+      it('should return 400 for non-numeric id', async () => {
+        const response = await request(app).get('/api/employees/abc');
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({ error: 'Invalid employee ID' });
+      });
+
+      it('should return 400 for mixed numeric-alpha id', async () => {
+        const response = await request(app).get('/api/employees/123abc');
+
+        expect(response.status).toBe(400);
+        expect(response.body).toEqual({ error: 'Invalid employee ID' });
+      });
+
+      it('should not call service for non-numeric id', async () => {
+        await request(app).get('/api/employees/abc');
+
+        expect(employeeService.getEmployeeById).not.toHaveBeenCalled();
+      });
+    });
+
+    describe('Service Error', () => {
+      it('should return 500 when service throws', async () => {
+        vi.mocked(employeeService.getEmployeeById).mockRejectedValue(new Error('DB error'));
+
+        const response = await request(app).get('/api/employees/1');
+
+        expect(response.status).toBe(500);
+        expect(response.body).toEqual({ error: 'Failed to fetch employee' });
       });
     });
   });

@@ -28,6 +28,13 @@ export const getEmployees = async (skip: number = 0, take: number = 50) => {
 };
 
 /**
+ * Get a single employee by ID
+ */
+export const getEmployeeById = async (id: number) => {
+  return await prisma.employee.findUnique({ where: { id } });
+};
+
+/**
  * Create a new employee
  */
 export const createEmployee = async (data: EmployeeCreateInput) => {

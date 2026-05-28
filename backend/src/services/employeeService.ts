@@ -1,4 +1,4 @@
-import { createEmployee, getEmployees, EmployeeCreateInput } from '../db/employeeRepository';
+import { createEmployee, getEmployees, getEmployeeById, EmployeeCreateInput } from '../db/employeeRepository';
 import { CreateEmployeeInput } from '../lib/validation';
 
 /**
@@ -26,6 +26,10 @@ export class EmployeeService {
       console.error('Error creating employee:', error);
       throw error;
     }
+  }
+
+  async getEmployeeById(id: number) {
+    return await getEmployeeById(id);
   }
 
   async getEmployees(skip: number = 0, take: number = 50) {

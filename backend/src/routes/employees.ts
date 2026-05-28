@@ -41,6 +41,43 @@ router.get('/', async (req: Request, res: Response) => {
 });
 
 /**
+ * GET /api/employees/:id - Get a single employee by ID
+ */
+router.get('/:id', async (req: Request, res: Response) => {
+  const raw = req.params.id;
+  const id = /^\d+$/.test(raw as string) ? parseInt(raw as string, 10) : NaN;
+
+  if (isNaN(id)) {
+    return res.status(400).json({ error: 'Invalid employee ID' });
+  }
+
+  try {
+    const employee = await employeeService.getEmployeeById(id);
+
+    if (!employee) {
+      return res.status(404).json({ error: 'Employee not found' });
+    }
+
+    return res.status(200).json({
+      id: employee.id,
+      firstName: employee.firstName,
+      lastName: employee.lastName,
+      jobTitle: employee.jobTitle,
+      country: employee.country,
+      salary: employee.salary,
+      department: employee.department,
+      hireDate: employee.hireDate.toISOString().split('T')[0],
+      employmentType: employee.employmentType,
+      createdAt: employee.createdAt,
+      updatedAt: employee.updatedAt,
+    });
+  } catch (error) {
+    console.error('Error fetching employee:', error);
+    return res.status(500).json({ error: 'Failed to fetch employee' });
+  }
+});
+
+/**
  * POST /api/employees - Create a new employee
  * @param {Request} req - Express request with employee data in body
  * @param {Response} res - Express response

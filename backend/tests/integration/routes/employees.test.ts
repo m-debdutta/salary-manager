@@ -384,3 +384,115 @@ describe('GET /api/employees - List Employees', () => {
     expect(page2.body.employees).toHaveLength(2);
   });
 });
+
+describe('GET /api/employees/:id - Get Single Employee', () => {
+  let app: Express;
+
+  const seedEmployee = (overrides: Record<string, unknown> = {}) =>
+    prisma.employee.create({
+      data: {
+        firstName: 'John',
+        lastName: 'Doe',
+        jobTitle: 'Software Engineer',
+        country: 'USA',
+        salary: 100000,
+        department: 'Engineering',
+        hireDate: new Date('2024-01-15'),
+        employmentType: 'Full-time',
+        ...overrides,
+      },
+    });
+
+  beforeAll(() => {
+    app = createTestApp();
+  });
+
+  afterEach(async () => {
+    await prisma.employee.deleteMany({});
+  });
+
+  afterAll(async () => {
+    await prisma.$disconnect();
+  });
+
+  describe('Found', () => {
+    it('should return 200 with the employee when found', async () => {
+      const created = await seedEmployee();
+
+      const response = await request(app).get(`/api/employees/${created.id}`);
+
+      expect(response.status).toBe(200);
+      expect(response.headers['content-type']).toMatch(/application\/json/);
+    });
+
+    it('should return the correct employee shape', async () => {
+      const created = await seedEmployee();
+
+      const response = await request(app).get(`/api/employees/${created.id}`);
+
+      expect(response.body).toHaveProperty('id', created.id);
+      expect(response.body).toHaveProperty('firstName', 'John');
+      expect(response.body).toHaveProperty('lastName', 'Doe');
+      expect(response.body).toHaveProperty('jobTitle', 'Software Engineer');
+      expect(response.body).toHaveProperty('country', 'USA');
+      expect(response.body).toHaveProperty('salary', 100000);
+      expect(response.body).toHaveProperty('department', 'Engineering');
+      expect(response.body).toHaveProperty('employmentType', 'Full-time');
+      expect(response.body).toHaveProperty('createdAt');
+      expect(response.body).toHaveProperty('updatedAt');
+    });
+
+    it('should format hireDate as YYYY-MM-DD', async () => {
+      const created = await seedEmployee({ hireDate: new Date('2024-01-15') });
+
+      const response = await request(app).get(`/api/employees/${created.id}`);
+
+      expect(response.body.hireDate).toBe('2024-01-15');
+    });
+
+    it('should return the correct employee when multiple exist', async () => {
+      await seedEmployee({ firstName: 'Alice' });
+      const target = await seedEmployee({ firstName: 'Bob' });
+      await seedEmployee({ firstName: 'Carol' });
+
+      const response = await request(app).get(`/api/employees/${target.id}`);
+
+      expect(response.status).toBe(200);
+      expect(response.body.id).toBe(target.id);
+      expect(response.body.firstName).toBe('Bob');
+    });
+
+    it('should return null department when not set', async () => {
+      const created = await seedEmployee({ department: undefined });
+
+      const response = await request(app).get(`/api/employees/${created.id}`);
+
+      expect(response.body.department).toBeNull();
+    });
+  });
+
+  describe('Not Found', () => {
+    it('should return 404 for a non-existent id', async () => {
+      const response = await request(app).get('/api/employees/999999');
+
+      expect(response.status).toBe(404);
+      expect(response.body).toEqual({ error: 'Employee not found' });
+    });
+  });
+
+  describe('Invalid ID', () => {
+    it('should return 400 for a non-numeric id', async () => {
+      const response = await request(app).get('/api/employees/abc');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: 'Invalid employee ID' });
+    });
+
+    it('should return 400 for a mixed numeric-alpha id', async () => {
+      const response = await request(app).get('/api/employees/123abc');
+
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({ error: 'Invalid employee ID' });
+    });
+  });
+});

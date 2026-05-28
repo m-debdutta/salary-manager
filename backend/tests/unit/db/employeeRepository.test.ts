@@ -2,6 +2,7 @@ import { describe, it, expect, afterEach } from 'vitest';
 import {
   createEmployee,
   getEmployees,
+  getEmployeeById,
   EmployeeCreateInput,
 } from '../../../src/db/employeeRepository';
 import { prisma } from '../../../src/db/client';
@@ -351,6 +352,61 @@ describe('EmployeeRepository', () => {
 
       expect(result.employees).toHaveLength(1);
       expect(result.total).toBe(1);
+    });
+  });
+
+  describe('getEmployeeById', () => {
+    const makeEmployeeData = (): EmployeeCreateInput => ({
+      firstName: 'Jane',
+      lastName: 'Smith',
+      jobTitle: 'Engineer',
+      country: 'USA',
+      salary: 80000,
+      hireDate: new Date('2024-01-15'),
+      employmentType: 'Full-time',
+    });
+
+    it('should return the employee when found', async () => {
+      const created = await createEmployee(makeEmployeeData());
+
+      const result = await getEmployeeById(created.id);
+
+      expect(result).toBeDefined();
+      expect(result!.id).toBe(created.id);
+    });
+
+    it('should return employee with all correct fields', async () => {
+      const data = makeEmployeeData();
+      const created = await createEmployee(data);
+
+      const result = await getEmployeeById(created.id);
+
+      expect(result!.firstName).toBe(data.firstName);
+      expect(result!.lastName).toBe(data.lastName);
+      expect(result!.jobTitle).toBe(data.jobTitle);
+      expect(result!.country).toBe(data.country);
+      expect(result!.salary).toBe(data.salary);
+      expect(result!.employmentType).toBe(data.employmentType);
+      expect(result!.hireDate).toBeInstanceOf(Date);
+      expect(result!.createdAt).toBeInstanceOf(Date);
+      expect(result!.updatedAt).toBeInstanceOf(Date);
+    });
+
+    it('should return null when employee does not exist', async () => {
+      const result = await getEmployeeById(999999);
+
+      expect(result).toBeNull();
+    });
+
+    it('should not return a different employee', async () => {
+      const emp1 = await createEmployee({ ...makeEmployeeData(), firstName: 'Alice' });
+      const emp2 = await createEmployee({ ...makeEmployeeData(), firstName: 'Bob' });
+
+      const result = await getEmployeeById(emp1.id);
+
+      expect(result!.id).toBe(emp1.id);
+      expect(result!.firstName).toBe('Alice');
+      expect(result!.id).not.toBe(emp2.id);
     });
   });
 });

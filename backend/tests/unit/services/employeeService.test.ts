@@ -118,4 +118,36 @@ describe('EmployeeService', () => {
       await expect(employeeService.getEmployees()).rejects.toThrow('DB connection lost');
     });
   });
+
+  describe('getEmployeeById', () => {
+    it('should call repository getEmployeeById with the given id', async () => {
+      vi.mocked(employeeRepository.getEmployeeById).mockResolvedValue(mockCreatedEmployee);
+
+      await employeeService.getEmployeeById(1);
+
+      expect(employeeRepository.getEmployeeById).toHaveBeenCalledWith(1);
+    });
+
+    it('should return the employee when found', async () => {
+      vi.mocked(employeeRepository.getEmployeeById).mockResolvedValue(mockCreatedEmployee);
+
+      const result = await employeeService.getEmployeeById(1);
+
+      expect(result).toEqual(mockCreatedEmployee);
+    });
+
+    it('should return null when employee does not exist', async () => {
+      vi.mocked(employeeRepository.getEmployeeById).mockResolvedValue(null);
+
+      const result = await employeeService.getEmployeeById(999);
+
+      expect(result).toBeNull();
+    });
+
+    it('should propagate repository errors', async () => {
+      vi.mocked(employeeRepository.getEmployeeById).mockRejectedValue(new Error('DB error'));
+
+      await expect(employeeService.getEmployeeById(1)).rejects.toThrow('DB error');
+    });
+  });
 });
