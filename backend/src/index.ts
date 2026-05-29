@@ -4,6 +4,7 @@ import { setupMiddleware } from './middleware';
 import healthRouter from './routes/health';
 import employeeRouter from './routes/employees';
 import analyticsRouter from './routes/analytics';
+import { PRISMA_LOG_FILE } from './db/client';
 
 // Load environment variables
 dotenv.config();
@@ -26,6 +27,9 @@ const main = async () => {
       console.log('Starting Salary Manager Backend...');
       console.log(`Backend is running on http://localhost:${PORT}`);
       console.log(`Health check available at http://localhost:${PORT}/health`);
+      if (process.env.NODE_ENV === 'development') {
+        console.log(`Prisma query log → ${PRISMA_LOG_FILE}`);
+      }
     });
   } catch (error) {
     console.error('Failed to start server:', error);
