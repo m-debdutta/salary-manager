@@ -4,7 +4,7 @@ import { fetchEmployees, deleteEmployee } from '../api/employees';
 import { EmployeeCard, type Employee } from './EmployeeCard';
 import AddEmployeeModal from './AddEmployeeModal';
 import EmployeeDetailsModal from './EmployeeDetailsModal';
-import SalaryByCountryChart from './SalaryByCountryChart';
+import AnalyticsPanel from './AnalyticsPanel';
 import styles from './Dashboard.module.css';
 
 const PAGE_SIZE = 80;
@@ -130,8 +130,7 @@ export default function Dashboard() {
         </div>
       )}
 
-      <SalaryByCountryChart />
-
+      <AnalyticsPanel />
     </div>
   );
 }

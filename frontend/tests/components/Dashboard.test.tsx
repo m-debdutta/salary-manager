@@ -15,8 +15,8 @@ import {
 } from '../fixtures/employees';
 
 vi.mock('../../src/api/employees');
-vi.mock('../../src/components/SalaryByCountryChart', () => ({
-  default: () => <div data-testid="salary-by-country-chart" />,
+vi.mock('../../src/components/AnalyticsPanel', () => ({
+  default: () => <div data-testid="analytics-panel" />,
 }));
 
 const contractCount = MOCK_EMPLOYEES.filter(

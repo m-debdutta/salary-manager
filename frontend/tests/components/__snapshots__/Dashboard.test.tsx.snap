@@ -582,7 +582,7 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
       />
     </div>
     <div
-      data-testid="salary-by-country-chart"
+      data-testid="analytics-panel"
     />
   </div>
 </DocumentFragment>
@@ -650,7 +650,7 @@ exports[`Dashboard > snapshot > matches loading snapshot 1`] = `
       Loading employees…
     </p>
     <div
-      data-testid="salary-by-country-chart"
+      data-testid="analytics-panel"
     />
   </div>
 </DocumentFragment>

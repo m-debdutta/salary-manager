@@ -1,0 +1,73 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`AnalyticsPanel > snapshot > matches default (By Country tab active) snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="_panel_55dc2a"
+  >
+    <nav
+      aria-label="Analytics charts"
+      class="_tabs_55dc2a"
+      role="tablist"
+    >
+      <button
+        aria-selected="true"
+        class="_tab_55dc2a _tabActive_55dc2a"
+        role="tab"
+      >
+        By Country
+      </button>
+      <button
+        aria-selected="false"
+        class="_tab_55dc2a "
+        role="tab"
+      >
+        By Job Title
+      </button>
+    </nav>
+    <div
+      role="tabpanel"
+    >
+      <div
+        data-testid="salary-by-country-chart"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`AnalyticsPanel > snapshot > matches snapshot after switching to By Job Title 1`] = `
+<DocumentFragment>
+  <div
+    class="_panel_55dc2a"
+  >
+    <nav
+      aria-label="Analytics charts"
+      class="_tabs_55dc2a"
+      role="tablist"
+    >
+      <button
+        aria-selected="false"
+        class="_tab_55dc2a "
+        role="tab"
+      >
+        By Country
+      </button>
+      <button
+        aria-selected="true"
+        class="_tab_55dc2a _tabActive_55dc2a"
+        role="tab"
+      >
+        By Job Title
+      </button>
+    </nav>
+    <div
+      role="tabpanel"
+    >
+      <div
+        data-testid="salary-by-job-title-chart"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

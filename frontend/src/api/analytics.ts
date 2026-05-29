@@ -9,9 +9,28 @@ export interface SalaryByCountryRow {
   median: number;
 }
 
+export interface SalaryByJobTitleRow {
+  jobTitle: string;
+  count: number;
+  min: number;
+  max: number;
+  avg: number;
+  median: number;
+}
+
 export const fetchSalaryByCountry = async (): Promise<SalaryByCountryRow[]> => {
   const { data } = await axios.get<SalaryByCountryRow[]>(
     '/api/analytics/salary-by-country',
+  );
+  return data;
+};
+
+export const fetchSalaryByJobTitle = async (
+  country?: string,
+): Promise<SalaryByJobTitleRow[]> => {
+  const { data } = await axios.get<SalaryByJobTitleRow[]>(
+    '/api/analytics/salary-by-job-title',
+    { params: country ? { country } : undefined },
   );
   return data;
 };
