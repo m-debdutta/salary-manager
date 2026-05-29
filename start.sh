@@ -83,6 +83,15 @@ log "Installing ${CYAN}Backend${RESET} dependencies…"
 (cd "$BACKEND_DIR" && npm install)
 ok "Backend dependencies installed."
 
+# ── Database setup ────────────────────────────────────────────────────────────
+log "Running database migrations…"
+(cd "$BACKEND_DIR" && npm run db:migrate:deploy)
+ok "Migrations applied."
+
+log "Initialising database…"
+(cd "$BACKEND_DIR" && npm run db:init)
+ok "Database initialised."
+
 log "Installing ${CYAN}Frontend${RESET} dependencies…"
 (cd "$FRONTEND_DIR" && npm install)
 ok "Frontend dependencies installed."
