@@ -35,7 +35,7 @@ describe('POST /api/employees - Create Employee', () => {
         firstName: 'John',
         lastName: 'Doe',
         jobTitle: 'Software Engineer',
-        country: 'USA',
+        country: 'United States',
         salary: 100000,
         department: 'Engineering',
         hireDate: '2024-01-15',
@@ -83,7 +83,7 @@ describe('POST /api/employees - Create Employee', () => {
         jobTitle: 'Data Analyst',
         country: 'Canada',
         salary: 75000,
-        department: 'Analytics',
+        department: 'Operations',
         hireDate: '2023-06-10',
         employmentType: 'Full-time',
       };
@@ -108,7 +108,7 @@ describe('POST /api/employees - Create Employee', () => {
         firstName: 'Bob',
         lastName: 'Brown',
         jobTitle: 'QA Engineer',
-        country: 'UK',
+        country: 'United Kingdom',
         salary: 70000,
         hireDate: '2023-09-20',
         employmentType: 'Full-time',
@@ -128,8 +128,8 @@ describe('POST /api/employees - Create Employee', () => {
       const employeeData = {
         firstName: longName,
         lastName: longName,
-        jobTitle: 'Engineer',
-        country: 'USA',
+        jobTitle: 'Software Engineer',
+        country: 'United States',
         salary: 100000,
         hireDate: '2024-01-15',
         employmentType: 'Full-time',
@@ -145,8 +145,8 @@ describe('POST /api/employees - Create Employee', () => {
       const employeeData = {
         firstName: 'John',
         lastName: 'Doe',
-        jobTitle: 'CEO',
-        country: 'USA',
+        jobTitle: 'Engineering Manager',
+        country: 'United States',
         salary: 999999999.99,
         hireDate: '2024-01-15',
         employmentType: 'Full-time',
@@ -162,11 +162,11 @@ describe('POST /api/employees - Create Employee', () => {
       const employeeData = {
         firstName: 'John',
         lastName: 'Doe',
-        jobTitle: 'Intern',
-        country: 'USA',
+        jobTitle: 'QA Engineer',
+        country: 'United States',
         salary: 0,
         hireDate: '2024-01-15',
-        employmentType: 'Internship',
+        employmentType: 'Contract',
       };
 
       const response = await request(app).post('/api/employees').send(employeeData);
@@ -179,8 +179,8 @@ describe('POST /api/employees - Create Employee', () => {
       const employeeData = {
         firstName: 'John',
         lastName: 'Doe',
-        jobTitle: 'Engineer',
-        country: 'USA',
+        jobTitle: 'Software Engineer',
+        country: 'United States',
         salary: 100000,
         hireDate: '2024-01-15',
         employmentType: 'Full-time',

@@ -40,7 +40,7 @@ const validEmployeeData = {
   firstName: 'John',
   lastName: 'Doe',
   jobTitle: 'Software Engineer',
-  country: 'USA',
+  country: 'United States',
   salary: 100000,
   department: 'Engineering',
   hireDate: '2024-01-15',
@@ -936,7 +936,7 @@ describe('Employees Router', () => {
     const updateData = {
       firstName: 'Jane',
       lastName: 'Smith',
-      jobTitle: 'Senior Engineer',
+      jobTitle: 'Senior Software Engineer',
       country: 'Canada',
       salary: 120000,
       department: 'Product',
@@ -982,7 +982,7 @@ describe('Employees Router', () => {
             id: 1,
             firstName: 'Jane',
             lastName: 'Smith',
-            jobTitle: 'Senior Engineer',
+            jobTitle: 'Senior Software Engineer',
             country: 'Canada',
             salary: 120000,
             department: 'Product',
@@ -996,7 +996,7 @@ describe('Employees Router', () => {
         expect(response.body.id).toBe(1);
         expect(response.body.firstName).toBe('Jane');
         expect(response.body.lastName).toBe('Smith');
-        expect(response.body.jobTitle).toBe('Senior Engineer');
+        expect(response.body.jobTitle).toBe('Senior Software Engineer');
         expect(response.body.country).toBe('Canada');
         expect(response.body.salary).toBe(120000);
         expect(response.body.department).toBe('Product');

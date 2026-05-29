@@ -1,4 +1,13 @@
 import { z } from 'zod';
+import countriesData from '../../../data/countries.json';
+import departmentsData from '../../../data/departments.json';
+import jobTitlesData from '../../../data/job_titles.json';
+import employmentTypesData from '../../../data/employment_types.json';
+
+const validCountries = countriesData.map((c) => c.name);
+const validDepartments = departmentsData.map((d) => d.name);
+const validJobTitles = jobTitlesData.map((jt) => jt.name);
+const validEmploymentTypes = employmentTypesData;
 
 /**
  * Validation schemas for Employee API
@@ -14,15 +23,24 @@ export const createEmployeeSchema = z.object({
     .string()
     .min(1, 'Last name is required')
     .min(2, 'Last name must be at least 2 characters'),
-  jobTitle: z
-    .string()
-    .min(1, 'Job title is required')
-    .min(2, 'Job title must be at least 2 characters'),
-  country: z.string().min(1, 'Country is required').min(2, 'Country must be at least 2 characters'),
+  jobTitle: z.string().refine((val) => validJobTitles.includes(val), {
+    message: `Invalid job title. Must be one of: ${validJobTitles.join(', ')}`,
+  }),
+  country: z.string().refine((val) => validCountries.includes(val), {
+    message: `Invalid country. Must be one of: ${validCountries.join(', ')}`,
+  }),
   salary: z.number().min(0, 'Salary cannot be negative'),
-  department: z.string().optional().nullable(),
+  department: z
+    .string()
+    .refine((val) => validDepartments.includes(val), {
+      message: `Invalid department. Must be one of: ${validDepartments.join(', ')}`,
+    })
+    .optional()
+    .nullable(),
   hireDate: z.iso.date('Hire date must be in YYYY-MM-DD format'),
-  employmentType: z.string().min(1, 'Employment type is required'),
+  employmentType: z.string().refine((val) => validEmploymentTypes.includes(val), {
+    message: `Invalid employment type. Must be one of: ${validEmploymentTypes.join(', ')}`,
+  }),
 });
 
 // Type inference from schema
