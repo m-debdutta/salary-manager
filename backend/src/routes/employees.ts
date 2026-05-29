@@ -15,9 +15,17 @@ router.get('/', async (req: Request, res: Response) => {
   const search = (req.query.search as string)?.trim() || undefined;
   const department = (req.query.department as string)?.trim() || undefined;
   const jobTitle = (req.query.jobTitle as string)?.trim() || undefined;
+  const country = (req.query.country as string)?.trim() || undefined;
 
   try {
-    const result = await employeeService.getEmployees(skip, pageSize, search, department, jobTitle);
+    const result = await employeeService.getEmployees(
+      skip,
+      pageSize,
+      search,
+      department,
+      jobTitle,
+      country
+    );
 
     return res.status(200).json({
       employees: result.employees.map((e) => ({

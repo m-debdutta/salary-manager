@@ -130,6 +130,7 @@ describe('Employees Router', () => {
         10,
         undefined,
         undefined,
+        undefined,
         undefined
       ); // skip=(2-1)*10=10
     });
@@ -147,6 +148,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined
@@ -203,6 +205,7 @@ describe('Employees Router', () => {
         50,
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -220,6 +223,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         100,
+        undefined,
         undefined,
         undefined,
         undefined
@@ -241,6 +245,7 @@ describe('Employees Router', () => {
         50,
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -258,6 +263,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         1,
+        undefined,
         undefined,
         undefined,
         undefined
@@ -279,6 +285,7 @@ describe('Employees Router', () => {
         50,
         'alice',
         undefined,
+        undefined,
         undefined
       );
     });
@@ -298,6 +305,7 @@ describe('Employees Router', () => {
         10,
         'smith',
         undefined,
+        undefined,
         undefined
       );
     });
@@ -315,6 +323,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined
@@ -336,6 +345,7 @@ describe('Employees Router', () => {
         50,
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -355,6 +365,7 @@ describe('Employees Router', () => {
         50,
         undefined,
         'Engineering',
+        undefined,
         undefined
       );
     });
@@ -372,6 +383,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined
@@ -393,6 +405,7 @@ describe('Employees Router', () => {
         50,
         'alice',
         'Engineering',
+        undefined,
         undefined
       );
     });
@@ -412,7 +425,8 @@ describe('Employees Router', () => {
         50,
         undefined,
         undefined,
-        'Software Engineer'
+        'Software Engineer',
+        undefined
       );
     });
 
@@ -429,6 +443,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined
@@ -448,6 +463,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined
@@ -471,7 +487,90 @@ describe('Employees Router', () => {
         50,
         'alice',
         'Engineering',
-        'Software Engineer'
+        'Software Engineer',
+        undefined
+      );
+    });
+
+    it('should pass country query param to service', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees?country=USA');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        'USA'
+      );
+    });
+
+    it('should pass undefined to service when country is not provided', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
+    });
+
+    it('should pass undefined to service when country is an empty string', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees?country=');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
+    });
+
+    it('should pass country together with search, department and jobTitle to service', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get(
+        '/api/employees?search=alice&department=Engineering&jobTitle=Software%20Engineer&country=USA'
+      );
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        'alice',
+        'Engineering',
+        'Software Engineer',
+        'USA'
       );
     });
   });

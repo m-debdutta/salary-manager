@@ -54,9 +54,17 @@ export class EmployeeService {
     take: number = 50,
     search?: string,
     department?: string,
-    jobTitle?: string
+    jobTitle?: string,
+    country?: string
   ) {
-    const { employees, total } = await getEmployees(skip, take, search, department, jobTitle);
+    const { employees, total } = await getEmployees(
+      skip,
+      take,
+      search,
+      department,
+      jobTitle,
+      country
+    );
 
     return {
       employees,

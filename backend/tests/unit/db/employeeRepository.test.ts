@@ -556,6 +556,105 @@ describe('EmployeeRepository', () => {
         expect(result.employees[0].department).toBe('Engineering');
       });
     });
+
+    describe('country filter', () => {
+      it('should return only employees in the specified country', async () => {
+        await createEmployee(makeEmployeeData({ country: 'USA' }));
+        await createEmployee(makeEmployeeData({ country: 'Canada' }));
+
+        const result = await getEmployees(0, 50, undefined, undefined, undefined, 'USA');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].country).toBe('USA');
+      });
+
+      it('should return all employees when country is undefined', async () => {
+        await createEmployee(makeEmployeeData({ country: 'USA' }));
+        await createEmployee(makeEmployeeData({ country: 'Canada' }));
+
+        const result = await getEmployees(0, 50, undefined, undefined, undefined, undefined);
+
+        expect(result.employees).toHaveLength(2);
+      });
+
+      it('should return accurate total reflecting only matching country', async () => {
+        await createEmployee(makeEmployeeData({ country: 'USA' }));
+        await createEmployee(makeEmployeeData({ country: 'USA' }));
+        await createEmployee(makeEmployeeData({ country: 'Canada' }));
+
+        const result = await getEmployees(0, 1, undefined, undefined, undefined, 'USA');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.total).toBe(2);
+      });
+
+      it('should return empty array when no employees match the country', async () => {
+        await createEmployee(makeEmployeeData({ country: 'USA' }));
+
+        const result = await getEmployees(0, 50, undefined, undefined, undefined, 'Germany');
+
+        expect(result.employees).toHaveLength(0);
+        expect(result.total).toBe(0);
+      });
+
+      it('should combine country filter with search term', async () => {
+        await createEmployee(
+          makeEmployeeData({ firstName: 'Alice', lastName: 'Smith', country: 'USA' })
+        );
+        await createEmployee(
+          makeEmployeeData({ firstName: 'Alice', lastName: 'Jones', country: 'Canada' })
+        );
+        await createEmployee(
+          makeEmployeeData({ firstName: 'Bob', lastName: 'Taylor', country: 'USA' })
+        );
+
+        const result = await getEmployees(0, 50, 'alice', undefined, undefined, 'USA');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].country).toBe('USA');
+        expect(result.employees[0].firstName).toBe('Alice');
+      });
+
+      it('should combine country filter with department and jobTitle', async () => {
+        await createEmployee(
+          makeEmployeeData({
+            firstName: 'Alice',
+            country: 'USA',
+            department: 'Engineering',
+            jobTitle: 'Software Engineer',
+          })
+        );
+        await createEmployee(
+          makeEmployeeData({
+            firstName: 'Alice',
+            country: 'Canada',
+            department: 'Engineering',
+            jobTitle: 'Software Engineer',
+          })
+        );
+        await createEmployee(
+          makeEmployeeData({
+            firstName: 'Bob',
+            country: 'USA',
+            department: 'Marketing',
+            jobTitle: 'Product Manager',
+          })
+        );
+
+        const result = await getEmployees(
+          0,
+          50,
+          undefined,
+          'Engineering',
+          'Software Engineer',
+          'USA'
+        );
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].country).toBe('USA');
+        expect(result.employees[0].firstName).toBe('Alice');
+      });
+    });
   });
 
   describe('getEmployeeById', () => {

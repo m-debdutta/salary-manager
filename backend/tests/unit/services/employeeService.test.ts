@@ -83,6 +83,7 @@ describe('EmployeeService', () => {
         20,
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -120,6 +121,7 @@ describe('EmployeeService', () => {
         50,
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -140,6 +142,7 @@ describe('EmployeeService', () => {
         50,
         'alice',
         undefined,
+        undefined,
         undefined
       );
     });
@@ -152,6 +155,7 @@ describe('EmployeeService', () => {
       expect(employeeRepository.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined
@@ -168,6 +172,7 @@ describe('EmployeeService', () => {
         50,
         undefined,
         'Engineering',
+        undefined,
         undefined
       );
     });
@@ -181,6 +186,7 @@ describe('EmployeeService', () => {
         0,
         50,
         'alice',
+        undefined,
         undefined,
         undefined
       );
@@ -196,6 +202,7 @@ describe('EmployeeService', () => {
         50,
         'alice',
         'Engineering',
+        undefined,
         undefined
       );
     });
@@ -210,7 +217,8 @@ describe('EmployeeService', () => {
         50,
         undefined,
         undefined,
-        'Software Engineer'
+        'Software Engineer',
+        undefined
       );
     });
 
@@ -222,6 +230,7 @@ describe('EmployeeService', () => {
       expect(employeeRepository.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined
@@ -238,7 +247,53 @@ describe('EmployeeService', () => {
         50,
         'alice',
         'Engineering',
-        'Software Engineer'
+        'Software Engineer',
+        undefined
+      );
+    });
+
+    it('should forward country filter to repository', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(0, 50, undefined, undefined, undefined, 'USA');
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        'USA'
+      );
+    });
+
+    it('should forward undefined country when not provided', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(0, 50);
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
+    });
+
+    it('should forward country together with all other filters to repository', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(0, 50, 'alice', 'Engineering', 'Software Engineer', 'USA');
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        'alice',
+        'Engineering',
+        'Software Engineer',
+        'USA'
       );
     });
   });
