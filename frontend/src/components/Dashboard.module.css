@@ -22,20 +22,23 @@
 
 .header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   margin-bottom: 28px;
+  background-color: #1a1a2e;
+  padding: 20px 24px;
+  border-radius: 12px;
 }
 
 .title {
   font-size: 2rem;
   font-weight: 700;
-  color: #1a1a2e;
+  color: #ffffff;
 }
 
 .subtitle {
   font-size: 1rem;
-  color: #6b7280;
+  color: #c9cdd6;
   margin-top: 4px;
 }
 

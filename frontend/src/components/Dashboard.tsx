@@ -103,7 +103,7 @@ export default function Dashboard() {
       <header className={styles.header}>
         <div>
           <h1 className={styles.title}>Salary Manager</h1>
-          <p className={styles.subtitle}>Employee Overview</p>
+          <p className={styles.subtitle}>Employee Details & Analytics</p>
         </div>
         <button className="btn btn--primary" onClick={() => setShowModal(true)}>
           + Add Employee

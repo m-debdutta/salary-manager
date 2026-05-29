@@ -18,7 +18,7 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
         <p
           class="_subtitle_4b4f5e"
         >
-          Employee Overview
+          Employee Details & Analytics
         </p>
       </div>
       <button
@@ -794,7 +794,7 @@ exports[`Dashboard > snapshot > matches loading snapshot 1`] = `
         <p
           class="_subtitle_4b4f5e"
         >
-          Employee Overview
+          Employee Details & Analytics
         </p>
       </div>
       <button

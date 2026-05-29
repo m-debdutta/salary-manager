@@ -81,7 +81,7 @@ describe('Dashboard', () => {
 
     it('renders the subtitle', () => {
       renderDashboard();
-      expect(screen.getByText('Employee Overview')).toBeInTheDocument();
+      expect(screen.getByText('Employee Details & Analytics')).toBeInTheDocument();
     });
   });
 
