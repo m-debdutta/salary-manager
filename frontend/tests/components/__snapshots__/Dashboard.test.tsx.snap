@@ -657,6 +657,15 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
       />
     </div>
     <div
+      class="_sectionHeader_4b4f5e"
+    >
+      <p
+        class="_sectionTitle_4b4f5e"
+      >
+        Analytics
+      </p>
+    </div>
+    <div
       data-testid="analytics-panel"
     />
   </div>
@@ -799,6 +808,15 @@ exports[`Dashboard > snapshot > matches loading snapshot 1`] = `
     >
       Loading employees…
     </p>
+    <div
+      class="_sectionHeader_4b4f5e"
+    >
+      <p
+        class="_sectionTitle_4b4f5e"
+      >
+        Analytics
+      </p>
+    </div>
     <div
       data-testid="analytics-panel"
     />

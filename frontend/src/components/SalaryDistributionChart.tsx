@@ -9,7 +9,7 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { fetchSalaryDistribution, type SalaryDistributionRow } from '../api/analytics';
-import styles from './SalaryByCountryChart.module.css';
+import styles from './chart.module.css';
 
 interface TooltipPayload {
   payload: SalaryDistributionRow;

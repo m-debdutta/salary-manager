@@ -177,6 +177,9 @@ export default function Dashboard() {
         </div>
       )}
 
+      <div className={styles.sectionHeader}>
+        <p className={styles.sectionTitle}>Analytics</p>
+      </div>
       <AnalyticsPanel />
     </div>
   );

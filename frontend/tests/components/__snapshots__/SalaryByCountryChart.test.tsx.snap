@@ -3,19 +3,19 @@
 exports[`SalaryByCountryChart > snapshot > matches error snapshot 1`] = `
 <DocumentFragment>
   <section
-    class="_section_aed678"
+    class="_section_e78324"
   >
     <div
-      class="_sectionHeader_aed678"
+      class="_sectionHeader_e78324"
     >
       <p
-        class="_sectionTitle_aed678"
+        class="_sectionTitle_e78324"
       >
         Avg. Salary by Country
       </p>
     </div>
     <p
-      class="_error_aed678"
+      class="_error_e78324"
     >
       Failed to load chart data.
     </p>
@@ -26,24 +26,24 @@ exports[`SalaryByCountryChart > snapshot > matches error snapshot 1`] = `
 exports[`SalaryByCountryChart > snapshot > matches loaded snapshot 1`] = `
 <DocumentFragment>
   <section
-    class="_section_aed678"
+    class="_section_e78324"
   >
     <div
-      class="_sectionHeader_aed678"
+      class="_sectionHeader_e78324"
     >
       <p
-        class="_sectionTitle_aed678"
+        class="_sectionTitle_e78324"
       >
         Avg. Salary by Country
       </p>
       <span
-        class="_sectionCount_aed678"
+        class="_sectionCount_e78324"
       >
         3 countries
       </span>
     </div>
     <div
-      class="_chartWrapper_aed678"
+      class="_chartWrapper_e78324"
     >
       <div
         data-testid="responsive-container"
@@ -64,19 +64,19 @@ exports[`SalaryByCountryChart > snapshot > matches loaded snapshot 1`] = `
 exports[`SalaryByCountryChart > snapshot > matches loading snapshot 1`] = `
 <DocumentFragment>
   <section
-    class="_section_aed678"
+    class="_section_e78324"
   >
     <div
-      class="_sectionHeader_aed678"
+      class="_sectionHeader_e78324"
     >
       <p
-        class="_sectionTitle_aed678"
+        class="_sectionTitle_e78324"
       >
         Avg. Salary by Country
       </p>
     </div>
     <p
-      class="_loading_aed678"
+      class="_loading_e78324"
     >
       Loading chart…
     </p>

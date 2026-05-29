@@ -10,7 +10,7 @@ import {
   Cell,
 } from 'recharts';
 import { fetchSalaryByJobTitle, type SalaryByJobTitleRow } from '../api/analytics';
-import styles from './SalaryByCountryChart.module.css';
+import styles from './chart.module.css';
 
 const formatCurrency = (value: number) =>
   new Intl.NumberFormat('en-US', {

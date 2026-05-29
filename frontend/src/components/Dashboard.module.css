@@ -104,6 +104,7 @@
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
+  margin-bottom: 32px;
 }
 
 .sentinel {
