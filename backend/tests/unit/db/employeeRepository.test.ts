@@ -354,6 +354,77 @@ describe('EmployeeRepository', () => {
       expect(result.employees).toHaveLength(1);
       expect(result.total).toBe(1);
     });
+
+    describe('search', () => {
+      it('should return employees whose firstName matches the search term', async () => {
+        await createEmployee(makeEmployeeData({ firstName: 'Alice', lastName: 'Smith' }));
+        await createEmployee(makeEmployeeData({ firstName: 'Bob', lastName: 'Jones' }));
+
+        const result = await getEmployees(0, 50, 'alice');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].firstName).toBe('Alice');
+      });
+
+      it('should return employees whose lastName matches the search term', async () => {
+        await createEmployee(makeEmployeeData({ firstName: 'Alice', lastName: 'Smith' }));
+        await createEmployee(makeEmployeeData({ firstName: 'Bob', lastName: 'Jones' }));
+
+        const result = await getEmployees(0, 50, 'jones');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].lastName).toBe('Jones');
+      });
+
+      it('should match regardless of case', async () => {
+        await createEmployee(makeEmployeeData({ firstName: 'Alice', lastName: 'Smith' }));
+
+        const result = await getEmployees(0, 50, 'ALICE');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].firstName).toBe('Alice');
+      });
+
+      it('should match partial names', async () => {
+        await createEmployee(makeEmployeeData({ firstName: 'Alexander', lastName: 'Smith' }));
+        await createEmployee(makeEmployeeData({ firstName: 'Alex', lastName: 'Jones' }));
+        await createEmployee(makeEmployeeData({ firstName: 'Bob', lastName: 'Taylor' }));
+
+        const result = await getEmployees(0, 50, 'alex');
+
+        expect(result.employees).toHaveLength(2);
+      });
+
+      it('should return empty array when no employee matches', async () => {
+        await createEmployee(makeEmployeeData({ firstName: 'Alice', lastName: 'Smith' }));
+
+        const result = await getEmployees(0, 50, 'xyz_no_match');
+
+        expect(result.employees).toHaveLength(0);
+        expect(result.total).toBe(0);
+      });
+
+      it('should return accurate total reflecting only matching records', async () => {
+        await createEmployee(makeEmployeeData({ firstName: 'Alice', lastName: 'Smith' }));
+        await createEmployee(makeEmployeeData({ firstName: 'Alice', lastName: 'Jones' }));
+        await createEmployee(makeEmployeeData({ firstName: 'Bob', lastName: 'Taylor' }));
+
+        const result = await getEmployees(0, 1, 'alice');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.total).toBe(2);
+      });
+
+      it('should return all employees when search is undefined', async () => {
+        await createEmployee(makeEmployeeData({ firstName: 'Alice' }));
+        await createEmployee(makeEmployeeData({ firstName: 'Bob' }));
+
+        const result = await getEmployees(0, 50, undefined);
+
+        expect(result.employees).toHaveLength(2);
+        expect(result.total).toBe(2);
+      });
+    });
   });
 
   describe('getEmployeeById', () => {

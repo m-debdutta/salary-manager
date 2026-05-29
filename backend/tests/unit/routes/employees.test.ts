@@ -125,7 +125,7 @@ describe('Employees Router', () => {
 
       await request(app).get('/api/employees?page=2&pageSize=10');
 
-      expect(employeeService.getEmployees).toHaveBeenCalledWith(10, 10); // skip=(2-1)*10=10
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(10, 10, undefined); // skip=(2-1)*10=10
     });
 
     it('should default to page 1 and pageSize 50 when not specified', async () => {
@@ -138,7 +138,7 @@ describe('Employees Router', () => {
 
       await request(app).get('/api/employees');
 
-      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50);
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50, undefined);
     });
 
     it('should format hireDate as YYYY-MM-DD string', async () => {
@@ -186,7 +186,7 @@ describe('Employees Router', () => {
 
       await request(app).get('/api/employees?page=abc&pageSize=xyz');
 
-      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50);
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50, undefined);
     });
 
     it('should cap pageSize at 100 when pageSize exceeds maximum', async () => {
@@ -199,7 +199,7 @@ describe('Employees Router', () => {
 
       await request(app).get('/api/employees?pageSize=200');
 
-      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 100);
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 100, undefined);
     });
 
     it('should default page to 1 when page is 0 or negative', async () => {
@@ -212,7 +212,7 @@ describe('Employees Router', () => {
 
       await request(app).get('/api/employees?page=-5');
 
-      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50);
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50, undefined);
     });
 
     it('should default pageSize to 1 when pageSize is negative', async () => {
@@ -225,7 +225,59 @@ describe('Employees Router', () => {
 
       await request(app).get('/api/employees?pageSize=-10');
 
-      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 1);
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 1, undefined);
+    });
+
+    it('should pass search query param to service', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees?search=alice');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50, 'alice');
+    });
+
+    it('should pass search together with pagination params', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 2,
+        pageSize: 10,
+      });
+
+      await request(app).get('/api/employees?search=smith&page=2&pageSize=10');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(10, 10, 'smith');
+    });
+
+    it('should pass undefined to service when search is an empty string', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees?search=');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50, undefined);
+    });
+
+    it('should pass undefined to service when search is not provided', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(0, 50, undefined);
     });
   });
 

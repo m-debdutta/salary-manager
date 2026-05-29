@@ -49,8 +49,8 @@ export class EmployeeService {
     return await updateEmployee(id, updateData);
   }
 
-  async getEmployees(skip: number = 0, take: number = 50) {
-    const { employees, total } = await getEmployees(skip, take);
+  async getEmployees(skip: number = 0, take: number = 50, search?: string) {
+    const { employees, total } = await getEmployees(skip, take, search);
 
     return {
       employees,

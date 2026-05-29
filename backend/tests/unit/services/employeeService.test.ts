@@ -78,7 +78,7 @@ describe('EmployeeService', () => {
 
       await employeeService.getEmployees(10, 20);
 
-      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(10, 20);
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(10, 20, undefined);
     });
 
     it('should return paginated result with employees and total', async () => {
@@ -109,13 +109,29 @@ describe('EmployeeService', () => {
 
       await employeeService.getEmployees();
 
-      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50);
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, undefined);
     });
 
     it('should propagate repository errors', async () => {
       vi.mocked(employeeRepository.getEmployees).mockRejectedValue(new Error('DB connection lost'));
 
       await expect(employeeService.getEmployees()).rejects.toThrow('DB connection lost');
+    });
+
+    it('should forward search term to repository', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(0, 50, 'alice');
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, 'alice');
+    });
+
+    it('should forward undefined search to repository when not provided', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(0, 50);
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, undefined);
     });
   });
 
