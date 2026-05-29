@@ -67,6 +67,15 @@ cleanup() {
 
 trap cleanup SIGINT SIGTERM EXIT
 
+# ── Install dependencies ──────────────────────────────────────────────────────
+log "Installing ${CYAN}Backend${RESET} dependencies…"
+(cd "$BACKEND_DIR" && npm install)
+ok "Backend dependencies installed."
+
+log "Installing ${CYAN}Frontend${RESET} dependencies…"
+(cd "$FRONTEND_DIR" && npm install)
+ok "Frontend dependencies installed."
+
 # ── Optional seeding ──────────────────────────────────────────────────────────
 if [[ "$SEED" == "true" ]]; then
   log "Running database seed…"
