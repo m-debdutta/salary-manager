@@ -8,18 +8,13 @@ import {
 import { Combobox } from './Combobox';
 import type { Employee } from './EmployeeCard';
 import { validateEmployeeForm } from '../lib/employeeValidation';
-import countriesData from '../../../data/countries.json';
-import departmentsData from '../../../data/departments.json';
-import employmentTypesData from '../../../data/employment_types.json';
 import styles from './AddEmployeeModal.module.css';
-
-const EMPLOYMENT_TYPES = employmentTypesData;
-const COUNTRIES = countriesData.map((c) => c.name);
-const DEPARTMENTS = departmentsData.map((d) => d.name);
-const JOB_TITLE_GROUPS = departmentsData.map((d) => ({
-  label: d.name,
-  options: d.jobTitles,
-}));
+import {
+  COUNTRIES,
+  DEPARTMENTS,
+  EMPLOYMENT_TYPES,
+  JOB_TITLE_GROUPS,
+} from '../lib/masterData';
 
 const INITIAL_FORM: CreateEmployeeInput = {
   firstName: '',

@@ -15,6 +15,7 @@ export interface ComboboxProps {
   searchable?: boolean;
   options?: string[];
   groups?: ComboboxGroup[];
+  width?: string;
 }
 
 export const Combobox = ({
@@ -26,6 +27,7 @@ export const Combobox = ({
   searchable = false,
   options = [],
   groups = [],
+  width = '100%',
 }: ComboboxProps) => {
   const [open, setOpen] = useState(false);
   const [query, setQuery] = useState('');
@@ -65,7 +67,7 @@ export const Combobox = ({
   };
 
   return (
-    <div className={styles.combobox} ref={containerRef}>
+    <div className={styles.combobox} style={{ width: width }} ref={containerRef}>
       <button
         type="button"
         className={`form-input ${styles.trigger}${hasError ? ' form-input--error' : ''}`}

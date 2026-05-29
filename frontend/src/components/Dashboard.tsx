@@ -11,8 +11,10 @@ import { EmployeeCard, type Employee } from './EmployeeCard';
 import AddEmployeeModal from './AddEmployeeModal';
 import EmployeeDetailsModal from './EmployeeDetailsModal';
 import AnalyticsPanel from './AnalyticsPanel';
+import { Combobox } from './Combobox';
 import StatCard from './StatCard';
 import styles from './Dashboard.module.css';
+import { DEPARTMENTS } from '../lib/masterData';
 
 const PAGE_SIZE = 80;
 
@@ -24,6 +26,7 @@ export default function Dashboard() {
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
+  const [department, setDepartment] = useState('');
 
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(search.trim()), 300);
@@ -48,9 +51,14 @@ export default function Dashboard() {
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['employees', debouncedSearch],
+      queryKey: ['employees', debouncedSearch, department],
       queryFn: ({ pageParam }) =>
-        fetchEmployees(pageParam, PAGE_SIZE, debouncedSearch || undefined),
+        fetchEmployees(
+          pageParam,
+          PAGE_SIZE,
+          debouncedSearch || undefined,
+          department || undefined,
+        ),
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
         lastPage.employees.length === lastPage.pageSize ? lastPage.page + 1 : undefined,
@@ -167,6 +175,15 @@ export default function Dashboard() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           aria-label="Search employees"
+        />
+        <Combobox
+          value={department}
+          onChange={(value) =>
+            value === 'All Departments' ? setDepartment('') : setDepartment(value)
+          }
+          placeholder="All Departments"
+          options={['All Departments', ...DEPARTMENTS]}
+          width='15%'
         />
       </div>
 

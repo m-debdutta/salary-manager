@@ -96,6 +96,36 @@ describe('fetchEmployees', () => {
     });
   });
 
+  it('includes department param when provided', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50, undefined, 'Engineering');
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50, department: 'Engineering' },
+    });
+  });
+
+  it('omits department param when not provided', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50);
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50 },
+    });
+  });
+
+  it('includes both search and department params when provided', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50, 'alice', 'Engineering');
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50, search: 'alice', department: 'Engineering' },
+    });
+  });
+
   it('returns the response data', async () => {
     mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
 
