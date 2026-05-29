@@ -324,3 +324,37 @@ npm test                   # Run all tests
 npm run test:coverage      # Run with coverage report
 npm run test:ui            # Open Vitest UI
 ```
+
+## 🔮 Future Enhancements
+
+### Authentication & Authorisation (JWT)
+
+The API is currently open — any client that can reach the server can read or mutate data. The next step is a proper auth layer:
+
+- **JWT-based authentication** — issue signed tokens on login (`POST /auth/login`) and verify them in an Express middleware before any protected route is reached. Access tokens would be short-lived (e.g. 15 min) and refreshed via a secure, `HttpOnly` refresh-token cookie to limit exposure if a token is stolen.
+- **Role-based access control (RBAC)** — distinguish at minimum between `viewer` (read-only analytics + employee list) and `admin` (full CRUD). Roles would be encoded in the JWT payload and checked per route.
+- **Audit log** — record who created, updated, or deleted an employee record, stored alongside the existing `created_at` / `updated_at` timestamps.
+
+### Multi-User Interface
+
+The current UI is a single shared view with no concept of who is logged in. A multi-user experience would include:
+
+- **Login / logout screen** — credential form that exchanges a username + password for a JWT, stored in memory (access token) and an `HttpOnly` cookie (refresh token).
+- **User management** — an admin-only panel to invite colleagues, assign roles, and revoke access.
+- **Per-user preferences** — saved filter presets, default page size, and preferred analytics view persisted per user account.
+- **Concurrent-edit awareness** — optimistic locking or a `version` field on employee records to prevent two admins silently overwriting each other's changes.
+
+### Structured Logging
+
+The backend currently uses `console.error` / `console.log` for diagnostics. Production-grade logging would include:
+
+- **Structured JSON logs** via a library such as `pino` — each log line is a machine-readable JSON object with a timestamp, severity level, request ID, and relevant context, making it straightforward to ingest into log aggregators (Datadog, Grafana Loki, AWS CloudWatch).
+- **Per-request correlation ID** — a UUID generated at the start of each request (or forwarded from an `X-Request-Id` header) and attached to every log line produced during that request, enabling full end-to-end tracing across services.
+- **HTTP access log** — log method, path, status code, and response time for every request to track latency trends and surface slow endpoints.
+- **Log levels by environment** — `debug` / `trace` in development, `info` in staging, `warn` and above in production to avoid noisy logs at scale.
+
+### Other Enhancements
+
+- **Rate limiting** — `express-rate-limit` on mutation endpoints to prevent bulk scraping or brute-force login attempts.
+- **Export** — CSV / Excel download of the current filtered employee list.
+- **Notifications** — email or in-app alerts for significant salary events (e.g. salary review reminders based on `hire_date`).
