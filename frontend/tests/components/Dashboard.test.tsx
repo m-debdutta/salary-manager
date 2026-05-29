@@ -969,4 +969,114 @@ describe('Dashboard', () => {
       await waitFor(() => expect(vi.mocked(fetchOverview)).toHaveBeenCalledTimes(2));
     });
   });
+
+  // ── Clear filters ─────────────────────────────────────────────────────────────
+  describe('clear filters', () => {
+    it('shows the clear filters button when the search input has a value', () => {
+      renderDashboard();
+      fireEvent.change(screen.getByRole('searchbox', { name: 'Search employees' }), {
+        target: { value: 'alice' },
+      });
+      expect(screen.getByRole('button', { name: 'Clear filters' })).toBeInTheDocument();
+    });
+
+    it('shows the clear filters button when a department filter is active', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('button', { name: 'All Departments' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Engineering' }));
+      expect(screen.getByRole('button', { name: 'Clear filters' })).toBeInTheDocument();
+    });
+
+    it('shows the clear filters button when a job title filter is active', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('button', { name: 'All Job Titles' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Software Engineer' }));
+      expect(screen.getByRole('button', { name: 'Clear filters' })).toBeInTheDocument();
+    });
+
+    it('shows the clear filters button when a country filter is active', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('button', { name: 'All Countries' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'United States' }));
+      expect(screen.getByRole('button', { name: 'Clear filters' })).toBeInTheDocument();
+    });
+
+    it('shows the clear filters button when an employment type filter is active', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('button', { name: 'All Employment Types' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Full-time' }));
+      expect(screen.getByRole('button', { name: 'Clear filters' })).toBeInTheDocument();
+    });
+
+    it('resets the search input when clear filters is clicked', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.change(screen.getByRole('searchbox', { name: 'Search employees' }), {
+        target: { value: 'alice' },
+      });
+      fireEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
+      expect(screen.getByRole('searchbox', { name: 'Search employees' })).toHaveValue('');
+    });
+
+    it('resets all comboboxes to their defaults when clear filters is clicked', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+
+      fireEvent.click(screen.getByRole('button', { name: 'All Departments' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Engineering' }));
+      fireEvent.click(screen.getByRole('button', { name: 'All Job Titles' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Software Engineer' }));
+      fireEvent.click(screen.getByRole('button', { name: 'All Countries' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'United States' }));
+      fireEvent.click(screen.getByRole('button', { name: 'All Employment Types' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Full-time' }));
+
+      fireEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
+
+      expect(screen.getByRole('button', { name: 'All Departments' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'All Job Titles' })).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'All Countries' })).toBeInTheDocument();
+      expect(
+        screen.getByRole('button', { name: 'All Employment Types' }),
+      ).toBeInTheDocument();
+    });
+
+    it('calls fetchEmployees with no filters after clearing', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+
+      fireEvent.click(screen.getByRole('button', { name: 'All Departments' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Engineering' }));
+      await waitFor(() =>
+        expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+          expect.any(Number),
+          expect.any(Number),
+          undefined,
+          'Engineering',
+          undefined,
+          undefined,
+          undefined,
+        ),
+      );
+
+      vi.mocked(fetchEmployees).mockClear();
+      fireEvent.click(screen.getByRole('button', { name: 'Clear filters' }));
+
+      await waitFor(() =>
+        expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+          expect.any(Number),
+          expect.any(Number),
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+        ),
+      );
+    });
+  });
 });

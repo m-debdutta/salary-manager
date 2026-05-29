@@ -31,6 +31,15 @@ export default function Dashboard() {
   const [country, setCountry] = useState('');
   const [employmentType, setEmploymentType] = useState('');
 
+
+  const clearFilters = () => {
+    setSearch('');
+    setDepartment('');
+    setJobTitle('');
+    setCountry('');
+    setEmploymentType('');
+  };
+
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(search.trim()), 300);
     return () => clearTimeout(id);
@@ -230,6 +239,9 @@ export default function Dashboard() {
           options={['All Employment Types', ...EMPLOYMENT_TYPES]}
           width="18%"
         />
+        <button className={styles.clearFilters} onClick={clearFilters}>
+          Clear filters
+        </button>
       </div>
 
       {isError && (

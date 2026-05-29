@@ -234,6 +234,11 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
           </span>
         </button>
       </div>
+      <button
+        class="_clearFilters_4b4f5e"
+      >
+        Clear filters
+      </button>
     </div>
     <div
       class="_grid_4b4f5e"
@@ -1000,6 +1005,11 @@ exports[`Dashboard > snapshot > matches loading snapshot 1`] = `
           </span>
         </button>
       </div>
+      <button
+        class="_clearFilters_4b4f5e"
+      >
+        Clear filters
+      </button>
     </div>
     <p
       class="_loading_4b4f5e"

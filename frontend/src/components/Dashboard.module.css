@@ -95,7 +95,7 @@
 
 .searchInput {
   margin-left: auto;
-  padding: 6px 12px;
+  padding: 10px 12px;
   border: 1px solid #d1d5db;
   border-radius: 8px;
   font-size: 0.875rem;
@@ -108,6 +108,22 @@
 .searchInput:focus {
   border-color: #6366f1;
   box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+
+.clearFilters {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #6b7280;
+  background: #ffffff;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.clearFilters:hover {
+  border-color: #6366f1;
+  color: #6366f1;
 }
 
 .departmentSelect {
