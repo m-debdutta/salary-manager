@@ -11,12 +11,10 @@ export const setupMiddleware = (app: Express): void => {
   app.use(
     cors({
       origin: (origin, callback) => {
-        // Allow server-to-server requests (no Origin header) only in non-production
+        // No Origin header means same-origin or server-to-server (e.g. health checks).
+        // CORS does not apply to these requests — always allow them.
         if (!origin) {
-          if (process.env.NODE_ENV !== 'production') {
-            return callback(null, true);
-          }
-          return callback(new Error('CORS: missing Origin header'));
+          return callback(null, true);
         }
 
         if (!allowedOrigin) {

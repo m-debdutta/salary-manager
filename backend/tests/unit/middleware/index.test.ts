@@ -80,7 +80,16 @@ describe('Middleware Setup', () => {
     expect(response.headers['access-control-allow-origin']).toBeUndefined();
   });
 
-  it('should reject requests when ALLOWED_ORIGIN is not configured', async () => {
+  it('should allow requests with no Origin header (health checks / server-to-server)', async () => {
+    const app = createApp(ALLOWED);
+
+    // Supertest sends no Origin header by default
+    const response = await request(app).get('/test');
+
+    expect(response.status).toBe(200);
+  });
+
+  it('should reject requests when ALLOWED_ORIGIN is not configured but an Origin is present', async () => {
     const app = createApp(undefined); // no env var
 
     const response = await request(app).get('/test').set('Origin', ALLOWED);
