@@ -1,0 +1,86 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`SalaryDistributionChart > snapshot > matches error snapshot 1`] = `
+<DocumentFragment>
+  <section
+    class="_section_aed678"
+  >
+    <div
+      class="_sectionHeader_aed678"
+    >
+      <p
+        class="_sectionTitle_aed678"
+      >
+        Salary Distribution
+      </p>
+    </div>
+    <p
+      class="_error_aed678"
+    >
+      Failed to load chart data.
+    </p>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`SalaryDistributionChart > snapshot > matches loaded snapshot 1`] = `
+<DocumentFragment>
+  <section
+    class="_section_aed678"
+  >
+    <div
+      class="_sectionHeader_aed678"
+    >
+      <p
+        class="_sectionTitle_aed678"
+      >
+        Salary Distribution
+      </p>
+      <span
+        class="_sectionCount_aed678"
+      >
+        4 ranges
+      </span>
+    </div>
+    <div
+      class="_chartWrapper_aed678"
+    >
+      <div
+        data-testid="responsive-container"
+      >
+        <div
+          data-length="4"
+          data-testid="bar-chart"
+        >
+          <div
+            data-testid="bar"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`SalaryDistributionChart > snapshot > matches loading snapshot 1`] = `
+<DocumentFragment>
+  <section
+    class="_section_aed678"
+  >
+    <div
+      class="_sectionHeader_aed678"
+    >
+      <p
+        class="_sectionTitle_aed678"
+      >
+        Salary Distribution
+      </p>
+    </div>
+    <p
+      class="_loading_aed678"
+    >
+      Loading chart…
+    </p>
+  </section>
+</DocumentFragment>
+`;

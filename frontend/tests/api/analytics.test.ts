@@ -1,13 +1,15 @@
 import axios from 'axios';
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import {
-  fetchDepartmentSummary,
   fetchSalaryByCountry,
   fetchSalaryByJobTitle,
+  fetchSalaryDistribution,
+  fetchDepartmentSummary,
 } from '../../src/api/analytics';
 import type {
   SalaryByCountryRow,
   SalaryByJobTitleRow,
+  SalaryDistributionRow,
   DepartmentSummaryRow,
 } from '../../src/api/analytics';
 
@@ -36,6 +38,11 @@ const MOCK_JOB_TITLE_DATA: SalaryByJobTitleRow[] = [
     avg: 130000,
     median: 128000,
   },
+];
+
+const MOCK_DISTRIBUTION_DATA: SalaryDistributionRow[] = [
+  { range: '$50k–$75k', min: 50000, max: 75000, count: 5 },
+  { range: '$75k–$100k', min: 75000, max: 100000, count: 12 },
 ];
 
 const MOCK_DEPARTMENT_DATA: DepartmentSummaryRow[] = [
@@ -123,6 +130,34 @@ describe('fetchSalaryByJobTitle', () => {
     mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
 
     await expect(fetchSalaryByJobTitle()).rejects.toThrow('Network Error');
+  });
+});
+
+describe('fetchSalaryDistribution', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('calls GET /api/analytics/salary-distribution', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_DISTRIBUTION_DATA });
+
+    await fetchSalaryDistribution();
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/analytics/salary-distribution');
+  });
+
+  it('returns the response data', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_DISTRIBUTION_DATA });
+
+    const result = await fetchSalaryDistribution();
+
+    expect(result).toEqual(MOCK_DISTRIBUTION_DATA);
+  });
+
+  it('propagates errors thrown by axios', async () => {
+    mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
+
+    await expect(fetchSalaryDistribution()).rejects.toThrow('Network Error');
   });
 });
 

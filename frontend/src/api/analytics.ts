@@ -18,6 +18,13 @@ export interface SalaryByJobTitleRow {
   median: number;
 }
 
+export interface SalaryDistributionRow {
+  range: string;
+  min: number;
+  max: number;
+  count: number;
+}
+
 export interface DepartmentSummaryRow {
   department: string;
   count: number;
@@ -40,6 +47,13 @@ export const fetchSalaryByJobTitle = async (
   const { data } = await axios.get<SalaryByJobTitleRow[]>(
     '/api/analytics/salary-by-job-title',
     { params: country ? { country } : undefined },
+  );
+  return data;
+};
+
+export const fetchSalaryDistribution = async (): Promise<SalaryDistributionRow[]> => {
+  const { data } = await axios.get<SalaryDistributionRow[]>(
+    '/api/analytics/salary-distribution',
   );
   return data;
 };
