@@ -655,6 +655,123 @@ describe('EmployeeRepository', () => {
         expect(result.employees[0].firstName).toBe('Alice');
       });
     });
+
+    describe('employmentType filter', () => {
+      it('should return only employees with the specified employmentType', async () => {
+        await createEmployee(makeEmployeeData({ employmentType: 'Full-time' }));
+        await createEmployee(makeEmployeeData({ employmentType: 'Contract' }));
+
+        const result = await getEmployees(
+          0,
+          50,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          'Full-time'
+        );
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].employmentType).toBe('Full-time');
+      });
+
+      it('should return all employees when employmentType is undefined', async () => {
+        await createEmployee(makeEmployeeData({ employmentType: 'Full-time' }));
+        await createEmployee(makeEmployeeData({ employmentType: 'Contract' }));
+
+        const result = await getEmployees(
+          0,
+          50,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined
+        );
+
+        expect(result.employees).toHaveLength(2);
+      });
+
+      it('should return accurate total reflecting only matching employmentType', async () => {
+        await createEmployee(makeEmployeeData({ employmentType: 'Full-time' }));
+        await createEmployee(makeEmployeeData({ employmentType: 'Full-time' }));
+        await createEmployee(makeEmployeeData({ employmentType: 'Contract' }));
+
+        const result = await getEmployees(
+          0,
+          1,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          'Full-time'
+        );
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.total).toBe(2);
+      });
+
+      it('should return empty array when no employees match the employmentType', async () => {
+        await createEmployee(makeEmployeeData({ employmentType: 'Full-time' }));
+
+        const result = await getEmployees(
+          0,
+          50,
+          undefined,
+          undefined,
+          undefined,
+          undefined,
+          'Internship'
+        );
+
+        expect(result.employees).toHaveLength(0);
+        expect(result.total).toBe(0);
+      });
+
+      it('should combine employmentType filter with all other filters', async () => {
+        await createEmployee(
+          makeEmployeeData({
+            firstName: 'Alice',
+            country: 'USA',
+            department: 'Engineering',
+            jobTitle: 'Software Engineer',
+            employmentType: 'Full-time',
+          })
+        );
+        await createEmployee(
+          makeEmployeeData({
+            firstName: 'Alice',
+            country: 'USA',
+            department: 'Engineering',
+            jobTitle: 'Software Engineer',
+            employmentType: 'Contract',
+          })
+        );
+        await createEmployee(
+          makeEmployeeData({
+            firstName: 'Bob',
+            country: 'Canada',
+            department: 'Marketing',
+            jobTitle: 'Product Manager',
+            employmentType: 'Full-time',
+          })
+        );
+
+        const result = await getEmployees(
+          0,
+          50,
+          'alice',
+          'Engineering',
+          'Software Engineer',
+          'USA',
+          'Full-time'
+        );
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].employmentType).toBe('Full-time');
+        expect(result.employees[0].firstName).toBe('Alice');
+      });
+    });
   });
 
   describe('getEmployeeById', () => {

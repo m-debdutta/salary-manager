@@ -84,6 +84,7 @@ describe('EmployeeService', () => {
         undefined,
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -122,6 +123,7 @@ describe('EmployeeService', () => {
         undefined,
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -143,6 +145,7 @@ describe('EmployeeService', () => {
         'alice',
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -155,6 +158,7 @@ describe('EmployeeService', () => {
       expect(employeeRepository.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -173,6 +177,7 @@ describe('EmployeeService', () => {
         undefined,
         'Engineering',
         undefined,
+        undefined,
         undefined
       );
     });
@@ -186,6 +191,7 @@ describe('EmployeeService', () => {
         0,
         50,
         'alice',
+        undefined,
         undefined,
         undefined,
         undefined
@@ -203,6 +209,7 @@ describe('EmployeeService', () => {
         'alice',
         'Engineering',
         undefined,
+        undefined,
         undefined
       );
     });
@@ -218,6 +225,7 @@ describe('EmployeeService', () => {
         undefined,
         undefined,
         'Software Engineer',
+        undefined,
         undefined
       );
     });
@@ -230,6 +238,7 @@ describe('EmployeeService', () => {
       expect(employeeRepository.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -248,6 +257,7 @@ describe('EmployeeService', () => {
         'alice',
         'Engineering',
         'Software Engineer',
+        undefined,
         undefined
       );
     });
@@ -263,7 +273,8 @@ describe('EmployeeService', () => {
         undefined,
         undefined,
         undefined,
-        'USA'
+        'USA',
+        undefined
       );
     });
 
@@ -275,6 +286,7 @@ describe('EmployeeService', () => {
       expect(employeeRepository.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -293,7 +305,72 @@ describe('EmployeeService', () => {
         'alice',
         'Engineering',
         'Software Engineer',
-        'USA'
+        'USA',
+        undefined
+      );
+    });
+
+    it('should forward employmentType filter to repository', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(
+        0,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        'Full-time'
+      );
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        'Full-time'
+      );
+    });
+
+    it('should forward undefined employmentType when not provided', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(0, 50);
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
+    });
+
+    it('should forward employmentType together with all other filters to repository', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(
+        0,
+        50,
+        'alice',
+        'Engineering',
+        'Software Engineer',
+        'USA',
+        'Full-time'
+      );
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        'alice',
+        'Engineering',
+        'Software Engineer',
+        'USA',
+        'Full-time'
       );
     });
   });

@@ -16,6 +16,7 @@ router.get('/', async (req: Request, res: Response) => {
   const department = (req.query.department as string)?.trim() || undefined;
   const jobTitle = (req.query.jobTitle as string)?.trim() || undefined;
   const country = (req.query.country as string)?.trim() || undefined;
+  const employmentType = (req.query.employmentType as string)?.trim() || undefined;
 
   try {
     const result = await employeeService.getEmployees(
@@ -24,7 +25,8 @@ router.get('/', async (req: Request, res: Response) => {
       search,
       department,
       jobTitle,
-      country
+      country,
+      employmentType
     );
 
     return res.status(200).json({

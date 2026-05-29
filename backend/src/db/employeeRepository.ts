@@ -26,7 +26,8 @@ export const getEmployees = async (
   search?: string,
   department?: string,
   jobTitle?: string,
-  country?: string
+  country?: string,
+  employmentType?: string
 ) => {
   // SQLite does not support Prisma's `mode: 'insensitive'`.
   // SQLite's LIKE (used by Prisma `contains`) is case-insensitive for ASCII by default,
@@ -50,6 +51,10 @@ export const getEmployees = async (
 
   if (country) {
     where.country = country;
+  }
+
+  if (employmentType) {
+    where.employmentType = employmentType;
   }
 
   const [employees, total] = await Promise.all([

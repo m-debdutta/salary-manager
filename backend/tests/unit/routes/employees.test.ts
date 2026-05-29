@@ -131,6 +131,7 @@ describe('Employees Router', () => {
         undefined,
         undefined,
         undefined,
+        undefined,
         undefined
       ); // skip=(2-1)*10=10
     });
@@ -148,6 +149,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -206,6 +208,7 @@ describe('Employees Router', () => {
         undefined,
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -223,6 +226,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         100,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -246,6 +250,7 @@ describe('Employees Router', () => {
         undefined,
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -263,6 +268,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         1,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -286,6 +292,7 @@ describe('Employees Router', () => {
         'alice',
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -306,6 +313,7 @@ describe('Employees Router', () => {
         'smith',
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -323,6 +331,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -346,6 +355,7 @@ describe('Employees Router', () => {
         undefined,
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -366,6 +376,7 @@ describe('Employees Router', () => {
         undefined,
         'Engineering',
         undefined,
+        undefined,
         undefined
       );
     });
@@ -383,6 +394,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -406,6 +418,7 @@ describe('Employees Router', () => {
         'alice',
         'Engineering',
         undefined,
+        undefined,
         undefined
       );
     });
@@ -426,6 +439,7 @@ describe('Employees Router', () => {
         undefined,
         undefined,
         'Software Engineer',
+        undefined,
         undefined
       );
     });
@@ -446,6 +460,7 @@ describe('Employees Router', () => {
         undefined,
         undefined,
         undefined,
+        undefined,
         undefined
       );
     });
@@ -463,6 +478,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -488,6 +504,7 @@ describe('Employees Router', () => {
         'alice',
         'Engineering',
         'Software Engineer',
+        undefined,
         undefined
       );
     });
@@ -508,7 +525,8 @@ describe('Employees Router', () => {
         undefined,
         undefined,
         undefined,
-        'USA'
+        'USA',
+        undefined
       );
     });
 
@@ -525,6 +543,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -545,6 +564,7 @@ describe('Employees Router', () => {
       expect(employeeService.getEmployees).toHaveBeenCalledWith(
         0,
         50,
+        undefined,
         undefined,
         undefined,
         undefined,
@@ -570,7 +590,94 @@ describe('Employees Router', () => {
         'alice',
         'Engineering',
         'Software Engineer',
-        'USA'
+        'USA',
+        undefined
+      );
+    });
+
+    it('should pass employmentType query param to service', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees?employmentType=Full-time');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        'Full-time'
+      );
+    });
+
+    it('should pass undefined to service when employmentType is not provided', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
+    });
+
+    it('should pass undefined to service when employmentType is an empty string', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get('/api/employees?employmentType=');
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        undefined,
+        undefined,
+        undefined,
+        undefined,
+        undefined
+      );
+    });
+
+    it('should pass employmentType together with all other filters to service', async () => {
+      vi.mocked(employeeService.getEmployees).mockResolvedValue({
+        employees: [],
+        total: 0,
+        page: 1,
+        pageSize: 50,
+      });
+
+      await request(app).get(
+        '/api/employees?search=alice&department=Engineering&jobTitle=Software%20Engineer&country=USA&employmentType=Full-time'
+      );
+
+      expect(employeeService.getEmployees).toHaveBeenCalledWith(
+        0,
+        50,
+        'alice',
+        'Engineering',
+        'Software Engineer',
+        'USA',
+        'Full-time'
       );
     });
   });
