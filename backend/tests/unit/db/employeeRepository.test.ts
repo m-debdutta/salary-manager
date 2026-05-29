@@ -484,6 +484,78 @@ describe('EmployeeRepository', () => {
         expect(result.employees[0].firstName).toBe('Alice');
       });
     });
+
+    describe('jobTitle filter', () => {
+      it('should return only employees with the specified jobTitle', async () => {
+        await createEmployee(makeEmployeeData({ jobTitle: 'Software Engineer' }));
+        await createEmployee(makeEmployeeData({ jobTitle: 'Product Manager' }));
+
+        const result = await getEmployees(0, 50, undefined, undefined, 'Software Engineer');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].jobTitle).toBe('Software Engineer');
+      });
+
+      it('should return all employees when jobTitle is undefined', async () => {
+        await createEmployee(makeEmployeeData({ jobTitle: 'Software Engineer' }));
+        await createEmployee(makeEmployeeData({ jobTitle: 'Product Manager' }));
+
+        const result = await getEmployees(0, 50, undefined, undefined, undefined);
+
+        expect(result.employees).toHaveLength(2);
+      });
+
+      it('should return accurate total reflecting only matching jobTitle', async () => {
+        await createEmployee(makeEmployeeData({ jobTitle: 'Software Engineer' }));
+        await createEmployee(makeEmployeeData({ jobTitle: 'Software Engineer' }));
+        await createEmployee(makeEmployeeData({ jobTitle: 'Product Manager' }));
+
+        const result = await getEmployees(0, 1, undefined, undefined, 'Software Engineer');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.total).toBe(2);
+      });
+
+      it('should return empty array when no employees match the jobTitle', async () => {
+        await createEmployee(makeEmployeeData({ jobTitle: 'Software Engineer' }));
+
+        const result = await getEmployees(0, 50, undefined, undefined, 'Designer');
+
+        expect(result.employees).toHaveLength(0);
+        expect(result.total).toBe(0);
+      });
+
+      it('should combine jobTitle filter with search term and department', async () => {
+        await createEmployee(
+          makeEmployeeData({
+            firstName: 'Alice',
+            department: 'Engineering',
+            jobTitle: 'Software Engineer',
+          })
+        );
+        await createEmployee(
+          makeEmployeeData({
+            firstName: 'Alice',
+            department: 'Marketing',
+            jobTitle: 'Software Engineer',
+          })
+        );
+        await createEmployee(
+          makeEmployeeData({
+            firstName: 'Bob',
+            department: 'Engineering',
+            jobTitle: 'Product Manager',
+          })
+        );
+
+        const result = await getEmployees(0, 50, 'alice', 'Engineering', 'Software Engineer');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].jobTitle).toBe('Software Engineer');
+        expect(result.employees[0].firstName).toBe('Alice');
+        expect(result.employees[0].department).toBe('Engineering');
+      });
+    });
   });
 
   describe('getEmployeeById', () => {
