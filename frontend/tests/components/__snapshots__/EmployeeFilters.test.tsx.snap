@@ -1,0 +1,242 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`EmployeeFilters > snapshot > matches loaded snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="_sectionHeader_4b4f5e"
+  >
+    <p
+      class="_sectionTitle_4b4f5e"
+    >
+      Employees
+    </p>
+    <span
+      class="_sectionCount_4b4f5e"
+    >
+      100
+    </span>
+    <input
+      aria-label="Search employees"
+      class="_searchInput_4b4f5e"
+      placeholder="Search by name…"
+      type="search"
+      value=""
+    />
+    <div
+      class="_combobox_53f94f"
+      style="width: 15%;"
+    >
+      <button
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        class="form-input _trigger_53f94f"
+        type="button"
+      >
+        <span
+          class="_placeholder_53f94f"
+        >
+          All Departments
+        </span>
+        <span
+          aria-hidden="true"
+          class="_chevron_53f94f"
+        >
+          ▾
+        </span>
+      </button>
+    </div>
+    <div
+      class="_combobox_53f94f"
+      style="width: 15%;"
+    >
+      <button
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        class="form-input _trigger_53f94f"
+        type="button"
+      >
+        <span
+          class="_placeholder_53f94f"
+        >
+          All Job Titles
+        </span>
+        <span
+          aria-hidden="true"
+          class="_chevron_53f94f"
+        >
+          ▾
+        </span>
+      </button>
+    </div>
+    <div
+      class="_combobox_53f94f"
+      style="width: 15%;"
+    >
+      <button
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        class="form-input _trigger_53f94f"
+        type="button"
+      >
+        <span
+          class="_placeholder_53f94f"
+        >
+          All Countries
+        </span>
+        <span
+          aria-hidden="true"
+          class="_chevron_53f94f"
+        >
+          ▾
+        </span>
+      </button>
+    </div>
+    <div
+      class="_combobox_53f94f"
+      style="width: 18%;"
+    >
+      <button
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        class="form-input _trigger_53f94f"
+        type="button"
+      >
+        <span
+          class="_placeholder_53f94f"
+        >
+          All Employment Types
+        </span>
+        <span
+          aria-hidden="true"
+          class="_chevron_53f94f"
+        >
+          ▾
+        </span>
+      </button>
+    </div>
+    <button
+      class="_clearFilters_4b4f5e"
+    >
+      Clear filters
+    </button>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`EmployeeFilters > snapshot > matches loading snapshot 1`] = `
+<DocumentFragment>
+  <div
+    class="_sectionHeader_4b4f5e"
+  >
+    <p
+      class="_sectionTitle_4b4f5e"
+    >
+      Employees
+    </p>
+    <input
+      aria-label="Search employees"
+      class="_searchInput_4b4f5e"
+      placeholder="Search by name…"
+      type="search"
+      value=""
+    />
+    <div
+      class="_combobox_53f94f"
+      style="width: 15%;"
+    >
+      <button
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        class="form-input _trigger_53f94f"
+        type="button"
+      >
+        <span
+          class="_placeholder_53f94f"
+        >
+          All Departments
+        </span>
+        <span
+          aria-hidden="true"
+          class="_chevron_53f94f"
+        >
+          ▾
+        </span>
+      </button>
+    </div>
+    <div
+      class="_combobox_53f94f"
+      style="width: 15%;"
+    >
+      <button
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        class="form-input _trigger_53f94f"
+        type="button"
+      >
+        <span
+          class="_placeholder_53f94f"
+        >
+          All Job Titles
+        </span>
+        <span
+          aria-hidden="true"
+          class="_chevron_53f94f"
+        >
+          ▾
+        </span>
+      </button>
+    </div>
+    <div
+      class="_combobox_53f94f"
+      style="width: 15%;"
+    >
+      <button
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        class="form-input _trigger_53f94f"
+        type="button"
+      >
+        <span
+          class="_placeholder_53f94f"
+        >
+          All Countries
+        </span>
+        <span
+          aria-hidden="true"
+          class="_chevron_53f94f"
+        >
+          ▾
+        </span>
+      </button>
+    </div>
+    <div
+      class="_combobox_53f94f"
+      style="width: 18%;"
+    >
+      <button
+        aria-expanded="false"
+        aria-haspopup="listbox"
+        class="form-input _trigger_53f94f"
+        type="button"
+      >
+        <span
+          class="_placeholder_53f94f"
+        >
+          All Employment Types
+        </span>
+        <span
+          aria-hidden="true"
+          class="_chevron_53f94f"
+        >
+          ▾
+        </span>
+      </button>
+    </div>
+    <button
+      class="_clearFilters_4b4f5e"
+    >
+      Clear filters
+    </button>
+  </div>
+</DocumentFragment>
+`;

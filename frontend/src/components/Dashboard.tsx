@@ -11,10 +11,10 @@ import { EmployeeCard, type Employee } from './EmployeeCard';
 import AddEmployeeModal from './AddEmployeeModal';
 import EmployeeDetailsModal from './EmployeeDetailsModal';
 import AnalyticsPanel from './AnalyticsPanel';
-import { Combobox } from './Combobox';
 import StatCard from './StatCard';
 import styles from './Dashboard.module.css';
-import { DEPARTMENTS, EMPLOYMENT_TYPES, JOB_TITLES, COUNTRIES } from '../lib/masterData';
+import EmployeeFilters from './EmployeeFilters';
+import { useEmployeeFilters } from '../hooks/useEmployeeFilters';
 
 const PAGE_SIZE = 80;
 
@@ -24,26 +24,8 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
-  const [search, setSearch] = useState('');
-  const [debouncedSearch, setDebouncedSearch] = useState('');
-  const [department, setDepartment] = useState('');
-  const [jobTitle, setJobTitle] = useState('');
-  const [country, setCountry] = useState('');
-  const [employmentType, setEmploymentType] = useState('');
-
-
-  const clearFilters = () => {
-    setSearch('');
-    setDepartment('');
-    setJobTitle('');
-    setCountry('');
-    setEmploymentType('');
-  };
-
-  useEffect(() => {
-    const id = setTimeout(() => setDebouncedSearch(search.trim()), 300);
-    return () => clearTimeout(id);
-  }, [search]);
+  const filters = useEmployeeFilters();
+  const { debouncedSearch, department, jobTitle, country, employmentType } = filters;
 
   const queryClient = useQueryClient();
 
@@ -127,7 +109,6 @@ export default function Dashboard() {
           + Add Employee
         </button>
       </header>
-
       {showModal && <AddEmployeeModal onClose={() => setShowModal(false)} />}
       {employeeToEdit && (
         <AddEmployeeModal
@@ -146,7 +127,6 @@ export default function Dashboard() {
           onDelete={() => deleteMutation.mutate(selectedEmployee.id)}
         />
       )}
-
       <div className={styles.stats} data-testid="stats-section">
         <StatCard
           label="Avg Salary"
@@ -187,67 +167,10 @@ export default function Dashboard() {
           value={overviewData?.departmentsCount}
         />
       </div>
-      <div className={styles.sectionHeader}>
-        <p className={styles.sectionTitle}>Employees</p>
-        {!isLoading && <span className={styles.sectionCount}>{total}</span>}
-        <input
-          type="search"
-          className={styles.searchInput}
-          placeholder="Search by name…"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          aria-label="Search employees"
-        />
-        <Combobox
-          value={department}
-          onChange={(value) =>
-            value === 'All Departments' ? setDepartment('') : setDepartment(value)
-          }
-          placeholder="All Departments"
-          searchable
-          options={['All Departments', ...DEPARTMENTS]}
-          width="15%"
-        />
-        <Combobox
-          value={jobTitle}
-          onChange={(value) =>
-            value === 'All Job Titles' ? setJobTitle('') : setJobTitle(value)
-          }
-          placeholder="All Job Titles"
-          searchable
-          options={['All Job Titles', ...JOB_TITLES]}
-          width="15%"
-        />
-        <Combobox
-          value={country}
-          onChange={(value) =>
-            value === 'All Countries' ? setCountry('') : setCountry(value)
-          }
-          placeholder="All Countries"
-          searchable
-          options={['All Countries', ...COUNTRIES]}
-          width="15%"
-        />
-        <Combobox
-          value={employmentType}
-          onChange={(value) =>
-            value === 'All Employment Types'
-              ? setEmploymentType('')
-              : setEmploymentType(value)
-          }
-          placeholder="All Employment Types"
-          options={['All Employment Types', ...EMPLOYMENT_TYPES]}
-          width="18%"
-        />
-        <button className={styles.clearFilters} onClick={clearFilters}>
-          Clear filters
-        </button>
-      </div>
-
+      <EmployeeFilters {...filters} total={total} isLoading={isLoading} />
       {isError && (
         <p className={styles.error}>Failed to load employees. Please try again.</p>
       )}
-
       {isLoading ? (
         <p className={styles.loading}>Loading employees…</p>
       ) : (
@@ -266,7 +189,6 @@ export default function Dashboard() {
           )}
         </div>
       )}
-
       <div className={styles.sectionHeader}>
         <p className={styles.sectionTitle}>Analytics</p>
       </div>
