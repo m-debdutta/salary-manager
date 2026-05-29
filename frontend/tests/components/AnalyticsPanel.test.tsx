@@ -8,6 +8,9 @@ vi.mock('../../src/components/SalaryByCountryChart', () => ({
 vi.mock('../../src/components/SalaryByJobTitleChart', () => ({
   default: () => <div data-testid="salary-by-job-title-chart" />,
 }));
+vi.mock('../../src/components/DepartmentSummaryChart', () => ({
+  default: () => <div data-testid="department-summary-chart" />,
+}));
 
 describe('AnalyticsPanel', () => {
   // ── Snapshot ──────────────────────────────────────────────────────────────
@@ -30,6 +33,7 @@ describe('AnalyticsPanel', () => {
       render(<AnalyticsPanel />);
       expect(screen.getByRole('tab', { name: 'By Country' })).toBeInTheDocument();
       expect(screen.getByRole('tab', { name: 'By Job Title' })).toBeInTheDocument();
+      expect(screen.getByRole('tab', { name: 'By Department' })).toBeInTheDocument();
     });
 
     it('marks "By Country" as selected by default', () => {
@@ -59,6 +63,7 @@ describe('AnalyticsPanel', () => {
     it('does not render other charts on initial load', () => {
       render(<AnalyticsPanel />);
       expect(screen.queryByTestId('salary-by-job-title-chart')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('department-summary-chart')).not.toBeInTheDocument();
     });
   });
 
@@ -84,12 +89,20 @@ describe('AnalyticsPanel', () => {
       );
     });
 
+    it('switches to DepartmentSummaryChart when "By Department" is clicked', () => {
+      render(<AnalyticsPanel />);
+      fireEvent.click(screen.getByRole('tab', { name: 'By Department' }));
+      expect(screen.getByTestId('department-summary-chart')).toBeInTheDocument();
+      expect(screen.queryByTestId('salary-by-country-chart')).not.toBeInTheDocument();
+    });
+
     it('can switch back to "By Country" after navigating away', () => {
       render(<AnalyticsPanel />);
-      fireEvent.click(screen.getByRole('tab', { name: 'By Job Title' }));
+      fireEvent.click(screen.getByRole('tab', { name: 'By Department' }));
       fireEvent.click(screen.getByRole('tab', { name: 'By Country' }));
       expect(screen.getByTestId('salary-by-country-chart')).toBeInTheDocument();
       expect(screen.queryByTestId('salary-by-job-title-chart')).not.toBeInTheDocument();
+      expect(screen.queryByTestId('department-summary-chart')).not.toBeInTheDocument();
     });
   });
 });

@@ -24,6 +24,13 @@ exports[`AnalyticsPanel > snapshot > matches default (By Country tab active) sna
       >
         By Job Title
       </button>
+      <button
+        aria-selected="false"
+        class="_tab_55dc2a "
+        role="tab"
+      >
+        By Department
+      </button>
     </nav>
     <div
       role="tabpanel"
@@ -59,6 +66,13 @@ exports[`AnalyticsPanel > snapshot > matches snapshot after switching to By Job 
         role="tab"
       >
         By Job Title
+      </button>
+      <button
+        aria-selected="false"
+        class="_tab_55dc2a "
+        role="tab"
+      >
+        By Department
       </button>
     </nav>
     <div

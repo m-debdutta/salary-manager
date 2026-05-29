@@ -1,0 +1,86 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`DepartmentSummaryChart > snapshot > matches error snapshot 1`] = `
+<DocumentFragment>
+  <section
+    class="_section_aed678"
+  >
+    <div
+      class="_sectionHeader_aed678"
+    >
+      <p
+        class="_sectionTitle_aed678"
+      >
+        Avg. Salary by Department
+      </p>
+    </div>
+    <p
+      class="_error_aed678"
+    >
+      Failed to load chart data.
+    </p>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`DepartmentSummaryChart > snapshot > matches loaded snapshot 1`] = `
+<DocumentFragment>
+  <section
+    class="_section_aed678"
+  >
+    <div
+      class="_sectionHeader_aed678"
+    >
+      <p
+        class="_sectionTitle_aed678"
+      >
+        Avg. Salary by Department
+      </p>
+      <span
+        class="_sectionCount_aed678"
+      >
+        3 departments
+      </span>
+    </div>
+    <div
+      class="_chartWrapper_aed678"
+    >
+      <div
+        data-testid="responsive-container"
+      >
+        <div
+          data-length="3"
+          data-testid="bar-chart"
+        >
+          <div
+            data-testid="bar"
+          />
+        </div>
+      </div>
+    </div>
+  </section>
+</DocumentFragment>
+`;
+
+exports[`DepartmentSummaryChart > snapshot > matches loading snapshot 1`] = `
+<DocumentFragment>
+  <section
+    class="_section_aed678"
+  >
+    <div
+      class="_sectionHeader_aed678"
+    >
+      <p
+        class="_sectionTitle_aed678"
+      >
+        Avg. Salary by Department
+      </p>
+    </div>
+    <p
+      class="_loading_aed678"
+    >
+      Loading chart…
+    </p>
+  </section>
+</DocumentFragment>
+`;
