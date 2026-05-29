@@ -20,22 +20,36 @@ export interface EmployeeCreateInput {
  * Get a paginated list of employees with total count
  * Optionally filters by a search pattern matched against firstName and lastName
  */
-export const getEmployees = async (skip: number = 0, take: number = 50, search?: string) => {
+export const getEmployees = async (
+  skip: number = 0,
+  take: number = 50,
+  search?: string,
+  department?: string
+) => {
   // SQLite does not support Prisma's `mode: 'insensitive'`.
   // SQLite's LIKE (used by Prisma `contains`) is case-insensitive for ASCII by default,
   // so lowercasing the search term is sufficient for consistent behaviour.
-  const where = search
-    ? {
-        OR: [
-          { firstName: { contains: search.toLowerCase() } },
-          { lastName: { contains: search.toLowerCase() } },
-        ],
-      }
-    : undefined;
+  const where: Record<string, unknown> = {};
+
+  if (search) {
+    where.OR = [
+      { firstName: { contains: search.toLowerCase() } },
+      { lastName: { contains: search.toLowerCase() } },
+    ];
+  }
+
+  if (department) {
+    where.department = department;
+  }
 
   const [employees, total] = await Promise.all([
-    prisma.employee.findMany({ where, skip, take, orderBy: { id: 'asc' } }),
-    prisma.employee.count({ where }),
+    prisma.employee.findMany({
+      where: Object.keys(where).length ? where : undefined,
+      skip,
+      take,
+      orderBy: { id: 'asc' },
+    }),
+    prisma.employee.count({ where: Object.keys(where).length ? where : undefined }),
   ]);
 
   return { employees, total };

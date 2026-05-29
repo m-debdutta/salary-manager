@@ -78,7 +78,7 @@ describe('EmployeeService', () => {
 
       await employeeService.getEmployees(10, 20);
 
-      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(10, 20, undefined);
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(10, 20, undefined, undefined);
     });
 
     it('should return paginated result with employees and total', async () => {
@@ -109,7 +109,7 @@ describe('EmployeeService', () => {
 
       await employeeService.getEmployees();
 
-      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, undefined);
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, undefined, undefined);
     });
 
     it('should propagate repository errors', async () => {
@@ -123,7 +123,7 @@ describe('EmployeeService', () => {
 
       await employeeService.getEmployees(0, 50, 'alice');
 
-      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, 'alice');
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, 'alice', undefined);
     });
 
     it('should forward undefined search to repository when not provided', async () => {
@@ -131,7 +131,31 @@ describe('EmployeeService', () => {
 
       await employeeService.getEmployees(0, 50);
 
-      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, undefined);
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, undefined, undefined);
+    });
+
+    it('should forward department filter to repository', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(0, 50, undefined, 'Engineering');
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, undefined, 'Engineering');
+    });
+
+    it('should forward undefined department when not provided', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(0, 50, 'alice');
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, 'alice', undefined);
+    });
+
+    it('should forward both search and department to repository', async () => {
+      vi.mocked(employeeRepository.getEmployees).mockResolvedValue({ employees: [], total: 0 });
+
+      await employeeService.getEmployees(0, 50, 'alice', 'Engineering');
+
+      expect(employeeRepository.getEmployees).toHaveBeenCalledWith(0, 50, 'alice', 'Engineering');
     });
   });
 

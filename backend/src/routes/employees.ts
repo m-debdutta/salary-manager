@@ -13,9 +13,10 @@ router.get('/', async (req: Request, res: Response) => {
   const pageSize = Math.min(100, Math.max(1, parseInt(req.query.pageSize as string) || 50));
   const skip = (page - 1) * pageSize;
   const search = (req.query.search as string)?.trim() || undefined;
+  const department = (req.query.department as string)?.trim() || undefined;
 
   try {
-    const result = await employeeService.getEmployees(skip, pageSize, search);
+    const result = await employeeService.getEmployees(skip, pageSize, search, department);
 
     return res.status(200).json({
       employees: result.employees.map((e) => ({

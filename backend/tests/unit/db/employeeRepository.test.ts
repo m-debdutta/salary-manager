@@ -425,6 +425,65 @@ describe('EmployeeRepository', () => {
         expect(result.total).toBe(2);
       });
     });
+
+    describe('department filter', () => {
+      it('should return only employees in the specified department', async () => {
+        await createEmployee(makeEmployeeData({ firstName: 'Alice', department: 'Engineering' }));
+        await createEmployee(makeEmployeeData({ firstName: 'Bob', department: 'Marketing' }));
+
+        const result = await getEmployees(0, 50, undefined, 'Engineering');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].firstName).toBe('Alice');
+      });
+
+      it('should return all employees when department is undefined', async () => {
+        await createEmployee(makeEmployeeData({ firstName: 'Alice', department: 'Engineering' }));
+        await createEmployee(makeEmployeeData({ firstName: 'Bob', department: 'Marketing' }));
+
+        const result = await getEmployees(0, 50, undefined, undefined);
+
+        expect(result.employees).toHaveLength(2);
+      });
+
+      it('should return accurate total reflecting only matching department', async () => {
+        await createEmployee(makeEmployeeData({ firstName: 'Alice', department: 'Engineering' }));
+        await createEmployee(makeEmployeeData({ firstName: 'Bob', department: 'Engineering' }));
+        await createEmployee(makeEmployeeData({ firstName: 'Carol', department: 'Marketing' }));
+
+        const result = await getEmployees(0, 1, undefined, 'Engineering');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.total).toBe(2);
+      });
+
+      it('should return empty array when no employees match the department', async () => {
+        await createEmployee(makeEmployeeData({ firstName: 'Alice', department: 'Engineering' }));
+
+        const result = await getEmployees(0, 50, undefined, 'HR');
+
+        expect(result.employees).toHaveLength(0);
+        expect(result.total).toBe(0);
+      });
+
+      it('should combine department filter with search term', async () => {
+        await createEmployee(
+          makeEmployeeData({ firstName: 'Alice', lastName: 'Smith', department: 'Engineering' })
+        );
+        await createEmployee(
+          makeEmployeeData({ firstName: 'Alice', lastName: 'Jones', department: 'Marketing' })
+        );
+        await createEmployee(
+          makeEmployeeData({ firstName: 'Bob', lastName: 'Taylor', department: 'Engineering' })
+        );
+
+        const result = await getEmployees(0, 50, 'alice', 'Engineering');
+
+        expect(result.employees).toHaveLength(1);
+        expect(result.employees[0].department).toBe('Engineering');
+        expect(result.employees[0].firstName).toBe('Alice');
+      });
+    });
   });
 
   describe('getEmployeeById', () => {
