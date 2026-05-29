@@ -7,6 +7,7 @@ import {
 } from '../api/employees';
 import { Combobox } from './Combobox';
 import type { Employee } from './EmployeeCard';
+import { validateEmployeeForm } from '../lib/employeeValidation';
 import countriesData from '../../../data/countries.json';
 import departmentsData from '../../../data/departments.json';
 import employmentTypesData from '../../../data/employment_types.json';
@@ -80,18 +81,7 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
   };
 
   const validate = (): boolean => {
-    const errors: Record<string, string> = {};
-    if (!form.firstName || form.firstName.length < 2)
-      errors.firstName = 'First name must be at least 2 characters';
-    if (!form.lastName || form.lastName.length < 2)
-      errors.lastName = 'Last name must be at least 2 characters';
-    if (!form.jobTitle || form.jobTitle.length < 2)
-      errors.jobTitle = 'Job title must be at least 2 characters';
-    if (!form.country || form.country.length < 2)
-      errors.country = 'Country must be at least 2 characters';
-    if (form.salary < 0) errors.salary = 'Salary cannot be negative';
-    if (!form.hireDate) errors.hireDate = 'Hire date is required';
-    if (!form.employmentType) errors.employmentType = 'Employment type is required';
+    const errors = validateEmployeeForm(form);
     setFieldErrors(errors);
     return Object.keys(errors).length === 0;
   };
@@ -132,6 +122,7 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
               <input
                 id="firstName"
                 name="firstName"
+                placeholder="First name"
                 className={`form-input${fieldErrors.firstName ? ' form-input--error' : ''}`}
                 type="text"
                 value={form.firstName}
@@ -149,6 +140,7 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
               <input
                 id="lastName"
                 name="lastName"
+                placeholder="Last name"
                 className={`form-input${fieldErrors.lastName ? ' form-input--error' : ''}`}
                 type="text"
                 value={form.lastName}

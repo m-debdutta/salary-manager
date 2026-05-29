@@ -48,6 +48,7 @@ exports[`AddEmployeeModal > snapshot > matches initial snapshot 1`] = `
               class="form-input"
               id="firstName"
               name="firstName"
+              placeholder="First name"
               type="text"
               value=""
             />
@@ -66,6 +67,7 @@ exports[`AddEmployeeModal > snapshot > matches initial snapshot 1`] = `
               class="form-input"
               id="lastName"
               name="lastName"
+              placeholder="Last name"
               type="text"
               value=""
             />
@@ -318,6 +320,7 @@ exports[`AddEmployeeModal > snapshot > matches snapshot with validation errors 1
               class="form-input form-input--error"
               id="firstName"
               name="firstName"
+              placeholder="First name"
               type="text"
               value=""
             />
@@ -341,6 +344,7 @@ exports[`AddEmployeeModal > snapshot > matches snapshot with validation errors 1
               class="form-input form-input--error"
               id="lastName"
               name="lastName"
+              placeholder="Last name"
               type="text"
               value=""
             />
@@ -385,7 +389,7 @@ exports[`AddEmployeeModal > snapshot > matches snapshot with validation errors 1
           <span
             class="_fieldError_46e4a7"
           >
-            Job title must be at least 2 characters
+            Job title is required
           </span>
         </div>
         <div
@@ -462,7 +466,7 @@ exports[`AddEmployeeModal > snapshot > matches snapshot with validation errors 1
             <span
               class="_fieldError_46e4a7"
             >
-              Country must be at least 2 characters
+              Country is required
             </span>
           </div>
           <div
@@ -618,6 +622,7 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
               class="form-input"
               id="firstName"
               name="firstName"
+              placeholder="First name"
               type="text"
               value="Alice"
             />
@@ -636,6 +641,7 @@ exports[`AddEmployeeModal – edit mode > snapshot > matches initial edit mode s
               class="form-input"
               id="lastName"
               name="lastName"
+              placeholder="Last name"
               type="text"
               value="Johnson"
             />

@@ -143,12 +143,8 @@ describe('AddEmployeeModal', () => {
       expect(
         screen.getByText('Last name must be at least 2 characters'),
       ).toBeInTheDocument();
-      expect(
-        screen.getByText('Job title must be at least 2 characters'),
-      ).toBeInTheDocument();
-      expect(
-        screen.getByText('Country must be at least 2 characters'),
-      ).toBeInTheDocument();
+      expect(screen.getByText('Job title is required')).toBeInTheDocument();
+      expect(screen.getByText('Country is required')).toBeInTheDocument();
       expect(screen.getByText('Hire date is required')).toBeInTheDocument();
       expect(screen.getByText('Employment type is required')).toBeInTheDocument();
     });
@@ -177,15 +173,11 @@ describe('AddEmployeeModal', () => {
     it('clears a combobox error when a value is selected', () => {
       renderModal();
       fireEvent.click(screen.getByRole('button', { name: 'Add Employee' }));
-      expect(
-        screen.getByText('Job title must be at least 2 characters'),
-      ).toBeInTheDocument();
+      expect(screen.getByText('Job title is required')).toBeInTheDocument();
 
       fireEvent.click(screen.getByRole('button', { name: 'Select job title…' }));
       fireEvent.mouseDown(screen.getByRole('option', { name: 'Software Engineer' }));
-      expect(
-        screen.queryByText('Job title must be at least 2 characters'),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText('Job title is required')).not.toBeInTheDocument();
     });
   });
 
