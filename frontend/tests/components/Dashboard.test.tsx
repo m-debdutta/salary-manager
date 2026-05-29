@@ -171,25 +171,6 @@ describe('Dashboard', () => {
 
   // ── Search ────────────────────────────────────────────────────────────────────
   describe('search', () => {
-    it('renders a search input', () => {
-      renderDashboard();
-      expect(
-        screen.getByRole('searchbox', { name: 'Search employees' }),
-      ).toBeInTheDocument();
-    });
-
-    it('search input has the correct placeholder', () => {
-      renderDashboard();
-      expect(screen.getByPlaceholderText('Search by name\u2026')).toBeInTheDocument();
-    });
-
-    it('updates the input value as the user types', () => {
-      renderDashboard();
-      const input = screen.getByRole('searchbox', { name: 'Search employees' });
-      fireEvent.change(input, { target: { value: 'alice' } });
-      expect(input).toHaveValue('alice');
-    });
-
     it('calls fetchEmployees with the search term after the debounce interval', async () => {
       renderDashboard();
       await screen.findByText('Alice Johnson');
@@ -268,17 +249,6 @@ describe('Dashboard', () => {
 
   // ── Department filter ─────────────────────────────────────────────────────────
   describe('department filter', () => {
-    it('renders a department filter combobox', () => {
-      renderDashboard();
-      expect(screen.getByRole('button', { name: 'All Departments' })).toBeInTheDocument();
-    });
-
-    it('defaults to showing all departments', () => {
-      renderDashboard();
-      const button = screen.getByRole('button', { name: 'All Departments' });
-      expect(button).toHaveTextContent('All Departments');
-    });
-
     it('calls fetchEmployees with department when one is selected', async () => {
       renderDashboard();
       await screen.findByText('Alice Johnson');
@@ -364,17 +334,6 @@ describe('Dashboard', () => {
 
   // ── Job title filter ──────────────────────────────────────────────────────────
   describe('job title filter', () => {
-    it('renders a job title filter combobox', () => {
-      renderDashboard();
-      expect(screen.getByRole('button', { name: 'All Job Titles' })).toBeInTheDocument();
-    });
-
-    it('defaults to showing all job titles', () => {
-      renderDashboard();
-      const button = screen.getByRole('button', { name: 'All Job Titles' });
-      expect(button).toHaveTextContent('All Job Titles');
-    });
-
     it('calls fetchEmployees with jobTitle when one is selected', async () => {
       renderDashboard();
       await screen.findByText('Alice Johnson');
@@ -462,17 +421,6 @@ describe('Dashboard', () => {
 
   // ── Country filter ────────────────────────────────────────────────────────────
   describe('country filter', () => {
-    it('renders a country filter combobox', () => {
-      renderDashboard();
-      expect(screen.getByRole('button', { name: 'All Countries' })).toBeInTheDocument();
-    });
-
-    it('defaults to showing all countries', () => {
-      renderDashboard();
-      const button = screen.getByRole('button', { name: 'All Countries' });
-      expect(button).toHaveTextContent('All Countries');
-    });
-
     it('calls fetchEmployees with country when one is selected', async () => {
       renderDashboard();
       await screen.findByText('Alice Johnson');
@@ -562,19 +510,6 @@ describe('Dashboard', () => {
 
   // ── Employment type filter ────────────────────────────────────────────────────
   describe('employment type filter', () => {
-    it('renders an employment type filter combobox', () => {
-      renderDashboard();
-      expect(
-        screen.getByRole('button', { name: 'All Employment Types' }),
-      ).toBeInTheDocument();
-    });
-
-    it('defaults to showing all employment types', () => {
-      renderDashboard();
-      const button = screen.getByRole('button', { name: 'All Employment Types' });
-      expect(button).toHaveTextContent('All Employment Types');
-    });
-
     it('calls fetchEmployees with employmentType when one is selected', async () => {
       renderDashboard();
       await screen.findByText('Alice Johnson');

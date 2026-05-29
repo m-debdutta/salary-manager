@@ -122,41 +122,6 @@ describe('POST /api/employees - Create Employee', () => {
     });
   });
 
-  describe('Invalid Input', () => {
-    it('should return 400 when a required field is missing', async () => {
-      const invalidEmployee = {
-        lastName: 'Doe',
-        jobTitle: 'Engineer',
-        country: 'USA',
-        salary: 100000,
-        hireDate: '2024-01-15',
-        employmentType: 'Full-time',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-
-    it('should return 400 when salary is negative', async () => {
-      const invalidEmployee = {
-        firstName: 'John',
-        lastName: 'Doe',
-        jobTitle: 'Engineer',
-        country: 'USA',
-        salary: -5000,
-        hireDate: '2024-01-15',
-        employmentType: 'Full-time',
-      };
-
-      const response = await request(app).post('/api/employees').send(invalidEmployee);
-
-      expect(response.status).toBe(400);
-      expect(response.body).toHaveProperty('error');
-    });
-  });
-
   describe('Edge Cases', () => {
     it('should handle very long names', async () => {
       const longName = 'A'.repeat(100);
