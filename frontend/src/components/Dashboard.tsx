@@ -1,10 +1,17 @@
-import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import {
+  useInfiniteQuery,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
 import { fetchEmployees, deleteEmployee } from '../api/employees';
+import { fetchOverview } from '../api/analytics';
 import { EmployeeCard, type Employee } from './EmployeeCard';
 import AddEmployeeModal from './AddEmployeeModal';
 import EmployeeDetailsModal from './EmployeeDetailsModal';
 import AnalyticsPanel from './AnalyticsPanel';
+import StatCard from './StatCard';
 import styles from './Dashboard.module.css';
 
 const PAGE_SIZE = 80;
@@ -24,6 +31,11 @@ export default function Dashboard() {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
       setSelectedEmployee(null);
     },
+  });
+
+  const { data: overviewData, isLoading: overviewLoading } = useQuery({
+    queryKey: ['analytics', 'overview'],
+    queryFn: fetchOverview,
   });
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
@@ -97,10 +109,44 @@ export default function Dashboard() {
       )}
 
       <div className={styles.stats} data-testid="stats-section">
-        <div className={styles.statCard} data-testid="stat-card">
-          <span className={styles.statValue}>{isLoading ? '—' : total}</span>
-          <span className={styles.statLabel}>Total Employees</span>
-        </div>
+        <StatCard
+          label="Avg Salary"
+          loading={overviewLoading}
+          value={
+            overviewData
+              ? `$${Math.round(overviewData.avgSalary).toLocaleString()}`
+              : undefined
+          }
+        />
+        <StatCard
+          label="Median Salary"
+          loading={overviewLoading}
+          value={
+            overviewData
+              ? `$${Math.round(overviewData.medianSalary).toLocaleString()}`
+              : undefined
+          }
+        />
+        <StatCard
+          label="Min Salary"
+          loading={overviewLoading}
+          value={overviewData ? `$${overviewData.minSalary.toLocaleString()}` : undefined}
+        />
+        <StatCard
+          label="Max Salary"
+          loading={overviewLoading}
+          value={overviewData ? `$${overviewData.maxSalary.toLocaleString()}` : undefined}
+        />
+        <StatCard
+          label="Countries"
+          loading={overviewLoading}
+          value={overviewData?.countriesCount}
+        />
+        <StatCard
+          label="Departments"
+          loading={overviewLoading}
+          value={overviewData?.departmentsCount}
+        />
       </div>
       <div className={styles.sectionHeader}>
         <p className={styles.sectionTitle}>Employees</p>

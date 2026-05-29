@@ -1,0 +1,61 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StatCard > snapshot > matches snapshot in loading state 1`] = `
+<DocumentFragment>
+  <div
+    class="_statCard_4b4f5e"
+    data-testid="stat-card"
+  >
+    <span
+      class="_statValue_4b4f5e"
+    >
+      —
+    </span>
+    <span
+      class="_statLabel_4b4f5e"
+    >
+      Avg Salary
+    </span>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`StatCard > snapshot > matches snapshot with a string value 1`] = `
+<DocumentFragment>
+  <div
+    class="_statCard_4b4f5e"
+    data-testid="stat-card"
+  >
+    <span
+      class="_statValue_4b4f5e"
+    >
+      $120,000
+    </span>
+    <span
+      class="_statLabel_4b4f5e"
+    >
+      Avg Salary
+    </span>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`StatCard > snapshot > matches snapshot with undefined value 1`] = `
+<DocumentFragment>
+  <div
+    class="_statCard_4b4f5e"
+    data-testid="stat-card"
+  >
+    <span
+      class="_statValue_4b4f5e"
+    >
+      —
+    </span>
+    <span
+      class="_statLabel_4b4f5e"
+    >
+      Countries
+    </span>
+  </div>
+</DocumentFragment>
+`;

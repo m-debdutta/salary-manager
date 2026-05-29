@@ -64,3 +64,18 @@ export const fetchDepartmentSummary = async (): Promise<DepartmentSummaryRow[]> 
   );
   return data;
 };
+
+export interface OverviewStats {
+  totalEmployees: number;
+  avgSalary: number;
+  medianSalary: number;
+  minSalary: number;
+  maxSalary: number;
+  countriesCount: number;
+  departmentsCount: number;
+}
+
+export const fetchOverview = async (): Promise<OverviewStats> => {
+  const { data } = await axios.get<OverviewStats>('/api/analytics/overview');
+  return data;
+};

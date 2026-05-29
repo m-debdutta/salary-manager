@@ -5,64 +5,18 @@ import {
   fetchSalaryByJobTitle,
   fetchSalaryDistribution,
   fetchDepartmentSummary,
+  fetchOverview,
 } from '../../src/api/analytics';
-import type {
-  SalaryByCountryRow,
-  SalaryByJobTitleRow,
-  SalaryDistributionRow,
-  DepartmentSummaryRow,
-} from '../../src/api/analytics';
+import {
+  MOCK_COUNTRY_DATA,
+  MOCK_JOB_TITLE_DATA,
+  MOCK_DISTRIBUTION_DATA,
+  MOCK_DEPARTMENT_DATA,
+  MOCK_OVERVIEW_DATA,
+} from '../fixtures/analytics';
 
 vi.mock('axios');
 const mockedAxios = vi.mocked(axios, true);
-
-const MOCK_COUNTRY_DATA: SalaryByCountryRow[] = [
-  { country: 'USA', count: 10, min: 80000, max: 150000, avg: 120000, median: 115000 },
-  { country: 'UK', count: 5, min: 70000, max: 130000, avg: 100000, median: 95000 },
-];
-
-const MOCK_JOB_TITLE_DATA: SalaryByJobTitleRow[] = [
-  {
-    jobTitle: 'Software Engineer',
-    count: 8,
-    min: 90000,
-    max: 160000,
-    avg: 125000,
-    median: 120000,
-  },
-  {
-    jobTitle: 'Product Manager',
-    count: 4,
-    min: 100000,
-    max: 150000,
-    avg: 130000,
-    median: 128000,
-  },
-];
-
-const MOCK_DISTRIBUTION_DATA: SalaryDistributionRow[] = [
-  { range: '$50k–$75k', min: 50000, max: 75000, count: 5 },
-  { range: '$75k–$100k', min: 75000, max: 100000, count: 12 },
-];
-
-const MOCK_DEPARTMENT_DATA: DepartmentSummaryRow[] = [
-  {
-    department: 'Engineering',
-    count: 20,
-    min: 85000,
-    max: 160000,
-    avg: 130000,
-    median: 125000,
-  },
-  {
-    department: 'Design',
-    count: 8,
-    min: 70000,
-    max: 120000,
-    avg: 95000,
-    median: 92000,
-  },
-];
 
 describe('fetchSalaryByCountry', () => {
   beforeEach(() => {
@@ -186,5 +140,33 @@ describe('fetchDepartmentSummary', () => {
     mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
 
     await expect(fetchDepartmentSummary()).rejects.toThrow('Network Error');
+  });
+});
+
+describe('fetchOverview', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
+  it('calls GET /api/analytics/overview', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_OVERVIEW_DATA });
+
+    await fetchOverview();
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/analytics/overview');
+  });
+
+  it('returns the response data', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_OVERVIEW_DATA });
+
+    const result = await fetchOverview();
+
+    expect(result).toEqual(MOCK_OVERVIEW_DATA);
+  });
+
+  it('propagates errors thrown by axios', async () => {
+    mockedAxios.get.mockRejectedValueOnce(new Error('Network Error'));
+
+    await expect(fetchOverview()).rejects.toThrow('Network Error');
   });
 });

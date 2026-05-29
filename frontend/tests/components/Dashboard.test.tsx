@@ -83,9 +83,9 @@ describe('Dashboard', () => {
 
   // ── Loading state ─────────────────────────────────────────────────────────────
   describe('loading state', () => {
-    it('shows — placeholder in the stat card', () => {
+    it('shows — placeholders in all stat cards while loading', () => {
       renderDashboard();
-      expect(screen.getAllByText('—')).toHaveLength(1);
+      expect(screen.getAllByText('—')).toHaveLength(6);
     });
 
     it('shows a loading message in place of the grid', () => {
@@ -103,21 +103,39 @@ describe('Dashboard', () => {
 
   // ── Summary stats ─────────────────────────────────────────────────────────────
   describe('summary stats', () => {
-    it('shows the correct total employee count', async () => {
-      renderDashboard();
-      const totalCard = screen
-        .getByText('Total Employees')
-        .closest('[data-testid="stat-card"]') as HTMLElement;
-      await waitFor(() =>
-        expect(
-          within(totalCard).getByText(String(EXPECTED.totalEmployees)),
-        ).toBeInTheDocument(),
-      );
+    it('renders all six stat cards', () => {
+      const { container } = renderDashboard();
+      expect(container.querySelectorAll('[data-testid="stat-card"]')).toHaveLength(6);
     });
 
-    it('renders exactly one stat card', () => {
-      const { container } = renderDashboard();
-      expect(container.querySelectorAll('[data-testid="stat-card"]')).toHaveLength(1);
+    it('renders the Avg Salary card', () => {
+      renderDashboard();
+      expect(screen.getByText('Avg Salary')).toBeInTheDocument();
+    });
+
+    it('renders the Median Salary card', () => {
+      renderDashboard();
+      expect(screen.getByText('Median Salary')).toBeInTheDocument();
+    });
+
+    it('renders the Min Salary card', () => {
+      renderDashboard();
+      expect(screen.getByText('Min Salary')).toBeInTheDocument();
+    });
+
+    it('renders the Max Salary card', () => {
+      renderDashboard();
+      expect(screen.getByText('Max Salary')).toBeInTheDocument();
+    });
+
+    it('renders the Countries card', () => {
+      renderDashboard();
+      expect(screen.getByText('Countries')).toBeInTheDocument();
+    });
+
+    it('renders the Departments card', () => {
+      renderDashboard();
+      expect(screen.getByText('Departments')).toBeInTheDocument();
     });
   });
 

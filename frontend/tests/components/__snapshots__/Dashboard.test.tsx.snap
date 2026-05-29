@@ -38,12 +38,87 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
         <span
           class="_statValue_4b4f5e"
         >
-          8
+          —
         </span>
         <span
           class="_statLabel_4b4f5e"
         >
-          Total Employees
+          Avg Salary
+        </span>
+      </div>
+      <div
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
+      >
+        <span
+          class="_statValue_4b4f5e"
+        >
+          —
+        </span>
+        <span
+          class="_statLabel_4b4f5e"
+        >
+          Median Salary
+        </span>
+      </div>
+      <div
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
+      >
+        <span
+          class="_statValue_4b4f5e"
+        >
+          —
+        </span>
+        <span
+          class="_statLabel_4b4f5e"
+        >
+          Min Salary
+        </span>
+      </div>
+      <div
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
+      >
+        <span
+          class="_statValue_4b4f5e"
+        >
+          —
+        </span>
+        <span
+          class="_statLabel_4b4f5e"
+        >
+          Max Salary
+        </span>
+      </div>
+      <div
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
+      >
+        <span
+          class="_statValue_4b4f5e"
+        >
+          —
+        </span>
+        <span
+          class="_statLabel_4b4f5e"
+        >
+          Countries
+        </span>
+      </div>
+      <div
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
+      >
+        <span
+          class="_statValue_4b4f5e"
+        >
+          —
+        </span>
+        <span
+          class="_statLabel_4b4f5e"
+        >
+          Departments
         </span>
       </div>
     </div>
@@ -631,7 +706,82 @@ exports[`Dashboard > snapshot > matches loading snapshot 1`] = `
         <span
           class="_statLabel_4b4f5e"
         >
-          Total Employees
+          Avg Salary
+        </span>
+      </div>
+      <div
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
+      >
+        <span
+          class="_statValue_4b4f5e"
+        >
+          —
+        </span>
+        <span
+          class="_statLabel_4b4f5e"
+        >
+          Median Salary
+        </span>
+      </div>
+      <div
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
+      >
+        <span
+          class="_statValue_4b4f5e"
+        >
+          —
+        </span>
+        <span
+          class="_statLabel_4b4f5e"
+        >
+          Min Salary
+        </span>
+      </div>
+      <div
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
+      >
+        <span
+          class="_statValue_4b4f5e"
+        >
+          —
+        </span>
+        <span
+          class="_statLabel_4b4f5e"
+        >
+          Max Salary
+        </span>
+      </div>
+      <div
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
+      >
+        <span
+          class="_statValue_4b4f5e"
+        >
+          —
+        </span>
+        <span
+          class="_statLabel_4b4f5e"
+        >
+          Countries
+        </span>
+      </div>
+      <div
+        class="_statCard_4b4f5e"
+        data-testid="stat-card"
+      >
+        <span
+          class="_statValue_4b4f5e"
+        >
+          —
+        </span>
+        <span
+          class="_statLabel_4b4f5e"
+        >
+          Departments
         </span>
       </div>
     </div>
