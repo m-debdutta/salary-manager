@@ -22,7 +22,7 @@ A full-stack salary management application for managing employee data with CRUD 
 
 - Node.js with TypeScript
 - Express.js v5
-- Prisma ORM with SQLite (`better-sqlite3`)
+- Prisma ORM with PostgreSQL
 - Zod for validation
 - Vitest for testing
 
@@ -162,11 +162,61 @@ salary-manager/
 - **Custom Hooks**: Reusable filter state logic
 - **Type Safety**: End-to-end TypeScript for reliability
 
-## 🚦 Getting Started
+## �️ PostgreSQL Database Setup
+
+### Option A — Using `psql` (local install)
+
+1. **Create the database and user**
+
+   ```sql
+   psql -U postgres
+   ```
+
+   ```sql
+   CREATE USER salary_manager WITH PASSWORD 'salary-manager-secret';
+   CREATE DATABASE salary_manager OWNER salary_manager;
+   GRANT ALL PRIVILEGES ON DATABASE salary_manager TO salary_manager;
+   \q
+   ```
+
+2. **Verify the connection**
+
+   ```bash
+   psql -U salary_manager -d salary_manager -h localhost
+   ```
+
+### Option B — Using Docker
+
+```bash
+docker run -d \
+  --name salary-manager-db \
+  -e POSTGRES_USER=salary_manager \
+  -e POSTGRES_PASSWORD=salary-manager-secret \
+  -e POSTGRES_DB=salary_manager \
+  -p 5432:5432 \
+  postgres:16-alpine
+```
+
+After creating the database, set `DATABASE_URL` in `backend/.env`:
+
+```
+DATABASE_URL="postgresql://salary_manager:salary-manager-secret@localhost:5432/salary_manager"
+```
+
+Then run migrations:
+
+```bash
+cd backend && npm run db:migrate
+```
+
+---
+
+## �🚦 Getting Started
 
 ### Prerequisites
 
 - Node.js 18+ and npm
+- PostgreSQL 14+
 
 ### Quick Start (recommended)
 
@@ -207,10 +257,10 @@ Optional flags:
    cp .env.example .env
    ```
 
-   Default values:
+   Edit `.env` with your PostgreSQL credentials:
 
    ```
-   DATABASE_URL="file:./dev.db"
+   DATABASE_URL="postgresql://<user>:<password>@localhost:5432/salary_manager"
    PORT=3000
    NODE_ENV=development
    ```
