@@ -188,6 +188,48 @@ describe('AnalyticsRepository', () => {
 
       expect(result).toEqual([]);
     });
+
+    // ── SQL injection safety ───────────────────────────────────────────────
+    // Each payload is treated as a literal country string by the parameterized
+    // query, so no rows match and [] is returned. If injection were possible,
+    // these would return data (e.g. all employees) instead of [].
+
+    describe('SQL injection safety', () => {
+      it("should not execute classic single-quote injection: ` ' OR '1'='1 `", async () => {
+        const result = await getSalaryByJobTitle("' OR '1'='1");
+
+        expect(result).toEqual([]);
+      });
+
+      it("should not execute comment-based injection: `USA'--`", async () => {
+        const result = await getSalaryByJobTitle("USA'--");
+
+        expect(result).toEqual([]);
+      });
+
+      it('should not execute UNION-based injection', async () => {
+        const result = await getSalaryByJobTitle(
+          "' UNION SELECT job_title,COUNT(*),MIN(salary),MAX(salary),AVG(salary),AVG(salary) FROM employees--"
+        );
+
+        expect(result).toEqual([]);
+      });
+
+      it('should not execute PostgreSQL dollar-quoting injection: `$$) OR 1=1--`', async () => {
+        const result = await getSalaryByJobTitle('$$) OR 1=1--');
+
+        expect(result).toEqual([]);
+      });
+
+      it('should not execute stacked-statement injection: `USA; DROP TABLE employees--`', async () => {
+        const result = await getSalaryByJobTitle('USA; DROP TABLE employees--');
+
+        // Table must still exist and return data for other queries
+        expect(result).toEqual([]);
+        const count = await prisma.employee.count();
+        expect(count).toBe(4);
+      });
+    });
   });
 
   // ─── getSalaryDistribution ───────────────────────────────────────────────

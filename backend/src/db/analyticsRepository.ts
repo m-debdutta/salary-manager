@@ -84,10 +84,16 @@ interface RawOverview {
 /**
  * Compute median + aggregate stats for a group field using a single raw SQL query.
  * PostgreSQL window functions (ROW_NUMBER / COUNT OVER) are used for efficient computation.
+ *
+ * `field` is an internal enum — never user-supplied. Interpolating it into
+ * $queryRawUnsafe is safe because the TypeScript union prevents arbitrary strings.
+ * `whereClause` must only ever be a hardcoded string literal (e.g. 'WHERE department IS NOT NULL').
+ * User-supplied filter values must NOT be passed through this function — use the
+ * dedicated parameterized helpers below instead.
  */
 async function queryGroupStats(
   field: 'country' | 'job_title' | 'department',
-  whereClause: string = ''
+  whereClause: '' | 'WHERE department IS NOT NULL' = ''
 ): Promise<RawGroupStats[]> {
   // language=PostgreSQL
   const rows = await prisma.$queryRawUnsafe<RawGroupStats[]>(`
@@ -125,6 +131,49 @@ async function queryGroupStats(
   return rows;
 }
 
+/**
+ * Variant of queryGroupStats that filters by country using a parameterized query.
+ * The country value comes from user input and MUST be passed as a $queryRaw parameter,
+ * never interpolated into the SQL string.
+ */
+async function queryJobStatsByCountry(country: string): Promise<RawGroupStats[]> {
+  // language=PostgreSQL
+  // $queryRaw uses tagged template literals — Prisma serializes ${country} as a
+  // bind parameter ($1), so no user data ever reaches the SQL string itself.
+  return prisma.$queryRaw<RawGroupStats[]>`
+    WITH ranked AS (
+      SELECT
+        job_title                                                    AS group_key,
+        salary,
+        ROW_NUMBER() OVER (PARTITION BY job_title ORDER BY salary)   AS rn,
+        COUNT(*)    OVER (PARTITION BY job_title)                    AS cnt
+      FROM employees
+      WHERE country = ${country}
+    ),
+    medians AS (
+      SELECT group_key, AVG(salary) AS median
+      FROM ranked
+      WHERE rn IN ((cnt + 1) / 2, (cnt + 2) / 2)
+      GROUP BY group_key
+    ),
+    aggs AS (
+      SELECT
+        job_title     AS group_key,
+        COUNT(*)      AS count,
+        MIN(salary)   AS min,
+        MAX(salary)   AS max,
+        AVG(salary)   AS avg
+      FROM employees
+      WHERE country = ${country}
+      GROUP BY job_title
+    )
+    SELECT a.group_key, a.count, a.min, a.max, a.avg, m.median
+    FROM   aggs a
+    JOIN   medians m ON a.group_key = m.group_key
+    ORDER  BY a.avg DESC
+  `;
+}
+
 // ─── Public functions ────────────────────────────────────────────────────────
 
 /**
@@ -148,8 +197,7 @@ export const getSalaryByCountry = async (): Promise<SalaryByCountryRow[]> => {
  * Returns salary stats per job title, optionally filtered by country.
  */
 export const getSalaryByJobTitle = async (country?: string): Promise<SalaryByJobTitleRow[]> => {
-  const where = country ? `WHERE country = '${country.replace(/'/g, "''")}'` : '';
-  const rows = await queryGroupStats('job_title', where);
+  const rows = country ? await queryJobStatsByCountry(country) : await queryGroupStats('job_title');
   return rows.map((r) => ({
     jobTitle: r.group_key,
     count: Number(r.count),
