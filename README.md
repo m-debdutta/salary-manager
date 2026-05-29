@@ -11,7 +11,7 @@ A full-stack salary management application for managing employee data with CRUD 
   - Salary distribution visualization
   - Department-wise summaries
 - **High-Performance Seeding**: Seed 10,000 records in under 5 seconds
-- **Modern UI**: Built with React and shadcn/ui components
+- **Modern UI**: Built with React and custom UI components
 - **Real-time Validation**: Input validation on both frontend and backend
 - **Pagination & Filtering**: Efficient data browsing with search capabilities
 - **Interactive Dashboards**: Visual insights with charts and graphs
@@ -21,18 +21,18 @@ A full-stack salary management application for managing employee data with CRUD 
 ### Backend
 
 - Node.js with TypeScript
-- Express.js
-- Prisma ORM
-- SQLite with indexing
+- Express.js v5
+- Prisma ORM with SQLite (`better-sqlite3`)
 - Zod for validation
 - Vitest for testing
 
 ### Frontend
 
-- Vite + React with TypeScript
-- shadcn/ui components
-- React Router for navigation
+- Vite + React 19 with TypeScript
+- TanStack Query (React Query) for server state
+- React Router v7 for navigation
 - Recharts for data visualization
+- Axios for HTTP requests
 - Vitest + React Testing Library
 
 ## 💾 Database Schema
@@ -43,8 +43,8 @@ A full-stack salary management application for managing employee data with CRUD 
 - `first_name`, `last_name` - Employee names
 - `job_title` - Position/role
 - `country` - Work location
-- `salary` - Annual salary (decimal)
-- `department` - Department name
+- `salary` - Annual salary (float)
+- `department` - Department name (optional)
 - `hire_date` - Date of hire
 - `employment_type` - Full-time/Part-time/Contract
 - `created_at`, `updated_at` - Timestamps
@@ -54,6 +54,10 @@ A full-stack salary management application for managing employee data with CRUD 
 **Indexes:** Optimized for queries on `country`, `job_title`, and combined `(country, job_title)`.
 
 ## 📡 API Endpoints
+
+### Health
+
+- `GET /health` - Service health check (status, uptime, environment)
 
 ### Employee Management
 
@@ -66,13 +70,15 @@ A full-stack salary management application for managing employee data with CRUD 
 ### Analytics
 
 - `GET /api/analytics/salary-by-country` - Min/max/avg salary per country
-- `GET /api/analytics/salary-by-job-title` - Avg salary per job title
-- `GET /api/analytics/overview` - Overall statistics
+- `GET /api/analytics/salary-by-job-title` - Salary stats per job title (optional `?country=` filter)
+- `GET /api/analytics/salary-distribution` - Employee counts by salary bucket
+- `GET /api/analytics/department-summary` - Salary stats grouped by department
 
 ## 📁 Project Structure
 
 ```
 salary-manager/
+├── start.sh                            # One-command launcher for the full stack
 ├── backend/
 │   ├── prisma/
 │   │   ├── schema.prisma               # Prisma schema definition
@@ -81,80 +87,80 @@ salary-manager/
 │   │   ├── index.ts                    # Express server entry point
 │   │   ├── routes/
 │   │   │   ├── employees.ts            # Employee CRUD routes
-│   │   │   └── analytics.ts            # Analytics routes
+│   │   │   ├── analytics.ts            # Analytics routes
+│   │   │   └── health.ts               # Health check route
 │   │   ├── services/
 │   │   │   ├── employeeService.ts      # Employee business logic
 │   │   │   └── analyticsService.ts     # Analytics calculations
 │   │   ├── db/
 │   │   │   ├── client.ts               # Prisma client singleton
-│   │   │   ├── init.ts                 # Database initialization
-│   │   │   └── README.md               # Database documentation
+│   │   │   ├── employeeRepository.ts   # Employee data access
+│   │   │   ├── analyticsRepository.ts  # Analytics data access
+│   │   │   └── init.ts                 # Database initialization
 │   │   ├── middleware/
-│   │   │   ├── validation.ts           # Request validation middleware
-│   │   │   └── errorHandler.ts         # Global error handler
+│   │   │   └── index.ts                # Request validation & error handling
+│   │   ├── lib/
+│   │   │   └── validation.ts           # Zod schemas
 │   │   ├── utils/
-│   │   │   └── dataGenerator.ts        # Helper for generating seed data
-│   │   ├── types/
-│   │   │   └── employee.ts             # TypeScript interfaces & types
+│   │   │   └── seedHelpers.ts          # Helpers for generating seed data
 │   │   └── scripts/
 │   │       └── seed.ts                 # High-performance seed script
 │   ├── data/
-│   │   ├── first_names.txt             # First names for seeding (~500)
-│   │   └── last_names.txt              # Last names for seeding (~500)
-│   ├── tests/
-│   │   ├── employees.test.ts           # Employee API tests
-│   │   └── analytics.test.ts           # Analytics API tests
-│   ├── .env                            # Environment variables (gitignored)
-│   ├── .env.example                    # Environment template
+│   │   ├── first_names.txt             # First names for seeding
+│   │   └── last_names.txt              # Last names for seeding
+│   ├── tests/                          # Unit and integration tests
 │   ├── package.json
-│   ├── tsconfig.json
-│   └── dev.db                          # SQLite database (gitignored)
+│   └── tsconfig.json
 ├── frontend/
 │   ├── src/
 │   │   ├── main.tsx                    # Application entry point
 │   │   ├── App.tsx                     # Root component with routing
-│   │   ├── pages/
-│   │   │   ├── EmployeeList.tsx        # Employee list with filters
-│   │   │   ├── EmployeeForm.tsx        # Add/Edit employee form
-│   │   │   └── Analytics.tsx           # Analytics dashboard
+│   │   ├── api/
+│   │   │   ├── employees.ts            # Employee API client
+│   │   │   └── analytics.ts            # Analytics API client
 │   │   ├── components/
-│   │   │   ├── ui/                     # shadcn/ui components
-│   │   │   ├── EmployeeTable.tsx       # Reusable employee table
-│   │   │   ├── SalaryCharts.tsx        # Chart components
-│   │   │   └── Layout.tsx              # App layout wrapper
-│   │   ├── lib/
-│   │   │   ├── api.ts                  # API client with axios
-│   │   │   ├── types.ts                # TypeScript types
-│   │   │   └── utils.ts                # Helper functions
+│   │   │   ├── ui/                     # Base UI components
+│   │   │   ├── Dashboard.tsx           # Main dashboard view
+│   │   │   ├── AnalyticsPanel.tsx      # Analytics dashboard
+│   │   │   ├── AddEmployeeModal.tsx    # Add employee form modal
+│   │   │   ├── EmployeeCard.tsx        # Employee card component
+│   │   │   ├── EmployeeDetailsModal.tsx
+│   │   │   ├── EmployeeFilters.tsx     # Filter controls
+│   │   │   ├── SalaryByCountryChart.tsx
+│   │   │   ├── SalaryByJobTitleChart.tsx
+│   │   │   ├── SalaryDistributionChart.tsx
+│   │   │   ├── DepartmentSummaryChart.tsx
+│   │   │   └── StatCard.tsx
 │   │   ├── hooks/
-│   │   │   └── useEmployees.ts         # Custom React hooks
-│   │   └── styles/
-│   │       └── globals.css             # Global styles
-│   ├── tests/
-│   │   └── components/                 # Component tests
+│   │   │   └── useEmployeeFilters.ts   # Filter state hook
+│   │   └── lib/
+│   │       ├── employeeValidation.ts   # Client-side Zod schemas
+│   │       └── masterData.ts           # Static lookup data
+│   ├── tests/                          # Component and hook tests
 │   ├── package.json
-│   ├── tsconfig.json
 │   └── vite.config.ts
-└── docs/
-    └── IMPLEMENTATION_PLAN.md          # Detailed implementation guide
+└── data/
+    ├── countries.json
+    ├── departments.json
+    ├── employment_types.json
+    └── job_titles.json
 ```
 
 ### Architecture Highlights
 
 **Backend:**
 
-- **Layered Architecture**: Separation of routes, services, and data access layers
+- **Layered Architecture**: Routes → Services → Repositories for clean separation of concerns
 - **Prisma ORM**: Type-safe database queries with automatic migrations
-- **Middleware Pattern**: Reusable validation and error handling
-- **Service Layer**: Business logic separated from HTTP concerns
-- **Database Indexing**: Optimized queries with strategic indexes
+- **Middleware Pattern**: Centralized validation and error handling
+- **Database Indexing**: Optimized queries with indexes on `country`, `job_title`, and `(country, job_title)`
 
 **Frontend:**
 
+- **TanStack Query**: Server state management with caching and background refetching
 - **Component-Based**: Modular, reusable React components
-- **Custom Hooks**: Reusable state logic and API interactions
+- **Custom Hooks**: Reusable filter state logic
 - **Type Safety**: End-to-end TypeScript for reliability
-- **Clean Separation**: Pages, components, and utilities clearly organized
 
 ## 🚦 Getting Started
 
@@ -162,7 +168,23 @@ salary-manager/
 
 - Node.js 18+ and npm
 
-### Installation
+### Quick Start (recommended)
+
+The `start.sh` script installs dependencies, runs migrations, and starts all services:
+
+```bash
+./start.sh
+```
+
+Optional flags:
+
+```bash
+./start.sh seed=true          # Seed 10,000 employees before starting
+./start.sh prisma=true        # Also open Prisma Studio at http://localhost:5555
+./start.sh seed=true prisma=true
+```
+
+### Manual Setup
 
 1. **Clone the repository**
 
@@ -171,117 +193,84 @@ salary-manager/
    cd salary-manager
    ```
 
-2. **Setup Backend**
+2. **Install backend dependencies and migrate the database**
 
    ```bash
    cd backend
    npm install
+   npm run db:migrate
    ```
 
-3. **Configure Environment Variables**
+3. **Configure environment variables**
 
-   Create a `.env` file in the backend directory:
    ```bash
-   cd backend
    cp .env.example .env
    ```
-   
-   The default configuration uses SQLite:
+
+   Default values:
+
    ```
    DATABASE_URL="file:./dev.db"
    PORT=3000
    NODE_ENV=development
    ```
 
-4. **Initialize Database**
-
-   Run Prisma migrations to create the database schema:
-   ```bash
-   cd backend
-   npm run db:migrate
-   ```
-   
-   This will:
-   - Create the SQLite database (`dev.db`)
-   - Apply the schema with all tables and indexes
-   - Generate the Prisma Client
-
-5. **Verify Database Connection**
+4. **Verify the database connection**
 
    ```bash
    npm run db:init
    ```
-   
-   You should see: `✅ Database connection established`
 
-6. **Install Frontend Dependencies**
+5. **Install frontend dependencies**
 
    ```bash
-   cd frontend
+   cd ../frontend
    npm install
    ```
 
-7. **Seed Database with Sample Data**
+6. **Seed the database (optional)**
+
    ```bash
-   cd backend
+   cd ../backend
    npm run seed
    ```
-   This seeds 10,000 employee records in under 5 seconds.
 
-### Development
+   Seeds 10,000 employee records in under 5 seconds.
 
-1. **Start Backend Server**
+### Running in Development
 
-   ```bash
-   cd backend
-   npm run dev
-   ```
+```bash
+# Terminal 1 — backend (http://localhost:3000)
+cd backend && npm run dev
 
-   Server runs on `http://localhost:3000`
-
-2. **Start Frontend Development Server**
-   ```bash
-   cd frontend
-   npm run dev
-   ```
-   Application runs on `http://localhost:5173`
+# Terminal 2 — frontend (http://localhost:5173)
+cd frontend && npm run dev
+```
 
 ### Database Management
-
-The project uses Prisma ORM for database management. Available commands:
 
 ```bash
 cd backend
 
-# Initialize and verify database connection
-npm run db:init
-
-# Create a new migration after schema changes
-npm run db:migrate
-
-# Open Prisma Studio (database GUI)
-npm run db:studio
-
-# Generate Prisma Client (after schema changes)
-npm run db:generate
-
-# Seed database with sample data
-npm run db:seed
-
-# Deploy migrations to production
-npm run db:migrate:deploy
+npm run db:init            # Verify database connection
+npm run db:migrate         # Apply pending migrations
+npm run db:generate        # Regenerate Prisma Client after schema changes
+npm run db:studio          # Open Prisma Studio at http://localhost:5555
+npm run db:migrate:deploy  # Deploy migrations to production
 ```
-
-**Prisma Studio**: Run `npm run db:studio` to open a visual database browser at `http://localhost:5555`
 
 ## 🧪 Testing
 
 ```bash
-# Backend tests
+# Backend
 cd backend
-npm test
+npm test                   # Run all tests
+npm run test:coverage      # Run with coverage report
+npm run test:ui            # Open Vitest UI
 
-# Frontend tests
+# Frontend
 cd frontend
-npm test
+npm test                   # Run all tests
+npm run test:coverage      # Run with coverage report
+npm run test:ui            # Open Vitest UI
 ```
