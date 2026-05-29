@@ -13,7 +13,7 @@ build/
 # Testing
 coverage/
 
-# SQLite database
+# Local database files (legacy SQLite)
 *.db
 *.db-journal
 prisma/*.db

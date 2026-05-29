@@ -1,17 +1,18 @@
 -- CreateTable
 CREATE TABLE "employees" (
-    "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-    "full_name" TEXT NOT NULL,
+    "id" SERIAL NOT NULL,
     "first_name" TEXT NOT NULL,
     "last_name" TEXT NOT NULL,
     "job_title" TEXT NOT NULL,
     "country" TEXT NOT NULL,
-    "salary" REAL NOT NULL,
+    "salary" DOUBLE PRECISION NOT NULL,
     "department" TEXT,
-    "hire_date" DATETIME NOT NULL,
+    "hire_date" TIMESTAMP(3) NOT NULL,
     "employment_type" TEXT NOT NULL,
-    "created_at" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" DATETIME NOT NULL
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "employees_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex

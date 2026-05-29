@@ -83,13 +83,13 @@ interface RawOverview {
 
 /**
  * Compute median + aggregate stats for a group field using a single raw SQL query.
- * SQLite window functions (ROW_NUMBER / COUNT OVER) are supported since 3.25.
+ * PostgreSQL window functions (ROW_NUMBER / COUNT OVER) are used for efficient computation.
  */
 async function queryGroupStats(
   field: 'country' | 'job_title' | 'department',
   whereClause: string = ''
 ): Promise<RawGroupStats[]> {
-  // language=SQLite
+  // language=PostgreSQL
   const rows = await prisma.$queryRawUnsafe<RawGroupStats[]>(`
     WITH ranked AS (
       SELECT
@@ -255,15 +255,15 @@ export const getOverview = async (): Promise<OverviewStats> => {
     ),
     stats AS (
       SELECT
-        COUNT(*)              AS totalEmployees,
-        AVG(salary)           AS avgSalary,
-        MIN(salary)           AS minSalary,
-        MAX(salary)           AS maxSalary,
-        COUNT(DISTINCT country)    AS countriesCount,
-        COUNT(DISTINCT department) AS departmentsCount
+        COUNT(*)                   AS "totalEmployees",
+        AVG(salary)                AS "avgSalary",
+        MIN(salary)                AS "minSalary",
+        MAX(salary)                AS "maxSalary",
+        COUNT(DISTINCT country)    AS "countriesCount",
+        COUNT(DISTINCT department) AS "departmentsCount"
       FROM employees
     )
-    SELECT s.*, m.value AS medianSalary
+    SELECT s.*, m.value AS "medianSalary"
     FROM   stats s, median m
   `;
 

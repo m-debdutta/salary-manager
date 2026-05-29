@@ -29,15 +29,12 @@ export const getEmployees = async (
   country?: string,
   employmentType?: string
 ) => {
-  // SQLite does not support Prisma's `mode: 'insensitive'`.
-  // SQLite's LIKE (used by Prisma `contains`) is case-insensitive for ASCII by default,
-  // so lowercasing the search term is sufficient for consistent behaviour.
   const where: Record<string, unknown> = {};
 
   if (search) {
     where.OR = [
-      { firstName: { contains: search.toLowerCase() } },
-      { lastName: { contains: search.toLowerCase() } },
+      { firstName: { contains: search, mode: 'insensitive' } },
+      { lastName: { contains: search, mode: 'insensitive' } },
     ];
   }
 

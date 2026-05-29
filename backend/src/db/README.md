@@ -1,12 +1,13 @@
 # Database Setup
 
-This project uses Prisma ORM with SQLite for database management.
+This project uses Prisma ORM with PostgreSQL for database management.
 
 ## Schema
 
 The database schema is defined in `prisma/schema.prisma` with the following model:
 
 ### Employee Model
+
 - `id`: Auto-incrementing primary key
 - `fullName`: Full name of the employee
 - `firstName`: First name
@@ -21,6 +22,7 @@ The database schema is defined in `prisma/schema.prisma` with the following mode
 - `updatedAt`: Timestamp of last update
 
 ### Indexes
+
 - Single index on `country` for efficient country-based queries
 - Single index on `jobTitle` for efficient job title queries
 - Compound index on `(country, jobTitle)` for combined queries
@@ -53,6 +55,7 @@ npm run db:seed
 ## Setup Instructions
 
 1. Install dependencies:
+
    ```bash
    npm install
    ```
@@ -65,11 +68,13 @@ npm run db:seed
      ```
 
 3. Run initial migration:
+
    ```bash
    npm run db:migrate
    ```
 
 4. Verify connection:
+
    ```bash
    npm run db:init
    ```
@@ -100,29 +105,31 @@ const newEmployee = await prisma.employee.create({
     salary: 100000,
     department: 'Engineering',
     hireDate: new Date(),
-    employmentType: 'Full-time'
-  }
+    employmentType: 'Full-time',
+  },
 });
 
 // Example: Update an employee
 const updated = await prisma.employee.update({
   where: { id: 1 },
-  data: { salary: 110000 }
+  data: { salary: 110000 },
 });
 
 // Example: Delete an employee
 await prisma.employee.delete({
-  where: { id: 1 }
+  where: { id: 1 },
 });
 ```
 
 ## Migrations
 
 Migrations are stored in `prisma/migrations/`. Each migration contains:
+
 - `migration.sql`: SQL commands to apply the migration
 - Timestamp and name for tracking
 
 To create a new migration after schema changes:
+
 ```bash
 npm run db:migrate
 ```
@@ -130,25 +137,30 @@ npm run db:migrate
 ## Production Considerations
 
 For production deployment:
-1. Use `DATABASE_URL` environment variable to point to production database
+
+1. Use `DATABASE_URL` environment variable to point to production PostgreSQL database
 2. Run `npm run db:migrate:deploy` to apply migrations
-3. Consider using a hosted SQLite service (e.g., Turso) or migrate to PostgreSQL
+3. Consider using a managed PostgreSQL service (e.g., Render, Supabase, Neon)
 4. Ensure proper backup strategy is in place
 
 ## Troubleshooting
 
 ### Connection Issues
+
 - Verify `.env` file exists and contains `DATABASE_URL`
 - Check file permissions on the database file
 - Run `npm run db:init` to test connection
 
 ### Migration Issues
+
 - If migrations fail, check `prisma/migrations/` for errors
 - Use `npx prisma migrate reset` to reset database (⚠️ deletes all data)
 - Use `npx prisma db push` to sync schema without migration
 
 ### Schema Changes
+
 After modifying `prisma/schema.prisma`:
+
 1. Run `npm run db:migrate` to create migration
 2. Run `npm run db:generate` to update Prisma Client
 3. Restart your development server

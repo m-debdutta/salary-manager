@@ -7,7 +7,7 @@ export default defineConfig({
     fileParallelism: false,
     globalSetup: ['./tests/globalSetup.ts'],
     env: {
-      DATABASE_URL: 'file:./prisma/test.db',
+      DATABASE_URL: 'postgresql://salary-manager:salary-manager-secret@localhost:5432/salary_manager_test',
     },
     exclude: ['**/node_modules/**', '**/dist/**'],
     coverage: {
