@@ -207,6 +207,7 @@ describe('Dashboard', () => {
             'alice',
             undefined,
             undefined,
+            undefined,
           ),
         { timeout: 1000 },
       );
@@ -240,6 +241,7 @@ describe('Dashboard', () => {
           'alice',
           undefined,
           undefined,
+          undefined,
         ),
       );
 
@@ -251,6 +253,7 @@ describe('Dashboard', () => {
           expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
             expect.any(Number),
             expect.any(Number),
+            undefined,
             undefined,
             undefined,
             undefined,
@@ -288,6 +291,7 @@ describe('Dashboard', () => {
           undefined,
           'Engineering',
           undefined,
+          undefined,
         ),
       );
     });
@@ -305,6 +309,7 @@ describe('Dashboard', () => {
           undefined,
           'Engineering',
           undefined,
+          undefined,
         ),
       );
 
@@ -318,6 +323,7 @@ describe('Dashboard', () => {
           expect.any(Number),
           undefined,
           'Design',
+          undefined,
           undefined,
         ),
       );
@@ -341,6 +347,7 @@ describe('Dashboard', () => {
             expect.any(Number),
             'alice',
             'Engineering',
+            undefined,
             undefined,
           ),
         { timeout: 1000 },
@@ -376,6 +383,7 @@ describe('Dashboard', () => {
           undefined,
           undefined,
           'Software Engineer',
+          undefined,
         ),
       );
     });
@@ -393,6 +401,7 @@ describe('Dashboard', () => {
           undefined,
           undefined,
           'Software Engineer',
+          undefined,
         ),
       );
 
@@ -407,6 +416,7 @@ describe('Dashboard', () => {
           undefined,
           undefined,
           'Product Manager',
+          undefined,
         ),
       );
     });
@@ -432,6 +442,103 @@ describe('Dashboard', () => {
             'alice',
             'Engineering',
             'Software Engineer',
+            undefined,
+          ),
+        { timeout: 1000 },
+      );
+    });
+  });
+
+  // ── Country filter ────────────────────────────────────────────────────────────
+  describe('country filter', () => {
+    it('renders a country filter combobox', () => {
+      renderDashboard();
+      expect(screen.getByRole('button', { name: 'All Countries' })).toBeInTheDocument();
+    });
+
+    it('defaults to showing all countries', () => {
+      renderDashboard();
+      const button = screen.getByRole('button', { name: 'All Countries' });
+      expect(button).toHaveTextContent('All Countries');
+    });
+
+    it('calls fetchEmployees with country when one is selected', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      vi.mocked(fetchEmployees).mockClear();
+
+      fireEvent.click(screen.getByRole('button', { name: 'All Countries' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'United States' }));
+
+      await waitFor(() =>
+        expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+          expect.any(Number),
+          expect.any(Number),
+          undefined,
+          undefined,
+          undefined,
+          'United States',
+        ),
+      );
+    });
+
+    it('calls fetchEmployees when country filter is changed to a different country', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+
+      fireEvent.click(screen.getByRole('button', { name: 'All Countries' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'United States' }));
+      await waitFor(() =>
+        expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+          expect.any(Number),
+          expect.any(Number),
+          undefined,
+          undefined,
+          undefined,
+          'United States',
+        ),
+      );
+
+      vi.mocked(fetchEmployees).mockClear();
+      fireEvent.click(screen.getByRole('button', { name: 'United States' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Germany' }));
+
+      await waitFor(() =>
+        expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+          expect.any(Number),
+          expect.any(Number),
+          undefined,
+          undefined,
+          undefined,
+          'Germany',
+        ),
+      );
+    });
+
+    it('calls fetchEmployees with all filters when all are set', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      vi.mocked(fetchEmployees).mockClear();
+
+      fireEvent.click(screen.getByRole('button', { name: 'All Departments' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Engineering' }));
+      fireEvent.click(screen.getByRole('button', { name: 'All Job Titles' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Software Engineer' }));
+      fireEvent.click(screen.getByRole('button', { name: 'All Countries' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'United States' }));
+      fireEvent.change(screen.getByRole('searchbox', { name: 'Search employees' }), {
+        target: { value: 'alice' },
+      });
+
+      await waitFor(
+        () =>
+          expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+            expect.any(Number),
+            expect.any(Number),
+            'alice',
+            'Engineering',
+            'Software Engineer',
+            'United States',
           ),
         { timeout: 1000 },
       );

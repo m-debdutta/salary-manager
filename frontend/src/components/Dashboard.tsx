@@ -14,7 +14,7 @@ import AnalyticsPanel from './AnalyticsPanel';
 import { Combobox } from './Combobox';
 import StatCard from './StatCard';
 import styles from './Dashboard.module.css';
-import { DEPARTMENTS, JOB_TITLES } from '../lib/masterData';
+import { DEPARTMENTS, JOB_TITLES, COUNTRIES } from '../lib/masterData';
 
 const PAGE_SIZE = 80;
 
@@ -28,6 +28,7 @@ export default function Dashboard() {
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [department, setDepartment] = useState('');
   const [jobTitle, setJobTitle] = useState('');
+  const [country, setCountry] = useState('');
 
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(search.trim()), 300);
@@ -52,7 +53,7 @@ export default function Dashboard() {
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['employees', debouncedSearch, department, jobTitle],
+      queryKey: ['employees', debouncedSearch, department, jobTitle, country],
       queryFn: ({ pageParam }) =>
         fetchEmployees(
           pageParam,
@@ -60,6 +61,7 @@ export default function Dashboard() {
           debouncedSearch || undefined,
           department || undefined,
           jobTitle || undefined,
+          country || undefined,
         ),
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
@@ -184,6 +186,7 @@ export default function Dashboard() {
             value === 'All Departments' ? setDepartment('') : setDepartment(value)
           }
           placeholder="All Departments"
+          searchable
           options={['All Departments', ...DEPARTMENTS]}
           width="15%"
         />
@@ -193,7 +196,18 @@ export default function Dashboard() {
             value === 'All Job Titles' ? setJobTitle('') : setJobTitle(value)
           }
           placeholder="All Job Titles"
+          searchable
           options={['All Job Titles', ...JOB_TITLES]}
+          width="15%"
+        />
+        <Combobox
+          value={country}
+          onChange={(value) =>
+            value === 'All Countries' ? setCountry('') : setCountry(value)
+          }
+          placeholder="All Countries"
+          searchable
+          options={['All Countries', ...COUNTRIES]}
           width="15%"
         />
       </div>

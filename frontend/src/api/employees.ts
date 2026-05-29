@@ -27,6 +27,7 @@ export const fetchEmployees = async (
   search?: string,
   department?: string,
   jobTitle?: string,
+  country?: string,
 ): Promise<EmployeesResponse> => {
   const { data } = await axios.get<EmployeesResponse>('/api/employees', {
     params: {
@@ -35,6 +36,7 @@ export const fetchEmployees = async (
       ...(search ? { search } : {}),
       ...(department ? { department } : {}),
       ...(jobTitle ? { jobTitle } : {}),
+      ...(country ? { country } : {}),
     },
   });
   return data;

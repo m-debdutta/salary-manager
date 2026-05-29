@@ -172,6 +172,60 @@ describe('fetchEmployees', () => {
     });
   });
 
+  it('includes country param when provided', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50, undefined, undefined, undefined, 'United States');
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50, country: 'United States' },
+    });
+  });
+
+  it('omits country param when not provided', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50);
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50 },
+    });
+  });
+
+  it('omits country param when given an empty string', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50, undefined, undefined, undefined, '');
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50 },
+    });
+  });
+
+  it('includes all params when all filters are provided', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(
+      1,
+      50,
+      'alice',
+      'Engineering',
+      'Software Engineer',
+      'United States',
+    );
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: {
+        page: 1,
+        pageSize: 50,
+        search: 'alice',
+        department: 'Engineering',
+        jobTitle: 'Software Engineer',
+        country: 'United States',
+      },
+    });
+  });
+
   it('returns the response data', async () => {
     mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
 
