@@ -8,13 +8,16 @@ import {
   updateEmployee,
   deleteEmployee,
 } from '../../src/api/employees';
+import { fetchOverview } from '../../src/api/analytics';
 import {
   MOCK_EMPLOYEES_RESPONSE,
   MOCK_EMPLOYEES,
   EMPLOYEE_NAMES,
 } from '../fixtures/employees';
+import { MOCK_OVERVIEW_DATA } from '../fixtures/analytics';
 
 vi.mock('../../src/api/employees');
+vi.mock('../../src/api/analytics');
 vi.mock('../../src/components/AnalyticsPanel', () => ({
   default: () => <div data-testid="analytics-panel" />,
 }));
@@ -48,6 +51,7 @@ describe('Dashboard', () => {
     vi.mocked(createEmployee).mockResolvedValue(MOCK_EMPLOYEES[0]);
     vi.mocked(updateEmployee).mockResolvedValue(MOCK_EMPLOYEES[0]);
     vi.mocked(deleteEmployee).mockResolvedValue(undefined);
+    vi.mocked(fetchOverview).mockResolvedValue(MOCK_OVERVIEW_DATA);
   });
 
   afterEach(() => {
@@ -360,6 +364,16 @@ describe('Dashboard', () => {
       );
     });
 
+    it('refetches analytics after successful update', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      fireEvent.click(screen.getByRole('heading', { name: 'Alice Johnson' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Edit Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+
+      await waitFor(() => expect(vi.mocked(fetchOverview)).toHaveBeenCalledTimes(2));
+    });
+
     it('opens the edit form when the edit button on a card is clicked', async () => {
       renderDashboard();
       await screen.findByText('Alice Johnson');
@@ -450,6 +464,14 @@ describe('Dashboard', () => {
       fireEvent.click(screen.getByRole('button', { name: 'Confirm Delete' }));
 
       await waitFor(() => expect(vi.mocked(fetchEmployees)).toHaveBeenCalledTimes(2));
+    });
+
+    it('refetches analytics after successful delete', async () => {
+      await openDetailsModal();
+      fireEvent.click(screen.getByRole('button', { name: 'Delete Employee' }));
+      fireEvent.click(screen.getByRole('button', { name: 'Confirm Delete' }));
+
+      await waitFor(() => expect(vi.mocked(fetchOverview)).toHaveBeenCalledTimes(2));
     });
   });
 });

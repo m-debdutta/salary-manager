@@ -62,6 +62,7 @@ export default function AddEmployeeModal({ onClose, employee }: AddEmployeeModal
       isEditMode ? updateEmployee(employee.id, payload) : createEmployee(payload),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
+      queryClient.invalidateQueries({ queryKey: ['analytics'] });
       onClose();
     },
   });

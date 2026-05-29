@@ -210,6 +210,23 @@ describe('AddEmployeeModal', () => {
       await waitFor(() => expect(onClose).toHaveBeenCalled());
     });
 
+    it('invalidates analytics queries after successful create', async () => {
+      const queryClient = new QueryClient({
+        defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+      });
+      const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+      render(
+        <QueryClientProvider client={queryClient}>
+          <AddEmployeeModal onClose={vi.fn()} />
+        </QueryClientProvider>,
+      );
+      fillValidForm();
+      fireEvent.click(screen.getByRole('button', { name: 'Add Employee' }));
+      await waitFor(() =>
+        expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['analytics'] }),
+      );
+    });
+
     it('shows "Saving…" on the submit button while the request is in flight', async () => {
       vi.mocked(createEmployee).mockImplementation(() => new Promise(() => {}));
       renderModal();
@@ -348,6 +365,22 @@ describe('AddEmployeeModal – edit mode', () => {
       renderEditModal();
       fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
       await waitFor(() => expect(onClose).toHaveBeenCalled());
+    });
+
+    it('invalidates analytics queries after successful update', async () => {
+      const queryClient = new QueryClient({
+        defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
+      });
+      const invalidateSpy = vi.spyOn(queryClient, 'invalidateQueries');
+      render(
+        <QueryClientProvider client={queryClient}>
+          <AddEmployeeModal onClose={vi.fn()} employee={MOCK_EXISTING_EMPLOYEE} />
+        </QueryClientProvider>,
+      );
+      fireEvent.click(screen.getByRole('button', { name: 'Save Changes' }));
+      await waitFor(() =>
+        expect(invalidateSpy).toHaveBeenCalledWith({ queryKey: ['analytics'] }),
+      );
     });
 
     it('shows "Saving…" while the request is in flight', async () => {

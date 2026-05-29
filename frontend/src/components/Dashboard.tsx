@@ -29,6 +29,7 @@ export default function Dashboard() {
     mutationFn: (id: number) => deleteEmployee(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['employees'] });
+      queryClient.invalidateQueries({ queryKey: ['analytics'] });
       setSelectedEmployee(null);
     },
   });
