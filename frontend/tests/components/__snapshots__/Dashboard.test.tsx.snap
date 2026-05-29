@@ -135,6 +135,13 @@ exports[`Dashboard > snapshot > matches loaded snapshot 1`] = `
       >
         8
       </span>
+      <input
+        aria-label="Search employees"
+        class="_searchInput_4b4f5e"
+        placeholder="Search by name…"
+        type="search"
+        value=""
+      />
     </div>
     <div
       class="_grid_4b4f5e"
@@ -802,6 +809,13 @@ exports[`Dashboard > snapshot > matches loading snapshot 1`] = `
       >
         Employees
       </p>
+      <input
+        aria-label="Search employees"
+        class="_searchInput_4b4f5e"
+        placeholder="Search by name…"
+        type="search"
+        value=""
+      />
     </div>
     <p
       class="_loading_4b4f5e"

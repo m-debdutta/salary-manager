@@ -93,6 +93,23 @@
   border-radius: 999px;
 }
 
+.searchInput {
+  margin-left: auto;
+  padding: 6px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 0.875rem;
+  color: #1a1a2e;
+  background: #ffffff;
+  width: 220px;
+  outline: none;
+}
+
+.searchInput:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.15);
+}
+
 /* Employee grid */
 .grid {
   display: grid;

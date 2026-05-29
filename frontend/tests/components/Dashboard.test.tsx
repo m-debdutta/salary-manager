@@ -169,6 +169,91 @@ describe('Dashboard', () => {
     });
   });
 
+  // ── Search ────────────────────────────────────────────────────────────────────
+  describe('search', () => {
+    it('renders a search input', () => {
+      renderDashboard();
+      expect(
+        screen.getByRole('searchbox', { name: 'Search employees' }),
+      ).toBeInTheDocument();
+    });
+
+    it('search input has the correct placeholder', () => {
+      renderDashboard();
+      expect(screen.getByPlaceholderText('Search by name\u2026')).toBeInTheDocument();
+    });
+
+    it('updates the input value as the user types', () => {
+      renderDashboard();
+      const input = screen.getByRole('searchbox', { name: 'Search employees' });
+      fireEvent.change(input, { target: { value: 'alice' } });
+      expect(input).toHaveValue('alice');
+    });
+
+    it('calls fetchEmployees with the search term after the debounce interval', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      vi.mocked(fetchEmployees).mockClear();
+
+      fireEvent.change(screen.getByRole('searchbox', { name: 'Search employees' }), {
+        target: { value: 'alice' },
+      });
+
+      await waitFor(
+        () =>
+          expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+            expect.any(Number),
+            expect.any(Number),
+            'alice',
+          ),
+        { timeout: 1000 },
+      );
+    });
+
+    it('does not call fetchEmployees with a search term before the debounce fires', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      vi.mocked(fetchEmployees).mockClear();
+
+      fireEvent.change(screen.getByRole('searchbox', { name: 'Search employees' }), {
+        target: { value: 'alice' },
+      });
+
+      // Synchronously check — debounce has not fired yet
+      expect(vi.mocked(fetchEmployees).mock.calls.every(([, , s]) => s !== 'alice')).toBe(
+        true,
+      );
+    });
+
+    it('calls fetchEmployees without search when input is cleared', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+
+      const input = screen.getByRole('searchbox', { name: 'Search employees' });
+      fireEvent.change(input, { target: { value: 'alice' } });
+      await waitFor(() =>
+        expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+          expect.any(Number),
+          expect.any(Number),
+          'alice',
+        ),
+      );
+
+      vi.mocked(fetchEmployees).mockClear();
+      fireEvent.change(input, { target: { value: '' } });
+
+      await waitFor(
+        () =>
+          expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+            expect.any(Number),
+            expect.any(Number),
+            undefined,
+          ),
+        { timeout: 1000 },
+      );
+    });
+  });
+
   // ── Employment type badges ────────────────────────────────────────────────────
   describe('employment type badges', () => {
     it('renders full-time badges for the expected employees', async () => {

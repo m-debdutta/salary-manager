@@ -22,6 +22,13 @@ export default function Dashboard() {
   const [showModal, setShowModal] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
   const [employeeToEdit, setEmployeeToEdit] = useState<Employee | null>(null);
+  const [search, setSearch] = useState('');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const id = setTimeout(() => setDebouncedSearch(search.trim()), 300);
+    return () => clearTimeout(id);
+  }, [search]);
 
   const queryClient = useQueryClient();
 
@@ -41,8 +48,9 @@ export default function Dashboard() {
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['employees'],
-      queryFn: ({ pageParam }) => fetchEmployees(pageParam, PAGE_SIZE),
+      queryKey: ['employees', debouncedSearch],
+      queryFn: ({ pageParam }) =>
+        fetchEmployees(pageParam, PAGE_SIZE, debouncedSearch || undefined),
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
         lastPage.employees.length === lastPage.pageSize ? lastPage.page + 1 : undefined,
@@ -152,6 +160,14 @@ export default function Dashboard() {
       <div className={styles.sectionHeader}>
         <p className={styles.sectionTitle}>Employees</p>
         {!isLoading && <span className={styles.sectionCount}>{total}</span>}
+        <input
+          type="search"
+          className={styles.searchInput}
+          placeholder="Search by name…"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          aria-label="Search employees"
+        />
       </div>
 
       {isError && (

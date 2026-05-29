@@ -66,6 +66,36 @@ describe('fetchEmployees', () => {
     });
   });
 
+  it('includes search param when provided', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50, 'alice');
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50, search: 'alice' },
+    });
+  });
+
+  it('omits search param when not provided', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50);
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50 },
+    });
+  });
+
+  it('omits search param when given an empty string', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50, '');
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50 },
+    });
+  });
+
   it('returns the response data', async () => {
     mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
 

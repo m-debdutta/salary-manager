@@ -24,9 +24,10 @@ export type UpdateEmployeeInput = Partial<CreateEmployeeInput>;
 export const fetchEmployees = async (
   page = 1,
   pageSize = 50,
+  search?: string,
 ): Promise<EmployeesResponse> => {
   const { data } = await axios.get<EmployeesResponse>('/api/employees', {
-    params: { page, pageSize },
+    params: { page, pageSize, ...(search ? { search } : {}) },
   });
   return data;
 };
