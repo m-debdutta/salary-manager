@@ -70,6 +70,22 @@ describe('EmployeeService', () => {
 
       expect(employee.department).toBeNull();
     });
+
+    it('should rethrow the error when the repository throws', async () => {
+      const dbError = new Error('Database connection failed');
+      vi.mocked(employeeRepository.createEmployee).mockRejectedValue(dbError);
+
+      await expect(employeeService.createEmployee(baseEmployeeData)).rejects.toThrow(
+        'Database connection failed',
+      );
+    });
+
+    it('should not swallow the error — the thrown error is the original', async () => {
+      const dbError = new Error('Unique constraint violation');
+      vi.mocked(employeeRepository.createEmployee).mockRejectedValue(dbError);
+
+      await expect(employeeService.createEmployee(baseEmployeeData)).rejects.toBe(dbError);
+    });
   });
 
   describe('getEmployees', () => {

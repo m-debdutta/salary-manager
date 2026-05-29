@@ -8,31 +8,9 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from 'recharts';
-import { fetchSalaryDistribution, type SalaryDistributionRow } from '../api/analytics';
+import { fetchSalaryDistribution } from '../api/analytics';
+import { DistributionTooltip } from './ChartTooltip';
 import styles from './chart.module.css';
-
-interface TooltipPayload {
-  payload: SalaryDistributionRow;
-}
-
-function CustomTooltip({
-  active,
-  payload,
-}: {
-  active?: boolean;
-  payload?: TooltipPayload[];
-}) {
-  if (!active || !payload?.length) return null;
-  const row = payload[0].payload;
-  return (
-    <div className={styles.tooltip}>
-      <p className={styles.tooltipTitle}>{row.range}</p>
-      <p>
-        <span className={styles.tooltipLabel}>Employees:</span> {row.count}
-      </p>
-    </div>
-  );
-}
 
 export default function SalaryDistributionChart() {
   const { data, isLoading, isError } = useQuery({
@@ -74,7 +52,7 @@ export default function SalaryDistributionChart() {
                 }}
               />
               <Tooltip
-                content={<CustomTooltip />}
+                content={<DistributionTooltip />}
                 cursor={{ fill: 'rgba(99,102,241,0.08)' }}
               />
               <Bar dataKey="count" fill="#6366f1" radius={[4, 4, 0, 0]} />

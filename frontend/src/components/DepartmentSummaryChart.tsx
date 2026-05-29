@@ -9,50 +9,9 @@ import {
   ResponsiveContainer,
   Cell,
 } from 'recharts';
-import { fetchDepartmentSummary, type DepartmentSummaryRow } from '../api/analytics';
+import { fetchDepartmentSummary } from '../api/analytics';
+import { SalaryBreakdownTooltip } from './ChartTooltip';
 import styles from './chart.module.css';
-
-const formatCurrency = (value: number) =>
-  new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    maximumFractionDigits: 0,
-  }).format(value);
-
-interface TooltipPayload {
-  payload: DepartmentSummaryRow;
-}
-
-function CustomTooltip({
-  active,
-  payload,
-}: {
-  active?: boolean;
-  payload?: TooltipPayload[];
-}) {
-  if (!active || !payload?.length) return null;
-  const row = payload[0].payload;
-  return (
-    <div className={styles.tooltip}>
-      <p className={styles.tooltipTitle}>{row.department}</p>
-      <p>
-        <span className={styles.tooltipLabel}>Avg:</span> {formatCurrency(row.avg)}
-      </p>
-      <p>
-        <span className={styles.tooltipLabel}>Median:</span> {formatCurrency(row.median)}
-      </p>
-      <p>
-        <span className={styles.tooltipLabel}>Min:</span> {formatCurrency(row.min)}
-      </p>
-      <p>
-        <span className={styles.tooltipLabel}>Max:</span> {formatCurrency(row.max)}
-      </p>
-      <p>
-        <span className={styles.tooltipLabel}>Employees:</span> {row.count}
-      </p>
-    </div>
-  );
-}
 
 export default function DepartmentSummaryChart() {
   const { data, isLoading, isError } = useQuery({
@@ -93,7 +52,9 @@ export default function DepartmentSummaryChart() {
                 tick={{ fontSize: 12, fill: '#374151' }}
               />
               <Tooltip
-                content={<CustomTooltip />}
+                content={(props: any) => (
+                  <SalaryBreakdownTooltip {...props} titleKey="department" />
+                )}
                 cursor={{ fill: 'rgba(245,158,11,0.08)' }}
               />
               <Bar dataKey="avg" radius={[0, 4, 4, 0]}>
