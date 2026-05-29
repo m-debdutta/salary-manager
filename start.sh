@@ -67,6 +67,17 @@ cleanup() {
 
 trap cleanup SIGINT SIGTERM EXIT
 
+# ── Ensure .env exists ────────────────────────────────────────────────────────
+if [[ ! -f "$BACKEND_DIR/.env" ]]; then
+  if [[ -f "$BACKEND_DIR/.env.example" ]]; then
+    cp "$BACKEND_DIR/.env.example" "$BACKEND_DIR/.env"
+    ok "Created backend/.env from .env.example."
+  else
+    err "No .env or .env.example found in backend/. Aborting."
+    exit 1
+  fi
+fi
+
 # ── Install dependencies ──────────────────────────────────────────────────────
 log "Installing ${CYAN}Backend${RESET} dependencies…"
 (cd "$BACKEND_DIR" && npm install)
