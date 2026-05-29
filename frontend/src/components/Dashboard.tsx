@@ -14,7 +14,7 @@ import AnalyticsPanel from './AnalyticsPanel';
 import { Combobox } from './Combobox';
 import StatCard from './StatCard';
 import styles from './Dashboard.module.css';
-import { DEPARTMENTS, JOB_TITLES, COUNTRIES } from '../lib/masterData';
+import { DEPARTMENTS, EMPLOYMENT_TYPES, JOB_TITLES, COUNTRIES } from '../lib/masterData';
 
 const PAGE_SIZE = 80;
 
@@ -29,6 +29,7 @@ export default function Dashboard() {
   const [department, setDepartment] = useState('');
   const [jobTitle, setJobTitle] = useState('');
   const [country, setCountry] = useState('');
+  const [employmentType, setEmploymentType] = useState('');
 
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(search.trim()), 300);
@@ -53,7 +54,14 @@ export default function Dashboard() {
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['employees', debouncedSearch, department, jobTitle, country],
+      queryKey: [
+        'employees',
+        debouncedSearch,
+        department,
+        jobTitle,
+        country,
+        employmentType,
+      ],
       queryFn: ({ pageParam }) =>
         fetchEmployees(
           pageParam,
@@ -62,6 +70,7 @@ export default function Dashboard() {
           department || undefined,
           jobTitle || undefined,
           country || undefined,
+          employmentType || undefined,
         ),
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
@@ -209,6 +218,17 @@ export default function Dashboard() {
           searchable
           options={['All Countries', ...COUNTRIES]}
           width="15%"
+        />
+        <Combobox
+          value={employmentType}
+          onChange={(value) =>
+            value === 'All Employment Types'
+              ? setEmploymentType('')
+              : setEmploymentType(value)
+          }
+          placeholder="All Employment Types"
+          options={['All Employment Types', ...EMPLOYMENT_TYPES]}
+          width="18%"
         />
       </div>
 

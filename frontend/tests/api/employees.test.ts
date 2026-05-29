@@ -202,6 +202,36 @@ describe('fetchEmployees', () => {
     });
   });
 
+  it('includes employmentType param when provided', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50, undefined, undefined, undefined, undefined, 'Full-time');
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50, employmentType: 'Full-time' },
+    });
+  });
+
+  it('omits employmentType param when not provided', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50);
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50 },
+    });
+  });
+
+  it('omits employmentType param when given an empty string', async () => {
+    mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
+
+    await fetchEmployees(1, 50, undefined, undefined, undefined, undefined, '');
+
+    expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
+      params: { page: 1, pageSize: 50 },
+    });
+  });
+
   it('includes all params when all filters are provided', async () => {
     mockedAxios.get.mockResolvedValueOnce({ data: MOCK_RESPONSE });
 
@@ -212,6 +242,7 @@ describe('fetchEmployees', () => {
       'Engineering',
       'Software Engineer',
       'United States',
+      'Full-time',
     );
 
     expect(mockedAxios.get).toHaveBeenCalledWith('/api/employees', {
@@ -222,6 +253,7 @@ describe('fetchEmployees', () => {
         department: 'Engineering',
         jobTitle: 'Software Engineer',
         country: 'United States',
+        employmentType: 'Full-time',
       },
     });
   });
