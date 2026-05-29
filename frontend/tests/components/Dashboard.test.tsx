@@ -206,6 +206,7 @@ describe('Dashboard', () => {
             expect.any(Number),
             'alice',
             undefined,
+            undefined,
           ),
         { timeout: 1000 },
       );
@@ -238,6 +239,7 @@ describe('Dashboard', () => {
           expect.any(Number),
           'alice',
           undefined,
+          undefined,
         ),
       );
 
@@ -251,6 +253,7 @@ describe('Dashboard', () => {
             expect.any(Number),
             undefined,
             undefined,
+            undefined,
           ),
         { timeout: 1000 },
       );
@@ -261,9 +264,7 @@ describe('Dashboard', () => {
   describe('department filter', () => {
     it('renders a department filter combobox', () => {
       renderDashboard();
-      expect(
-        screen.getByRole('button', { name: 'All Departments' }),
-      ).toBeInTheDocument();
+      expect(screen.getByRole('button', { name: 'All Departments' })).toBeInTheDocument();
     });
 
     it('defaults to showing all departments', () => {
@@ -286,6 +287,7 @@ describe('Dashboard', () => {
           expect.any(Number),
           undefined,
           'Engineering',
+          undefined,
         ),
       );
     });
@@ -302,6 +304,7 @@ describe('Dashboard', () => {
           expect.any(Number),
           undefined,
           'Engineering',
+          undefined,
         ),
       );
 
@@ -315,6 +318,7 @@ describe('Dashboard', () => {
           expect.any(Number),
           undefined,
           'Design',
+          undefined,
         ),
       );
     });
@@ -326,10 +330,9 @@ describe('Dashboard', () => {
 
       fireEvent.click(screen.getByRole('button', { name: 'All Departments' }));
       fireEvent.mouseDown(screen.getByRole('option', { name: 'Engineering' }));
-      fireEvent.change(
-        screen.getByRole('searchbox', { name: 'Search employees' }),
-        { target: { value: 'alice' } },
-      );
+      fireEvent.change(screen.getByRole('searchbox', { name: 'Search employees' }), {
+        target: { value: 'alice' },
+      });
 
       await waitFor(
         () =>
@@ -338,6 +341,97 @@ describe('Dashboard', () => {
             expect.any(Number),
             'alice',
             'Engineering',
+            undefined,
+          ),
+        { timeout: 1000 },
+      );
+    });
+  });
+
+  // ── Job title filter ──────────────────────────────────────────────────────────
+  describe('job title filter', () => {
+    it('renders a job title filter combobox', () => {
+      renderDashboard();
+      expect(screen.getByRole('button', { name: 'All Job Titles' })).toBeInTheDocument();
+    });
+
+    it('defaults to showing all job titles', () => {
+      renderDashboard();
+      const button = screen.getByRole('button', { name: 'All Job Titles' });
+      expect(button).toHaveTextContent('All Job Titles');
+    });
+
+    it('calls fetchEmployees with jobTitle when one is selected', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      vi.mocked(fetchEmployees).mockClear();
+
+      fireEvent.click(screen.getByRole('button', { name: 'All Job Titles' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Software Engineer' }));
+
+      await waitFor(() =>
+        expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+          expect.any(Number),
+          expect.any(Number),
+          undefined,
+          undefined,
+          'Software Engineer',
+        ),
+      );
+    });
+
+    it('calls fetchEmployees when job title filter is changed to a different title', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+
+      fireEvent.click(screen.getByRole('button', { name: 'All Job Titles' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Software Engineer' }));
+      await waitFor(() =>
+        expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+          expect.any(Number),
+          expect.any(Number),
+          undefined,
+          undefined,
+          'Software Engineer',
+        ),
+      );
+
+      vi.mocked(fetchEmployees).mockClear();
+      fireEvent.click(screen.getByRole('button', { name: 'Software Engineer' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Product Manager' }));
+
+      await waitFor(() =>
+        expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+          expect.any(Number),
+          expect.any(Number),
+          undefined,
+          undefined,
+          'Product Manager',
+        ),
+      );
+    });
+
+    it('calls fetchEmployees with search, department and jobTitle when all are set', async () => {
+      renderDashboard();
+      await screen.findByText('Alice Johnson');
+      vi.mocked(fetchEmployees).mockClear();
+
+      fireEvent.click(screen.getByRole('button', { name: 'All Departments' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Engineering' }));
+      fireEvent.click(screen.getByRole('button', { name: 'All Job Titles' }));
+      fireEvent.mouseDown(screen.getByRole('option', { name: 'Software Engineer' }));
+      fireEvent.change(screen.getByRole('searchbox', { name: 'Search employees' }), {
+        target: { value: 'alice' },
+      });
+
+      await waitFor(
+        () =>
+          expect(vi.mocked(fetchEmployees)).toHaveBeenCalledWith(
+            expect.any(Number),
+            expect.any(Number),
+            'alice',
+            'Engineering',
+            'Software Engineer',
           ),
         { timeout: 1000 },
       );

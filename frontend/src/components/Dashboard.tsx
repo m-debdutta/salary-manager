@@ -14,7 +14,7 @@ import AnalyticsPanel from './AnalyticsPanel';
 import { Combobox } from './Combobox';
 import StatCard from './StatCard';
 import styles from './Dashboard.module.css';
-import { DEPARTMENTS } from '../lib/masterData';
+import { DEPARTMENTS, JOB_TITLES } from '../lib/masterData';
 
 const PAGE_SIZE = 80;
 
@@ -27,6 +27,7 @@ export default function Dashboard() {
   const [search, setSearch] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const [department, setDepartment] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
 
   useEffect(() => {
     const id = setTimeout(() => setDebouncedSearch(search.trim()), 300);
@@ -51,13 +52,14 @@ export default function Dashboard() {
 
   const { data, isLoading, isError, fetchNextPage, hasNextPage, isFetchingNextPage } =
     useInfiniteQuery({
-      queryKey: ['employees', debouncedSearch, department],
+      queryKey: ['employees', debouncedSearch, department, jobTitle],
       queryFn: ({ pageParam }) =>
         fetchEmployees(
           pageParam,
           PAGE_SIZE,
           debouncedSearch || undefined,
           department || undefined,
+          jobTitle || undefined,
         ),
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
@@ -183,7 +185,16 @@ export default function Dashboard() {
           }
           placeholder="All Departments"
           options={['All Departments', ...DEPARTMENTS]}
-          width='15%'
+          width="15%"
+        />
+        <Combobox
+          value={jobTitle}
+          onChange={(value) =>
+            value === 'All Job Titles' ? setJobTitle('') : setJobTitle(value)
+          }
+          placeholder="All Job Titles"
+          options={['All Job Titles', ...JOB_TITLES]}
+          width="15%"
         />
       </div>
 
